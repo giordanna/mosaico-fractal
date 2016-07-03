@@ -1,4 +1,4 @@
-package testefractal;
+package testefractal.Complexos;
 
 public class Complexo {
     private double real;

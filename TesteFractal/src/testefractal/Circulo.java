@@ -40,7 +40,31 @@ public class Circulo extends Forma {
     }
     
     public double distancia(Circulo c2){
-        return Math.sqrt((x - c2.x) * (x - c2.x) + (y - c2.y) * (y - c2.y));
+        return Math.sqrt(Math.pow(x - c2.x, 2) + Math.pow(y - c2.y, 2));
+    }
+    
+    public boolean teste(Circulo c2, double soma_raios){
+        double deltax = Math.abs(c2.x - x), deltay, q2;
+        
+        if (deltax < soma_raios) { //coarse test x
+
+            deltay = Math.abs(c2.y - y);
+            if (deltay < soma_raios) {//coarse test y
+
+                q2 = Math.sqrt(Math.pow(deltax, 2) + Math.pow(deltay, 2));
+                if (q2 < soma_raios) {//fine test
+
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    public static double raioGerado(double area_razao){
+        return Math.sqrt(Area.instancia().getArea()) * 
+                Math.sqrt(area_razao / Math.PI);
     }
     
     @Override

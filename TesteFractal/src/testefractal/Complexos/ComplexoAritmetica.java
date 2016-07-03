@@ -1,4 +1,4 @@
-package testefractal;
+package testefractal.Complexos;
 
 public class ComplexoAritmetica {  
     public static Complexo adiciona(Complexo primeiro, Complexo segundo) {

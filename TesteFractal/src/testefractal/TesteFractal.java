@@ -1,105 +1,102 @@
 package testefractal;
 
+/**
+ * @author Giordanna De Gregoriis
+ * código original em C: http://john-art.com/circle_fractal_demo.c 
+ */
+
 public class TesteFractal {
 
     public static void main(String[] args) {
         Area.instancia();
-        preencheCirculo(90000, 400000, .99);
-
+        preencheCirculo(90000, 400000, 0.99);
     }
 
     public static void preencheCirculo(int circulos_max, int iteracoes_max, double preenchimento_max) {
-        int nmax = circulos_max + 1;
 
         //final double c_max = 1.48;
         // função exponencial da área
-        double c = 1 + Math.random() * 0.48, valor_n = 2, exp_u = 0.5 * c;
-        double teste_raio, area_preenchida, area_nova, q1, x1, y1, dx, dy, teste, soma_raios;
-        int circulos = 1, numero_iteracoes_total = 0, numero_iteracoes, raio_k, x_k, y_k;
+        double  teste_raio, area_preenchida, soma_raios,
+                c = 1 + Math.random() * 0.48, // função exponencial da área (usada pra determinar o primeiro círculo)
+                exp_u = 0.5 * c; // metade desse valor
         
-        System.out.println(c);
         
-        double valor_zeta = funcaoZeta(c, (int) valor_n);
-        double area_razao = 1.0 / valor_zeta;
-        double q2 = Math.sqrt(area_razao / Math.PI);
-        double raio_circulo = Math.pow(Area.instancia().getArea(), 0.5) * q2 * Math.pow(valor_n, -exp_u);
-        double ffac = Math.pow(Area.instancia().getArea(), 0.5) * q2;
-        double area_total = Math.PI * raio_circulo * raio_circulo;
+        int     circulos = 1,
+                numero_iteracoes_total = 0,
+                numero_iteracoes,
+                valor_n = 2,
+                nmax = circulos_max + 1;
 
-        int x = (int) (raio_circulo + Math.random() * (Area.instancia().getLargura() - 2 * raio_circulo));
-        int y = (int) (raio_circulo + Math.random() * (Area.instancia().getAltura() - 2 * raio_circulo));
+        double  valor_zeta = funcaoZeta(c, valor_n), // o valor que vai determinar a porcentagem. ex: 4 = 25%
+                
+                area_razao = 1.0 / valor_zeta, // ex: valor_zeta = 4, area_razao = 1/4 = 25%
         
-        Area.instancia().getFormas().add(new Circulo(x, y, (int) raio_circulo));
+                // raio gerado multiplicado por uma porcentagem de controle. quanto maior c, menor o valor multiplicado
+                // então menor será o raio de fato, que não será um círculo gigante preenchendo 25% da tela, mas
+                // um pouco menor
+                raio_circulo = Circulo.raioGerado(area_razao) * valorControle(valor_n, exp_u),
+        
+                raio_original_primeiro = Circulo.raioGerado(area_razao);
 
-        do //loop on circle number
-        {
-            numero_iteracoes = 0;   //iteration count init
-            q1 = (double) circulos + valor_n;
-            teste_raio = ffac * Math.pow(q1, -exp_u);
-            do //loop on random search
-            {
-                x1 = teste_raio + Math.random() * (Area.instancia().getLargura() - 2 * teste_raio);
-                y1 = teste_raio + Math.random() * (Area.instancia().getAltura() - 2 * teste_raio);
+        boolean teste;
+        
+        System.out.println("c = " + c + " | zeta = " + valor_zeta + " | razão = " + area_razao
+        + "| raio = " + raio_circulo);
+        
+        double x = (int) (raio_circulo + Math.random() * (Area.instancia().getLargura() - 2 * raio_circulo));
+        double y = (int) (raio_circulo + Math.random() * (Area.instancia().getAltura() - 2 * raio_circulo));
+        
+        Area.instancia().getFormas().add(new Circulo((int) x, (int) y, (int) raio_circulo));
+
+        double area_total = Area.instancia().getFormas().get(0).getArea();
+        do { // loop no número de círculos
+        
+            numero_iteracoes = 0;
+            teste_raio = raio_original_primeiro * valorControle(circulos + valor_n, exp_u);
+            do { // busca aleatória
+            
+                x = teste_raio + Math.random() * (Area.instancia().getLargura() - 2 * teste_raio);
+                y = teste_raio + Math.random() * (Area.instancia().getAltura() - 2 * teste_raio);
                 numero_iteracoes++;
-                teste = 1;
-                for (int k = 0; k < circulos; k++) //loop over old placements
-                {
-                    raio_k = Area.instancia().getFormas().get(k).raio;
-                    x_k = Area.instancia().getFormas().get(k).x;
-                    y_k = Area.instancia().getFormas().get(k).y;
-                    
-                    soma_raios = teste_raio + raio_k;  //sum of radii
-                    dx = x_k - x1;
-                    if (dx < 0) {
-                        dx = -dx;
-                    }
-                    if (dx < soma_raios) //coarse test x
-                    {
-                        dy = y_k - y1;
-                        if (dy < 0.) {
-                            dy = -dy;
-                        }
-                        if (dy < soma_raios) //coarse test y
-                        {
-                            q1 = Math.pow(dx, 2) + Math.pow(dy, 2);
-                            q2 = Math.sqrt(q1);
-                            if (q2 < soma_raios) //fine test
-                            {
-                                teste = 0;
-                                break;
-                            }
-                        }  //if dy<
-                    }  //if(dx<
-                } //next k
-                //System.out.println("passou interno interno");
-            } while (teste == 0);	//repeat if too close to a circle
+                teste = true;
+                Circulo obj_teste = new Circulo((int) x, (int) y, (int) teste_raio);
+                for (int k = 0; k < circulos; k++) {//loop over old placements
+                    soma_raios = teste_raio + Area.instancia().getFormas().get(k).raio;  //sum of radii
+                    teste = obj_teste.teste(Area.instancia().getFormas().get(k), soma_raios);
+                    if (!teste) break;
+                } // próximo k
+            } while (!teste); // repetir se ficou muito perto de um círculo
 
-            numero_iteracoes_total = numero_iteracoes_total + numero_iteracoes;
-            Area.instancia().getFormas().add(new Circulo((int) x1, (int) y1, (int) teste_raio));
-            area_nova = Math.PI * Math.pow(teste_raio, 2);
-            area_total += area_nova;
+            numero_iteracoes_total += numero_iteracoes;
+            Area.instancia().getFormas().add(new Circulo((int) x, (int) y, (int) teste_raio));
+            
+            area_total += Area.instancia().getFormas().get(circulos).getArea();
             area_preenchida = area_total / (Area.instancia().getArea());
             circulos++;
-            //System.out.println("passou interno");
-        } while (numero_iteracoes_total < iteracoes_max & circulos < nmax & area_preenchida < preenchimento_max);
+        } while (numero_iteracoes_total < iteracoes_max && circulos < nmax && area_preenchida < preenchimento_max);
 
-        //System.out.println("passou");
         Area.instancia().revalidate();
         Area.instancia().repaint();
     }
 
     public static double funcaoZeta(double c, int N) {
         double soma = 0;
-
-        for (double i = N; i < 100000; i++) {
+        int NEXP = 100000;
+        for (double i = N; i < NEXP; i++) {
             soma += Math.pow(i, -c);
         }
+        System.out.println(soma);
 
-        return soma + soma_estimada(c, 100000.5);
+        return soma + soma_estimada(c, NEXP);
     }
 
     public static double soma_estimada(double c, double n) {
-        return (1.0 / (c - 1)) * Math.pow(n - 0.5, 1 - c);
+        System.out.println((1.0 / (c - 1)) * Math.pow(n, 1 - c));
+        return (1.0 / (c - 1)) * Math.pow(n, 1 - c);
+    }
+    
+    public static double valorControle(double valor_n, double exp_u){
+        return Math.pow(valor_n, -exp_u);
     }
 
 }

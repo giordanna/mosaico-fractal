@@ -1,0 +1,15 @@
+Breve introdução sobre fractais
+
+Artistas utilizam "estampas" (motifs) para produzir padrões esteticamente agradáveis hà milênios.
+Em contraste, poddemos descrever um algoritmo que pode preencher uma região planar com uma série de estampas menores posicionadas em espaços aleatoriamente.
+Isso produz o que John chama de "padrão fractal".
+
+Mandelbrot popularizou o estudo dos fractais e inspirou diversos outros pesquisadores a encontrar outros padrões em outras áreaas.
+
+Motif = Estampa
+Gasket = Gaxeta. Junta de separação entre duas peças
+
+No artigo John explica o funcionamento do artigo, a sua natureza matemática e computacional.
+
+O algoritmo
+O objetivo original era preencher uma região R em um plano euclidiano com cópias menores posicionadas aleatoriamente de uma estampa ou forma.

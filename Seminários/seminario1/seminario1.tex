@@ -1,0 +1,234 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usetheme{AnnArbor}
+\usecolortheme{beaver}
+
+\newcommand{\disp}{\displaystyle}
+
+\author[\sc{GREGORIIS, D. G.}]{Aluna: Giordanna De Gregoriis\\Orientadora: Cristina Lúcia Dias Vaz\\Co-Orientador: Dionne Cavalcante Monteiro}
+\institute[\sc{UFPA}]{Universidade Federal do Pará\\Instituto de Ciências Exatas e Naturais\\Faculdade de Computação\\Bacharelado em Ciência da Computação}
+\date{\today}
+
+\title{Estudo do Artigo ``The Art of Random Fractals''}
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+{\tableofcontents}
+\end{frame}
+
+\section{Introdução}
+\begin{frame}
+\frametitle{Introdução}
+
+$\bullet$ Este seminário tem como objetivo mostrar os resultados do estudo feito em torno do artigo {\it ``The Art of Random Fractals''}, escrito por Douglas Dunham e John Shier;
+\medskip
+\pause
+
+$\bullet$ Nas próximas secções será explicado o funcionamento e a matemática do algoritmo de demonstração, cuja autoria é de John Shier e se encontra em seu site;
+\medskip
+\pause
+
+$\bullet$ Por fim serão feitas as conclusões e o resumo dos resultados obtidos.
+\medskip
+
+\end{frame}
+
+\section{Algoritmo}
+\begin{frame}
+\frametitle{Algoritmo}
+
+$\bullet$ O algoritmo criado por John Shier possui uma base matemática que permite preencher uma região espacial com uma sequência finita de formas (ou ``estampas'', como ele descreve) colocadas aleatoriamente e cada vez menores;
+\medskip
+\pause
+
+$\bullet$ Este algoritmo pode ser usado para produzir uma variedade de padrões que são esteticamente agradáveis, que pela sua aparente autossimilaridade são chamados de padrões fractais.
+\medskip
+
+\end{frame}
+
+\subsection{Início}
+\begin{frame}
+\frametitle{Início}
+
+Inicialmente desejava-se preencher área $A$ com estampas em posições aleatórias, progressivamente menores, sem que estas tenham intersecção entre si. Foi descoberto através de testes que isso pode ser alcançado se for obedecido uma regra de potência inversa;
+\medskip
+\pause
+
+Para $i=0, 1, 2, ...$ a área da estampa de ordem $i$, $A_{i}$ pode ser definido por:
+\medskip
+
+\begin{equation}
+A_{i} = \dfrac{A}{\zeta(c,N)(N+i)^c}
+\end{equation}
+\medskip
+
+Onde $c>1$, $c_{max}\approx1.48$ e $N>1$ são parâmetros, e $\zeta(c,N)$ é a função zeta de Hurwitz: $$\zeta(c,N)=\sum\limits_{k=0}^\infty\dfrac{1}{(N+k)^c}$$
+\medskip
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Função Zeta de Hurtwitz}
+
+A função zeta de Hurwitz implementada no algoritmo original é feita apenas no domínio dos números reais, feita com somatórios aproximados. Esta função aproximada é dada por:
+\medskip
+
+\begin{equation}
+\zeta(c,N) = (\sum\limits_{i=N}^{100000} i^{-c})+(\dfrac{1}{c-1} \times N^{1-c})
+\end{equation}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Função Zeta de Hurtwitz}
+
+No algoritmo de demonstração o $c$ é um valor encontrado aleatoriamente entre $1$ e $1.48$ e $N=2$.
+\medskip
+
+O número retornado por esta função será utilizado para determinar a porcentagem da área $A$ que será preenchida por $A_{0}$. \pause \textbf{Exemplo:}
+\medskip
+
+\begin{equation}
+\zeta(1.263,2) = (\sum\limits_{i=2}^{100000} i^{-1.263})+(\dfrac{1}{1.263-1} \times 2^{1-1.263})
+\end{equation}
+$$\approx 3.23 + 0.19 \approx 3.42$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Início}
+
+Com $c=1.263$ e $N=2$, o valor obtido de $\zeta(1.263,2)$ foi aproximadamente $3.42$. O algoritmo então procede calculando a razão através de: 
+\medskip
+
+\begin{equation}
+Raz\tilde{a}o=\dfrac{1}{\zeta(1.263,2)}=\dfrac{1}{3.42}\approx0.29
+\end{equation}
+\medskip
+
+Então a área $A_{0}$ da primeira forma a ser posicionada no plano deverá preencher aproximadamente $29\%$ da área original.
+\medskip
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Início}
+
+Na demonstração original deseja-se preencher o plano com círculos. Para isso utiliza-se a razão para descobrir qual será o raio do primeiro círculo que terá área $A_{0}$, dada por:
+\medskip
+
+\begin{equation}
+Raio_{A_{0}}= (\sqrt{A_{total}} \times \sqrt{\dfrac{Raz\tilde{a}o}{\pi}}) \times N^{-\dfrac{c}{2}} 
+\end{equation}
+\medskip
+
+Onde $N^{-\dfrac{c}{2}}$ serve para realizar uma leve redução do raio proporcionalmente ao valor $c$ e com isso evitar que, para valores altos de $c$, não tenhamos uma forma que ocupe logo de primeira muito espaço da tela.
+\medskip
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Início}
+
+Substituindo a fórmula anterior pelos valores do exemplo dado alguns slides atrás e considerando que a nossa área é uma tela de $600\times600$ pixels, temos:
+\medskip
+
+\begin{equation}
+Raio_{A_{0}} = (\sqrt{360000} \times \sqrt{\dfrac{0.29}{\pi}}) \times 2^{-\dfrac{1.263}{2}}
+\end{equation}
+
+$$
+\approx (600 \times 0.3) \times 2^{-0.6315} \approx 180 \times 0.64 \approx 115.2
+$$
+
+\end{frame}
+
+\subsection{Iteração}
+\begin{frame}
+\frametitle{Iteração}
+
+$\bullet$ Quando $i = 0$, a primeira forma com área de $A_{0}$ é colocada aleatóriamente no interior da região $R$ tal que não se sobreponha a fronteira de $R$. Isso normalmente requer várias tentativas em posições aleatórias antes da obtenção de um posicionamento bem sucedido em que a forma é completamente dentro de $R$;
+\medskip
+\pause
+
+$\bullet$ Quando $i > 0$, para cada $i = 1, 2, ...$ coloca-se de forma iterativa aleatoriamente uma cópia da estampa com área $A_{i}$ dentro de $R$ e de modo que não intersecte com qualquer cópia anteriormente colocada. Em seguida, passamos a colocar a próxima estampa, com área de $A_{i + 1}$, ou parar o algoritmo se foi colocado a $n$-ésima forma ou atingiu uma outra condição de parada.
+\medskip
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Iteração}
+
+Dentro da iteração:
+\medskip
+
+\begin{equation}
+Raio_{A_{i}}= Raio_{A_{0}} \times i^{-\dfrac{c}{2}} 
+\end{equation}
+\medskip
+
+\end{frame}
+
+\subsection{Finalização}
+\begin{frame}
+\frametitle{Finalização}
+Terminado a iteração temos uma figura que se assemelha a um fractal geométrico aleatório onde nenhuma das estampas se tocam, e a área não preenchida ou carpete é um conjunto conectado contínuo (isso se forem estampas sem oco).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Finalização}
+
+Exemplo de uma execução:
+
+\end{frame}
+
+\section{Testes e Resultados}
+\begin{frame}
+\frametitle{Testes e Resultados}
+Vários testes foram realizados para entender melhor a relação entre os diversos parâmetros presentes no algoritmo.
+\end{frame}
+
+\subsection{Círculo}
+\begin{frame}
+\frametitle{Círculo}
+\end{frame}
+
+\begin{frame}
+\frametitle{Círculo}
+\end{frame}
+
+\begin{frame}
+\frametitle{Círculo}
+\end{frame}
+
+\subsection{Quadrado}
+\begin{frame}
+\frametitle{Quadrado}
+\end{frame}
+
+\begin{frame}
+\frametitle{Quadrado}
+\end{frame}
+
+\begin{frame}
+\frametitle{Quadrado}
+\end{frame}
+
+\section{Conclusão}
+\begin{frame}
+\frametitle{Conclusão}
+\end{frame}
+
+\section{Referências}
+\begin{frame}
+\frametitle{Referências}
+\end{frame}
+
+\end{document}

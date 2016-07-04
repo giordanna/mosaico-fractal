@@ -1,0 +1,12 @@
+\beamer@endinputifotherversion {3.36pt}
+\select@language {brazil}
+\beamer@sectionintoc {1}{Introdu\IeC {\c c}\IeC {\~a}o}{3}{0}{1}
+\beamer@sectionintoc {2}{Algoritmo}{6}{0}{2}
+\beamer@subsectionintoc {2}{1}{In\IeC {\'\i }cio}{8}{0}{2}
+\beamer@subsectionintoc {2}{2}{Itera\IeC {\c c}\IeC {\~a}o}{16}{0}{2}
+\beamer@subsectionintoc {2}{3}{Finaliza\IeC {\c c}\IeC {\~a}o}{19}{0}{2}
+\beamer@sectionintoc {3}{Testes e Resultados}{21}{0}{3}
+\beamer@subsectionintoc {3}{1}{C\IeC {\'\i }rculo}{22}{0}{3}
+\beamer@subsectionintoc {3}{2}{Quadrado}{25}{0}{3}
+\beamer@sectionintoc {4}{Conclus\IeC {\~a}o}{28}{0}{4}
+\beamer@sectionintoc {5}{Refer\IeC {\^e}ncias}{29}{0}{5}

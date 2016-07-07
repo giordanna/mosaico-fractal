@@ -1,5 +1,11 @@
 package testefractal;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
 /**
  * @author Giordanna De Gregoriis
  * código original em C: http://john-art.com/circle_fractal_demo.c 
@@ -9,15 +15,26 @@ public class TesteFractal {
 
     public static void main(String[] args) {
         Area.instancia();
+        BufferedImage bImg = new BufferedImage(Area.instancia().getWidth(), Area.instancia().getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D cg = bImg.createGraphics();
         preencheCirculo(90000, 400000, 0.99);
+        
+        Area.instancia().renderizador.paintAll(cg);
+        try {
+            if (ImageIO.write(bImg, "png", new File("./output_image.png")))
+            {
+                System.out.println("-- saved");
+            }
+        } catch (IOException e) {
+        }
     }
 
     public static void preencheCirculo(int formas_max, int iteracoes_max, double preenchimento_max) {
 
         //final double c_max = 1.48;
         // função exponencial da área
-        double  teste_raio, area_preenchida, soma_raios,
-                c = 1 + Math.random() * 0.48, // função exponencial da área (usada pra determinar o primeiro círculo)
+        double  teste_raio, area_preenchida,
+                c = 1.1 + Math.random() * 0.38, // função exponencial da área (usada pra determinar o primeiro círculo)
                 exp_u = 0.5 * c; // metade desse valor
         
         
@@ -61,14 +78,15 @@ public class TesteFractal {
                 teste = true;
                 Circulo obj_teste = new Circulo((int) x, (int) y, (int) teste_raio);
                 for (int k = 0; k < formas; k++) {//loop over old placements
-                    soma_raios = teste_raio + Area.instancia().getFormas().get(k).raio;  //sum of radii
-                    teste = obj_teste.teste(Area.instancia().getFormas().get(k), soma_raios);
+                    teste = obj_teste.teste(Area.instancia().getFormas().get(k));
                     if (!teste) break;
                 } // próximo k
             } while (!teste); // repetir se ficou muito perto de um círculo
 
             numero_iteracoes_total += numero_iteracoes;
-            Area.instancia().getFormas().add(new Circulo((int) x, (int) y, (int) teste_raio));
+            synchronized(Area.instancia().getFormas()){
+                Area.instancia().getFormas().add(new Circulo((int) x, (int) y, (int) teste_raio));
+            }
             
             area_total += Area.instancia().getFormas().get(formas).getArea();
             area_preenchida = area_total / (Area.instancia().getArea());
@@ -83,8 +101,8 @@ public class TesteFractal {
 
         //final double c_max = 1.48;
         // função exponencial da área
-        double  teste_raio, area_preenchida, soma_raios,
-                c = 1 + Math.random() * 0.48, // função exponencial da área (usada pra determinar o primeiro círculo)
+        double  teste_raio, area_preenchida,
+                c = 1.1 + Math.random() * 0.38, // função exponencial da área (usada pra determinar o primeiro círculo)
                 exp_u = 0.5 * c; // metade desse valor
         
         
@@ -128,13 +146,15 @@ public class TesteFractal {
                 teste = true;
                 Quadrado obj_teste = new Quadrado((int) x, (int) y, (int) teste_raio);
                 for (int k = 0; k < formas; k++) {//loop over old placements
-                    soma_raios = teste_raio + Area.instancia().getFormas().get(k).raio;  //sum of radii
-                    teste = obj_teste.teste(Area.instancia().getFormas().get(k), soma_raios);
+                    teste = obj_teste.teste(Area.instancia().getFormas().get(k));
                     if (!teste) break;
                 } // próximo k
             } while (!teste); // repetir se ficou muito perto de um círculo
             numero_iteracoes_total += numero_iteracoes;
-            Area.instancia().getFormas().add(new Quadrado((int) x, (int) y, (int) teste_raio));
+            
+            synchronized(Area.instancia().getFormas()){
+                Area.instancia().getFormas().add(new Quadrado((int) x, (int) y, (int) teste_raio));
+            }
             
             area_total += Area.instancia().getFormas().get(formas).getArea();
             area_preenchida = area_total / (Area.instancia().getArea());

@@ -24,17 +24,14 @@ public class Circulo extends Forma {
     }
     
     @Override
-    public boolean teste(Forma c2, double soma_raios){
+    public boolean teste(Forma c2){
         double deltax = Math.abs(c2.x - x), deltay;
         
-        if (deltax < soma_raios) {
+        if (deltax < (c2.raio + raio)) {
 
             deltay = Math.abs(c2.y - y);
-            if (deltay < soma_raios) {
-                if (distancia(c2) < soma_raios) {
-
-                    return false;
-                }
+            if (deltay < (c2.raio + raio)) {
+                return (distancia(c2) >= (c2.raio + raio));
             }
         }
         

@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[brazil]{babel}
+\usepackage[portuguese, ruled, linesnumbered]{algorithm2e}
 \usetheme{AnnArbor}
 \usecolortheme{beaver}
 
@@ -128,7 +129,7 @@ Raio_{A_{0}}= (\sqrt{A_{total}} \times \sqrt{\dfrac{Raz\tilde{a}o}{\pi}}) \times
 \end{equation}
 \medskip
 
-Onde $N^{-\dfrac{c}{2}}$ serve para realizar uma leve redução do raio proporcionalmente ao valor $c$ e com isso evitar que, para valores altos de $c$, não tenhamos uma forma que ocupe logo de primeira muito espaço da tela.
+Onde $N^{-\dfrac{c}{2}}$ serve para reduzir o valor obtido de acordo com a iteração $N$, assim servindo para a parte iterativa do algoritmo também.
 \medskip
 
 \end{frame}
@@ -157,7 +158,7 @@ $\bullet$ Quando $i = 0$, a primeira forma com área de $A_{0}$ é colocada alea
 \medskip
 \pause
 
-$\bullet$ Quando $i > 0$, para cada $i = 1, 2, ...$ coloca-se de forma iterativa aleatoriamente uma cópia da estampa com área $A_{i}$ dentro de $R$ e de modo que não intersecte com qualquer cópia anteriormente colocada. Em seguida, passamos a colocar a próxima estampa, com área de $A_{i + 1}$, ou parar o algoritmo se foi colocado a $n$-ésima forma ou atingiu uma outra condição de parada.
+$\bullet$ Quando $i > 0$, para cada $i = 1, 2, ..., n$ coloca-se de forma iterativa aleatoriamente uma cópia da estampa com área $A_{i}$ dentro de $R$ e de modo que não intersecte com qualquer cópia anteriormente colocada. Em seguida, passamos a colocar a próxima estampa, com área de $A_{i + 1}$, ou parar o algoritmo se foi colocado a $n$-ésima forma ou atingiu uma outra condição de parada.
 \medskip
 
 \end{frame}
@@ -165,7 +166,7 @@ $\bullet$ Quando $i > 0$, para cada $i = 1, 2, ...$ coloca-se de forma iterativa
 \begin{frame}
 \frametitle{Iteração}
 
-Dentro da iteração:
+O raio da forma $A_{i}$ $i$ para $i > 0$ é determinado por:
 \medskip
 
 \begin{equation}
@@ -173,6 +174,44 @@ Raio_{A_{i}}= Raio_{A_{0}} \times i^{-\dfrac{c}{2}}
 \end{equation}
 \medskip
 
+Onde $Raio_{A_{0}}$ é o raio da primeira forma inserida no plano.
+\medskip
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Iteração}
+
+$\bullet$ Após determinar uma posição aleatória no plano, verifica-se caso a forma $A_{i}$ não intersecta com nenhuma outra já posicionada. Este teste depende de cada forma, devendo ser implementado de acordo com suas características. Caso seja desejável inserir formas diferentes no mesmo plano, o teste deve ser abstraído para aceitar qualquer entrada e produzir uma resposta correta.
+\medskip
+\pause
+
+$\bullet$ Neste algoritmo demonstratívo, o teste é feito apenas para círculos. Além disso ele verifica se a distância entre os círculos é maior que a soma de seus raios, evitando assim que os círculos sejam posicionados muito próximo entre si e tornando a imagem mais esteticamente agradável.
+\medskip
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Iteração}
+
+\begin{algorithm}[H]
+   \SetAlgoLined
+   \Entrada{$x_{c2}, y_{c2}, raio_{c2}$} 
+   \Saida{$true$ se não tem intersecção e $false$ caso contrário}
+   \Inicio{
+    \Se{$\vert x_{c2} - x\vert < (raio_{c2} + raio)$}{
+        \Se{$\vert y_{c2} - y\vert < (raio_{c2} + raio)$}{
+            \Se{$\sqrt{(x-x_{c2})^2 + (x-y_{c2})^2} >= (raio_{c2} + raio)$}{
+                \Retorna{true}
+            }
+        }
+    }
+   }
+   \Retorna{false}
+   \label{alg1}
+   \caption{\textsc{Teste de intersecção dos círculos}}
+ \end{algorithm}
+ 
 \end{frame}
 
 \subsection{Finalização}

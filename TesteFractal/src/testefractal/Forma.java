@@ -44,7 +44,7 @@ public abstract class Forma {
     }
     
     public abstract double distancia(Forma c2);
-    public abstract boolean teste(Forma c2, double soma_raios);
+    public abstract boolean teste(Forma c2);
     public abstract double raioGerado(double area_razao);
     public abstract double getArea();
     public abstract void desenha(Graphics g);

@@ -6,11 +6,12 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.JFrame;
 
 public class Area extends JFrame {
     private static Area singleton;
-    private Renderizador renderizador;
+    public Renderizador renderizador;
     
     private ArrayList<Forma> formas;
     private final int altura = 600, largura = 600;
@@ -42,8 +43,8 @@ public class Area extends JFrame {
         return largura * altura;
     }
     
-    public double getAltura() { return altura; }
-    public double getLargura() { return altura; }
+    public int getAltura() { return altura; }
+    public int getLargura() { return altura; }
     
     public ArrayList<Forma> getFormas() { return formas; }
 
@@ -53,7 +54,9 @@ public class Area extends JFrame {
         
         // formas e letras não ficarão serrilhadas
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        
-        for (Forma x: formas) x.desenha(g2d);
+        for (Iterator<Forma> x = formas.iterator() ; x.hasNext();){
+            Forma forma = x.next();
+            forma.desenha(g2d);
+        }
     }
 }

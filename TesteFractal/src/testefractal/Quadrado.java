@@ -50,7 +50,7 @@ public class Quadrado extends Forma {
 
     @Override
     public double getArea() {
-        return raio * 4;
+        return raio * raio * 4;
     }
 }
 

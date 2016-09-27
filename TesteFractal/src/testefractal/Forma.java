@@ -34,12 +34,23 @@ public abstract class Forma {
         this.cor = cor;
     }
     
-    public static Color corAleatoria(){
+    public static Color corAleatoriaClara(){
         Random rand = new Random();
+
         int r = rand.nextInt(128) + 128;
         int g = rand.nextInt(128) + 128;
         int b = rand.nextInt(128) + 128;
-        
+
+        return new Color(r, g, b);
+    }
+    
+    public static Color corAleatoria(){
+        Random rand = new Random();
+
+        int r = rand.nextInt(254) + 1;
+        int g = rand.nextInt(254) + 1;
+        int b = rand.nextInt(254) + 1;
+
         return new Color(r, g, b);
     }
     

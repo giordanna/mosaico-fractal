@@ -1,10 +1,17 @@
 package testefractal;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 
 /**
  * @author Giordanna De Gregoriis
@@ -14,27 +21,53 @@ import javax.imageio.ImageIO;
 public class TesteFractal {
 
     public static void main(String[] args) {
+        
         Area.instancia();
-        BufferedImage bImg = new BufferedImage(Area.instancia().getWidth(), Area.instancia().getHeight(), BufferedImage.TYPE_INT_RGB);
+        BufferedImage bImg = new BufferedImage(Area.instancia().getLargura(), Area.instancia().getAltura(), BufferedImage.TYPE_INT_RGB);
         Graphics2D cg = bImg.createGraphics();
-        preencheCirculo(90000, 400000, 0.99);
+        opcao();
         
         Area.instancia().renderizador.paintAll(cg);
         try {
-            if (ImageIO.write(bImg, "png", new File("./output_image.png")))
+            if (ImageIO.write(bImg, "png", new File("./exemplo.png")))
             {
                 System.out.println("-- saved");
             }
         } catch (IOException e) {
         }
     }
+    
+    public static void opcao(){
+        JPanel p = new JPanel();
+        int n;
+        // para impedir valores negativos e 0 nos lados e raio
+        SpinnerModel modelo_spinner = new SpinnerNumberModel(1, 1, 48, 1);
+        
+        JSpinner valor_c = new JSpinner(modelo_spinner);
+        
+        Dimension d = valor_c.getPreferredSize();  
+        d.width = 35;
+        valor_c.setPreferredSize(d);
 
-    public static void preencheCirculo(int formas_max, int iteracoes_max, double preenchimento_max) {
+        p.add(new JLabel("Defina o valor de c: 1,"));
+        p.add(valor_c);
+        
+        n = JOptionPane.showConfirmDialog(Area.instancia(), p, "TesteFractal", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (n == 0){
+            double c = 1 + ((int) valor_c.getValue()) * 0.01;
+            long tempoInicial = System.currentTimeMillis();
+            preencheCirculo(90000, 400000, 0.99, c);
+            System.out.println("tempo de execução: " + (System.currentTimeMillis() - tempoInicial)/1000.0 + " segundos.");
+        }
+        else System.exit(0);
+    }
+
+    public static void preencheCirculo(int formas_max, int iteracoes_max, double preenchimento_max, double c) {
 
         //final double c_max = 1.48;
         // função exponencial da área
         double  teste_raio, area_preenchida,
-                c = 1.1 + Math.random() * 0.38, // função exponencial da área (usada pra determinar o primeiro círculo)
+                //c = 1.1 + Math.random() * 0.38, // função exponencial da área (usada pra determinar o primeiro círculo)
                 exp_u = 0.5 * c; // metade desse valor
         
         
@@ -92,17 +125,19 @@ public class TesteFractal {
             area_preenchida = area_total / (Area.instancia().getArea());
             formas++;
         } while (numero_iteracoes_total < iteracoes_max && formas < nmax && area_preenchida < preenchimento_max);
-
+        System.out.println("área preenchida = " + Math.round(area_preenchida * 100) + "%");
+        System.out.println("número de iterações = " + numero_iteracoes_total);
+        System.out.println("número de formas = " + formas);
         Area.instancia().revalidate();
         Area.instancia().repaint();
     }
     
-    public static void preencheQuadrado(int formas_max, int iteracoes_max, double preenchimento_max) {
+    public static void preencheQuadrado(int formas_max, int iteracoes_max, double preenchimento_max, double c) {
 
         //final double c_max = 1.48;
         // função exponencial da área
         double  teste_raio, area_preenchida,
-                c = 1.1 + Math.random() * 0.38, // função exponencial da área (usada pra determinar o primeiro círculo)
+                //c = 1.1 + Math.random() * 0.38, // função exponencial da área (usada pra determinar o primeiro círculo)
                 exp_u = 0.5 * c; // metade desse valor
         
         
@@ -160,6 +195,9 @@ public class TesteFractal {
             area_preenchida = area_total / (Area.instancia().getArea());
             formas++;
         } while (numero_iteracoes_total < iteracoes_max && formas < nmax && area_preenchida < preenchimento_max);
+        System.out.println("área preenchida = " + area_preenchida + "%");
+        System.out.println("número de iterações = " + numero_iteracoes_total);
+        System.out.println("número de formas = " + formas);
         Area.instancia().revalidate();
         Area.instancia().repaint();
     }
@@ -170,13 +208,10 @@ public class TesteFractal {
         for (double i = N; i < NEXP; i++) {
             soma += Math.pow(i, -c);
         }
-        System.out.println("soma="+soma);
-
         return soma + soma_estimada(c, NEXP);
     }
 
     public static double soma_estimada(double c, double n) {
-        System.out.println("soma_estimada="+(1.0 / (c - 1)) * Math.pow(n, 1 - c));
         return (1.0 / (c - 1)) * Math.pow(n, 1 - c);
     }
     

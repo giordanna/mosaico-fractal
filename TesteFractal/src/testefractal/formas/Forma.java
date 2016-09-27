@@ -1,4 +1,4 @@
-package testefractal;
+package testefractal.formas;
 
 import java.awt.Color;
 import java.awt.Graphics;

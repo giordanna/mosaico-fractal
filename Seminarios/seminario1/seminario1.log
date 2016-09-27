@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.7.3)  4 JUL 2016 13:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.7.3)  13 JUL 2016 23:51
 entering extended mode
 **./seminario1.tex
 (seminario1.tex
@@ -1043,32 +1043,134 @@ LaTeX Info: Redefining \textlatin on input line 1448.
 \l@brazil = a dialect from \language\l@portuges 
 Package babel Info: Making " an active character on input line 145.
 ))
-("C:\Program Files\MiKTeX 2.9\tex\latex\algorithms\algorithm.sty"
-Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
-nment
+("C:\Program Files\MiKTeX 2.9\tex\latex\algorithm2e\algorithm2e.sty"
+Package: algorithm2e 2013/01/06 v5.00 algorithms environments
+\c@AlgoLine=\count154
 
-("C:\Program Files\MiKTeX 2.9\tex\latex\float\float.sty"
-Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count154
-\float@exts=\toks45
-\float@box=\box53
-\@float@everytoks=\toks46
-\@floatcapt=\box54
-)
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\ifthen.sty"
 Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\@float@every@algorithm=\toks47
-\c@algorithm=\count155
+\algocf@hangindent=\skip57
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\tools\xspace.sty"
+Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
 )
-("C:\Program Files\MiKTeX 2.9\tex\latex\algorithms\algorithmic.sty"
-Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
-\c@ALC@unique=\count156
-\c@ALC@line=\count157
-\c@ALC@rem=\count158
-\c@ALC@depth=\count159
-\ALC@tlm=\skip57
-\algorithmicindent=\skip58
+("C:\Program Files\MiKTeX 2.9\tex\latex\ltxmisc\relsize.sty"
+Package: relsize 2003/07/04 ver 3.1
+)
+********************************************************
+Package `algorithm2e' Release 5.1 -- october 19 2015 --
+- algorithm2e-announce@lirmm.fr mailing list for announcement about releases
+- algorithm2e-discussion@lirmm.fr mailing list for discussion about package
+subscribe by emailing sympa@lirmm.fr with 'subscribe <list> <firstname name>'
+- Author: Christophe Fiorio (christophe.fiorio@umontpellier.fr)
+********************************************************
+\skiptotal=\skip58
+\skiplinenumber=\skip59
+\skiprule=\skip60
+\skiphlne=\skip61
+\skiptext=\skip62
+\skiplength=\skip63
+\algomargin=\skip64
+\skipalgocfslide=\skip65
+\algowidth=\dimen189
+\inoutsize=\dimen190
+\inoutindent=\dimen191
+\interspacetitleruled=\dimen192
+\interspacealgoruled=\dimen193
+\interspacetitleboxruled=\dimen194
+\algocf@ruledwidth=\skip66
+\algocf@inoutbox=\box53
+\algocf@inputbox=\box54
+\AlCapSkip=\skip67
+\AlCapHSkip=\skip68
+\algoskipindent=\skip69
+\algocf@nlbox=\box55
+\algocf@hangingbox=\box56
+\algocf@untilbox=\box57
+\algocf@skipuntil=\skip70
+\algocf@capbox=\box58
+\algoheightruledefault=\skip71
+\algoheightrule=\skip72
+\algotitleheightruledefault=\skip73
+\algotitleheightrule=\skip74
+\c@algocfline=\count155
+\c@algocfproc=\count156
+\c@algocf=\count157
+\algocf@algoframe=\box59
+\algocf@algobox=\box60
+) ("C:\Program Files\MiKTeX 2.9\tex\latex\tools\multicol.sty"
+Package: multicol 2016/04/07 v1.8p multicolumn formatting (FMi)
+\c@tracingmulticols=\count158
+\mult@box=\box61
+\multicol@leftmargin=\dimen195
+\c@unbalance=\count159
+\c@collectmore=\count160
+\doublecol@number=\count161
+\multicoltolerance=\count162
+\multicolpretolerance=\count163
+\full@width=\dimen196
+\page@free=\dimen197
+\premulticols=\dimen198
+\postmulticols=\dimen199
+\multicolsep=\skip75
+\multicolbaselineskip=\skip76
+\partial@page=\box62
+\last@line=\box63
+\maxbalancingoverflow=\dimen256
+\mult@rightbox=\box64
+\mult@grightbox=\box65
+\mult@gfirstbox=\box66
+\mult@firstbox=\box67
+\@tempa=\box68
+\@tempa=\box69
+\@tempa=\box70
+\@tempa=\box71
+\@tempa=\box72
+\@tempa=\box73
+\@tempa=\box74
+\@tempa=\box75
+\@tempa=\box76
+\@tempa=\box77
+\@tempa=\box78
+\@tempa=\box79
+\@tempa=\box80
+\@tempa=\box81
+\@tempa=\box82
+\@tempa=\box83
+\@tempa=\box84
+\c@columnbadness=\count164
+\c@finalcolumnbadness=\count165
+\last@try=\dimen257
+\multicolovershoot=\dimen258
+\multicolundershoot=\dimen259
+\mult@nat@firstbox=\box85
+\colbreak@box=\box86
+\mc@col@check@num=\count166
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\sidecap\sidecap.sty"
+Package: sidecap 2003/06/06 v1.6f SideCap Package (RN/HjG)
+\SC@BOXWD=\dimen260
+\SC@CAPWD=\dimen261
+\SC@tempdima=\dimen262
+\SC@tempdimb=\dimen263
+\c@SC@C=\count167
+\SC@BOX=\box87
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\wrapfig\wrapfig.sty"
+\wrapoverhang=\dimen264
+\WF@size=\dimen265
+\c@WF@wrappedlines=\count168
+\WF@box=\box88
+\WF@everypar=\toks45
+Package: wrapfig 2003/01/31  v 3.6
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\natbib\natbib.sty"
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+\bibhang=\skip77
+\bibsep=\skip78
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count169
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\beamer\base\themes\theme\beamerthemeAnn
 Arbor.sty"
@@ -1092,33 +1194,29 @@ Package: beamercolorthemebeaver 2010/06/17  (rcs-revision d02a7cf4d8ae)
 )
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\\' on input line 11.
+(hyperref)                removing `\\' on input line 16.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\\' on input line 11.
+(hyperref)                removing `\\' on input line 16.
 
-(seminario1.aux
-
-LaTeX Warning: Label `alg:seq' multiply defined.
-
-)
+(seminario1.aux)
 \openout1 = `seminario1.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1156,17 +1254,17 @@ LaTeX Font Info:    ... okay on input line 16.
 
 ("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count160
-\scratchdimen=\dimen189
-\scratchbox=\box55
-\nofMPsegments=\count161
-\nofMParguments=\count162
-\everyMPshowfont=\toks48
-\MPscratchCnt=\count163
-\MPscratchDim=\dimen190
-\MPnumerator=\count164
-\makeMPintoPDFobject=\count165
-\everyMPtoPDFconversion=\toks49
+\scratchcounter=\count170
+\scratchdimen=\dimen266
+\scratchbox=\box89
+\nofMPsegments=\count171
+\nofMParguments=\count172
+\everyMPshowfont=\toks46
+\MPscratchCnt=\count173
+\MPscratchDim=\dimen267
+\MPnumerator=\count174
+\makeMPintoPDFobject=\count175
+\everyMPtoPDFconversion=\toks47
 ) ("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty"
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -1179,8 +1277,8 @@ G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
 )
 ABD: EveryShipout initializing macros
-\AtBeginShipoutBox=\box56
-Package hyperref Info: Link coloring OFF on input line 16.
+\AtBeginShipoutBox=\box90
+Package hyperref Info: Link coloring OFF on input line 21.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -1188,73 +1286,73 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty"
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count166
+\c@section@level=\count176
 )
-LaTeX Info: Redefining \ref on input line 16.
-LaTeX Info: Redefining \pageref on input line 16.
-LaTeX Info: Redefining \nameref on input line 16.
+LaTeX Info: Redefining \ref on input line 21.
+LaTeX Info: Redefining \pageref on input line 21.
+LaTeX Info: Redefining \nameref on input line 21.
 
 (seminario1.out) (seminario1.out)
 \@outlinefile=\write5
 \openout5 = `seminario1.out'.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 16.
+(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 21.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 16.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 21.
 \symnumbers=\mathgroup6
 \sympureletters=\mathgroup7
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/cmss/m/n --> T1/cmr/m/n on input line 16.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 16.
+(Font)                  OT1/cmss/m/n --> T1/cmr/m/n on input line 21.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> T1/cmss/bx/n on input line 16.
+(Font)                  OT1/cmr/bx/n --> T1/cmss/bx/n on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/cmr/bx/n --> T1/cmss/bx/n on input line 16.
-LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 16.
+(Font)                  OT1/cmr/bx/n --> T1/cmss/bx/n on input line 21.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> T1/cmss/m/n on input line 16.
+(Font)                  OT1/cmss/m/n --> T1/cmss/m/n on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> T1/cmss/m/n on input line 16.
-LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 16.
+(Font)                  OT1/cmss/bx/n --> T1/cmss/m/n on input line 21.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> T1/cmss/m/it on input line 16.
+(Font)                  OT1/cmr/m/it --> T1/cmss/m/it on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmr/bx/it --> T1/cmss/m/it on input line 16.
-LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 16.
+(Font)                  OT1/cmr/bx/it --> T1/cmss/m/it on input line 21.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> T1/cmtt/m/n on input line 16.
+(Font)                  OT1/cmtt/m/n --> T1/cmtt/m/n on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> T1/cmtt/m/n on input line 16.
+(Font)                  OT1/cmtt/m/n --> T1/cmtt/m/n on input line 21.
 LaTeX Font Info:    Overwriting symbol font `numbers' in version `bold'
-(Font)                  T1/cmss/m/n --> T1/cmss/bx/n on input line 16.
+(Font)                  T1/cmss/m/n --> T1/cmss/bx/n on input line 21.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
-(Font)                  T1/cmss/m/it --> T1/cmss/bx/it on input line 16.
+(Font)                  T1/cmss/m/it --> T1/cmss/bx/it on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `bold'
-(Font)                  OT1/cmss/bx/n --> T1/cmr/bx/n on input line 16.
+(Font)                  OT1/cmss/bx/n --> T1/cmr/bx/n on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  T1/cmss/bx/n --> T1/cmss/bx/n on input line 16.
+(Font)                  T1/cmss/bx/n --> T1/cmss/bx/n on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  T1/cmss/m/n --> T1/cmss/bx/n on input line 16.
+(Font)                  T1/cmss/m/n --> T1/cmss/bx/n on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  T1/cmss/m/it --> T1/cmss/bx/it on input line 16.
+(Font)                  T1/cmss/m/it --> T1/cmss/bx/it on input line 21.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  T1/cmtt/m/n --> T1/cmtt/bx/n on input line 16.
-LaTeX Font Info:    Redeclaring symbol font `pureletters' on input line 16.
+(Font)                  T1/cmtt/m/n --> T1/cmtt/bx/n on input line 21.
+LaTeX Font Info:    Redeclaring symbol font `pureletters' on input line 21.
 LaTeX Font Info:    Encoding `T1' has changed to `OT1' for symbol font
-(Font)              `pureletters' in the math version `normal' on input line 16
+(Font)              `pureletters' in the math version `normal' on input line 21
 .
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `normal'
-(Font)                  T1/cmss/m/it --> OT1/mathkerncmss/m/sl on input line 16
+(Font)                  T1/cmss/m/it --> OT1/mathkerncmss/m/sl on input line 21
 .
 LaTeX Font Info:    Encoding `T1' has changed to `OT1' for symbol font
-(Font)              `pureletters' in the math version `bold' on input line 16.
+(Font)              `pureletters' in the math version `bold' on input line 21.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
-(Font)                  T1/cmss/bx/it --> OT1/mathkerncmss/m/sl on input line 1
-6.
+(Font)                  T1/cmss/bx/it --> OT1/mathkerncmss/m/sl on input line 2
+1.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
 (Font)                  OT1/mathkerncmss/m/sl --> OT1/mathkerncmss/bx/sl on inp
-ut line 16.
+ut line 21.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\beamer\base\translator\dicts\translator
 -basic-dictionary\translator-basic-dictionary-English.dict"
@@ -1280,16 +1378,39 @@ Dictionary: translator-numbers-dictionary, Language: English
 -theorem-dictionary\translator-theorem-dictionary-English.dict"
 Dictionary: translator-theorem-dictionary, Language: English 
 )
-LaTeX Info: Redefining \includegraphics on input line 16.
+LaTeX Info: Redefining \includegraphics on input line 21.
 
-(seminario1.nav)
+("C:\Program Files\MiKTeX 2.9\tex\latex\ms\ragged2e.sty"
+Package: ragged2e 2009/05/21 v2.1 ragged2e Package (MS)
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\ms\everysel.sty"
+Package: everysel 2011/10/28 v1.2 EverySelectfont Package (MS)
+
+ABD: EverySelectfont initializing macros
+LaTeX Info: Redefining \selectfont on input line 126.
+)
+\CenteringLeftskip=\skip79
+\RaggedLeftLeftskip=\skip80
+\RaggedRightLeftskip=\skip81
+\CenteringRightskip=\skip82
+\RaggedLeftRightskip=\skip83
+\RaggedRightRightskip=\skip84
+\CenteringParfillskip=\skip85
+\RaggedLeftParfillskip=\skip86
+\RaggedRightParfillskip=\skip87
+\JustifyingParfillskip=\skip88
+\CenteringParindent=\skip89
+\RaggedLeftParindent=\skip90
+\RaggedRightParindent=\skip91
+\JustifyingParindent=\skip92
+) (seminario1.nav)
 
 LaTeX Font Warning: Font shape `T1/cmss/m/sc' undefined
-(Font)              using `T1/cmss/m/n' instead on input line 16.
+(Font)              using `T1/cmss/m/n' instead on input line 21.
 
 
 LaTeX Font Warning: Font shape `T1/cmss/m/n' in size <4> not available
-(Font)              size <5> substituted on input line 20.
+(Font)              size <5> substituted on input line 25.
 
 [1
 
@@ -1297,17 +1418,17 @@ LaTeX Font Warning: Font shape `T1/cmss/m/n' in size <4> not available
 [2
 
 ]
-LaTeX Font Info:    Try loading font information for U+msa on input line 41.
+LaTeX Font Info:    Try loading font information for U+msa on input line 48.
  ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 41.
+LaTeX Font Info:    Try loading font information for U+msb on input line 48.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Try loading font information for OT1+mathkerncmss on input 
-line 41.
+line 48.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\sansmathaccent\ot1mathkerncmss.fd"
 File: ot1mathkerncmss.fd 2013/03/27 Fontinst v1.933 font definitions for OT1/ma
@@ -1352,35 +1473,79 @@ thkerncmss.
 
 ] [21
 
-]pdfTeX warning (ext4): destination with the same identifier (name{alg:seq}) ha
-s been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.229 \end{frame}
-                  [22
+] [22
 
-] [23
+] <imagens/exemplo1.png, id=707, 602.25pt x 602.25pt>
+File: imagens/exemplo1.png Graphic file (type png)
 
-] [24
+<use imagens/exemplo1.png>
+Package pdftex.def Info: imagens/exemplo1.png used on input line 239.
+(pdftex.def)             Requested size: 162.62805pt x 162.62805pt.
 
-] [25
+Overfull \vbox (3.5539pt too high) detected at line 239
+ []
 
-] [26
+[23
 
-] [27
-
-] [28
-
-] [29
-
-] [30
-
-] [31
-
-] [32
+ <./imagens/exemplo1.png (PNG copy)>] [24
 
 ]
-[33
+<imagens/exemplo2.png, id=766, 602.25pt x 602.25pt>
+File: imagens/exemplo2.png Graphic file (type png)
+ <use imagens/exemplo2.png>
+Package pdftex.def Info: imagens/exemplo2.png used on input line 291.
+(pdftex.def)             Requested size: 151.71875pt x 151.72002pt.
+
+[25
+
+ <./imagens/exemplo2.png (PNG copy)>]
+<imagens/exemplo3.png, id=797, 602.25pt x 602.25pt>
+File: imagens/exemplo3.png Graphic file (type png)
+ <use imagens/exemplo3.png>
+Package pdftex.def Info: imagens/exemplo3.png used on input line 333.
+(pdftex.def)             Requested size: 151.71875pt x 151.72002pt.
+
+[26
+
+ <./imagens/exemplo3.png (PNG copy)>]
+<imagens/exemplo4.png, id=825, 602.25pt x 602.25pt>
+File: imagens/exemplo4.png Graphic file (type png)
+ <use imagens/exemplo4.png>
+Package pdftex.def Info: imagens/exemplo4.png used on input line 374.
+(pdftex.def)             Requested size: 151.71875pt x 151.72002pt.
+
+[27
+
+ <./imagens/exemplo4.png (PNG copy)>]
+<imagens/exemplo5.png, id=853, 602.25pt x 602.25pt>
+File: imagens/exemplo5.png Graphic file (type png)
+ <use imagens/exemplo5.png>
+Package pdftex.def Info: imagens/exemplo5.png used on input line 415.
+(pdftex.def)             Requested size: 151.71875pt x 151.72002pt.
+
+[28
+
+ <./imagens/exemplo5.png (PNG copy)>]
+<imagens/exemplo6.png, id=882, 602.25pt x 602.25pt>
+File: imagens/exemplo6.png Graphic file (type png)
+ <use imagens/exemplo6.png>
+Package pdftex.def Info: imagens/exemplo6.png used on input line 455.
+(pdftex.def)             Requested size: 151.71875pt x 151.72002pt.
+
+[29
+
+ <./imagens/exemplo6.png (PNG copy)>]
+<imagens/exemplo7.png, id=910, 602.25pt x 602.25pt>
+File: imagens/exemplo7.png Graphic file (type png)
+ <use imagens/exemplo7.png>
+Package pdftex.def Info: imagens/exemplo7.png used on input line 495.
+(pdftex.def)             Requested size: 151.71875pt x 151.72002pt.
+
+[30
+
+ <./imagens/exemplo7.png (PNG copy)>] [31
+
+] [32
 
 ]
 \tf@nav=\write6
@@ -1392,13 +1557,13 @@ l.229 \end{frame}
 \tf@snm=\write8
 \openout8 = `seminario1.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 287.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 287.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 518.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 518.
  (seminario1.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 287.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 287.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 518.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 518.
 Package rerunfilecheck Info: File `seminario1.out' has not changed.
-(rerunfilecheck)             Checksum: 23D124E2F23F67CC9B5AC236A428B630;563.
+(rerunfilecheck)             Checksum: 454F4DF9D81882F4E47FAB63EC84237F;563.
 
 
 LaTeX Font Warning: Size substitutions with differences
@@ -1407,38 +1572,41 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 518.
+ )
+(\end occurred inside a group at level 1)
 
-LaTeX Warning: There were multiply-defined labels.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 287.
- ) 
+### simple group (level 1) entered at line 1061 ({)
+### bottom level 
 Here is how much of TeX's memory you used:
- 18075 strings out of 493335
- 337256 string characters out of 3139249
- 419521 words of memory out of 3000000
- 21073 multiletter control sequences out of 15000+200000
- 16002 words of font info for 44 fonts, out of 3000000 for 9000
+ 19711 strings out of 493335
+ 363720 string characters out of 3139249
+ 476572 words of memory out of 3000000
+ 22679 multiletter control sequences out of 15000+200000
+ 21336 words of font info for 60 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 56i,17n,64p,422b,878s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/cm-super/cm-super-t1.enc}<C:/Pro
-gram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Fil
-es/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTe
-X 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX 2.9/fon
-ts/type1/public/amsfonts/cm/cmss10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1
-/public/amsfonts/cm/cmss8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/a
-msfonts/cm/cmssi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts
-/cm/cmssi8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy
-10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C
-:/Program Files/MiKTeX 2.9/fonts/type1/public/cm-super/sfsi1095.pfb><C:/Program
- Files/MiKTeX 2.9/fonts/type1/public/cm-super/sfss0600.pfb><C:/Program Files/Mi
-KTeX 2.9/fonts/type1/public/cm-super/sfss0800.pfb><C:/Program Files/MiKTeX 2.9/
-fonts/type1/public/cm-super/sfss0900.pfb><C:/Program Files/MiKTeX 2.9/fonts/typ
-e1/public/cm-super/sfss1095.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public
-/cm-super/sfss1440.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/cm-super
-/sfsx1095.pfb>
-Output written on seminario1.pdf (33 pages, 393562 bytes).
+ 56i,22n,62p,422b,4495s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/cm-super/cm-super-
+t1.enc}<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><
+C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Progr
+am Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/
+MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Program Files/MiKTeX 2
+.9/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Program Files/MiKTeX 2.9/fonts/
+type1/public/amsfonts/cm/cmssi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/p
+ublic/amsfonts/cm/cmssi8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/am
+sfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/c
+m/cmsy8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/ms
+am10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/cm-super/sfsi1095.pfb>
+<C:/Program Files/MiKTeX 2.9/fonts/type1/public/cm-super/sfss0600.pfb><C:/Progr
+am Files/MiKTeX 2.9/fonts/type1/public/cm-super/sfss0800.pfb><C:/Program Files/
+MiKTeX 2.9/fonts/type1/public/cm-super/sfss1000.pfb><C:/Program Files/MiKTeX 2.
+9/fonts/type1/public/cm-super/sfss1095.pfb><C:/Program Files/MiKTeX 2.9/fonts/t
+ype1/public/cm-super/sfss1440.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publ
+ic/cm-super/sfsx0800.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/cm-sup
+er/sfsx1095.pfb>
+Output written on seminario1.pdf (32 pages, 967611 bytes).
 PDF statistics:
- 1078 PDF objects out of 1200 (max. 8388607)
- 78 named destinations out of 1000 (max. 500000)
- 153 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1067 PDF objects out of 1200 (max. 8388607)
+ 76 named destinations out of 1000 (max. 500000)
+ 194 words of extra memory for PDF output out of 10000 (max. 10000000)
 

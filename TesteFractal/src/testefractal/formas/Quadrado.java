@@ -1,7 +1,8 @@
-package testefractal;
+package testefractal.formas;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import testefractal.Area;
 
 public class Quadrado extends Forma {
     

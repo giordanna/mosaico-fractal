@@ -1,5 +1,7 @@
 package testefractal;
 
+import testefractal.formas.Circulo;
+import testefractal.formas.Quadrado;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -41,25 +43,43 @@ public class TesteFractal {
         JPanel p = new JPanel();
         int n;
         // para impedir valores negativos e 0 nos lados e raio
-        SpinnerModel modelo_spinner = new SpinnerNumberModel(1, 1, 48, 1);
+        SpinnerModel modelo_spinner = new SpinnerNumberModel(1.45, 1.01, 1.48, 0.01);
         
         JSpinner valor_c = new JSpinner(modelo_spinner);
         
         Dimension d = valor_c.getPreferredSize();  
-        d.width = 35;
+        d.width = 50;
         valor_c.setPreferredSize(d);
 
-        p.add(new JLabel("Defina o valor de c: 1,"));
+        p.add(new JLabel("Defina o valor de c: "));
         p.add(valor_c);
         
         n = JOptionPane.showConfirmDialog(Area.instancia(), p, "TesteFractal", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (n == 0){
-            double c = 1 + ((int) valor_c.getValue()) * 0.01;
+            double c = ((double) valor_c.getValue());
             long tempoInicial = System.currentTimeMillis();
-            preencheCirculo(90000, 400000, 0.99, c);
+            opcao_preenchimento(90000, 400000, 0.99, c);
             System.out.println("tempo de execução: " + (System.currentTimeMillis() - tempoInicial)/1000.0 + " segundos.");
         }
         else System.exit(0);
+        
+    }
+    
+    public static void opcao_preenchimento(int formas_max, int iteracoes_max, double preenchimento_max, double c){
+        String [] opcoes = {"Círculo", "Quadrado", "Apolonio"};
+        String opcao = (String) JOptionPane.showInputDialog(null, "Escolha um tipo de forma", "Escolha",
+                JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+        
+        switch (opcao){
+            case "Círculo":
+                preencheCirculo(formas_max, iteracoes_max, preenchimento_max, c);
+                break;
+            case "Quadrado":
+                preencheQuadrado(formas_max, iteracoes_max, preenchimento_max, c);
+                break;
+            case "Apolonio":
+                break;
+        } 
     }
 
     public static void preencheCirculo(int formas_max, int iteracoes_max, double preenchimento_max, double c) {

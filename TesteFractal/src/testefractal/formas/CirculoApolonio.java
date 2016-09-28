@@ -13,7 +13,7 @@ public class CirculoApolonio extends FormaAbstrata{
     public CirculoApolonio(){
         x = y = 0;
         raio = 10;
-        cor = corAleatoria();
+        cor = Forma.corAleatoria2();
     }
     
     public CirculoApolonio(Color cor){
@@ -26,7 +26,7 @@ public class CirculoApolonio extends FormaAbstrata{
         this.x = x;
         this.y = y;
         this.raio = raio;
-        cor = corAleatoria();
+        cor = Forma.corAleatoria2();
     }
     
     public CirculoApolonio(double x, double y, double raio, Color cor){
@@ -34,26 +34,6 @@ public class CirculoApolonio extends FormaAbstrata{
         this.y = y;
         this.raio = raio;
         this.cor = cor;
-    }
-    
-    public static Color corAleatoriaClara(){
-        Random rand = new Random();
-
-        int r = rand.nextInt(128) + 128;
-        int g = rand.nextInt(128) + 128;
-        int b = rand.nextInt(128) + 128;
-
-        return new Color(r, g, b);
-    }
-    
-    public static Color corAleatoria(){
-        Random rand = new Random();
-
-        int r = rand.nextInt(254) + 1;
-        int g = rand.nextInt(254) + 1;
-        int b = rand.nextInt(254) + 1;
-
-        return new Color(r, g, b);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package testefractal.dependencias;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import testefractal.Area;
 import testefractal.formas.CirculoApolonio;
@@ -112,7 +113,7 @@ public class Apolonio {
         double qx = 0;
         double qy = qr - 1;
         CirculoApolonio p = new CirculoApolonio(px, py, pr);
-        CirculoApolonio q = new CirculoApolonio(qx, qy, qr);
+        CirculoApolonio q = new CirculoApolonio(qx, qy, qr, Color.BLACK);
 
         // fila para conter trincas de círculos que se encostam
         ArrayList<Tupla> queue = new ArrayList<>();
@@ -170,7 +171,7 @@ public class Apolonio {
         double qx = 0;
         double qy = qr - 1;
         CirculoApolonio p = new CirculoApolonio(px, py, pr);
-        CirculoApolonio q = new CirculoApolonio(qx, qy, qr);
+        CirculoApolonio q = new CirculoApolonio(qx, qy, qr, Color.BLACK);
 
         // fila para conter trincas de círculos que se encostam
         ArrayList<Tupla> queue = new ArrayList<>();

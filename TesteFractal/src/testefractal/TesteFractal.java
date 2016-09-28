@@ -29,7 +29,8 @@ public class TesteFractal {
         Area.instancia();
         BufferedImage bImg = new BufferedImage(Area.instancia().getLargura(), Area.instancia().getAltura(), BufferedImage.TYPE_INT_RGB);
         Graphics2D cg = bImg.createGraphics();
-        opcao();
+        
+        opcao_preenchimento(90000, 400000, 0.99);
         
         Area.instancia().renderizador.paintAll(cg);
         try {
@@ -41,7 +42,7 @@ public class TesteFractal {
         }
     }
     
-    public static void opcao(){
+    public static double opcao(){
         JPanel p = new JPanel();
         int n;
         // para impedir valores negativos e 0 nos lados e raio
@@ -59,34 +60,71 @@ public class TesteFractal {
         n = JOptionPane.showConfirmDialog(Area.instancia(), p, "TesteFractal", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (n == 0){
             double c = ((double) valor_c.getValue());
-            long tempoInicial = System.currentTimeMillis();
-            opcao_preenchimento(90000, 400000, 0.99, c);
-            System.out.println("tempo de execução: " + (System.currentTimeMillis() - tempoInicial)/1000.0 + " segundos.");
+            
+            return c;
+            
         }
         else System.exit(0);
+        return 1.45;
         
     }
     
-    public static void opcao_preenchimento(int formas_max, int iteracoes_max, double preenchimento_max, double c){
+    public static double opcao_apollonio(){
+        JPanel p = new JPanel();
+        int n;
+        // para impedir valores negativos e 0 nos lados e raio
+        SpinnerModel modelo_spinner = new SpinnerNumberModel(50, 50, 99, 1);
+        
+        JSpinner valor_c = new JSpinner(modelo_spinner);
+        
+        Dimension d = valor_c.getPreferredSize();  
+        d.width = 35;
+        valor_c.setPreferredSize(d);
+
+        p.add(new JLabel("Defina o tamanho do círculo: "));
+        p.add(valor_c);
+        p.add(new JLabel("%"));
+        
+        n = JOptionPane.showConfirmDialog(Area.instancia(), p, "TesteFractal", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (n == 0){
+            double c = (int) valor_c.getValue();
+            c /= 100.0;
+            return c;
+            
+        }
+        else System.exit(0);
+        return 1.45;
+        
+    }
+    
+    public static void opcao_preenchimento(int formas_max, int iteracoes_max, double preenchimento_max){
         String [] opcoes = {"Círculo", "Quadrado", "Apolonio"};
-        String opcao = (String) JOptionPane.showInputDialog(null, "Escolha um tipo de forma", "Escolha",
-                JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+        String opcao = "";
+        opcao = (String) JOptionPane.showInputDialog(null, "Escolha um tipo de forma", "Escolha",
+                JOptionPane.PLAIN_MESSAGE, null, opcoes, opcoes[0]);
+        double tempo_retornado = 0;
+        if(opcao == null || (opcao != null && ("".equals(opcao))))
+            System.exit(0);
         
         switch (opcao){
             case "Círculo":
-                preencheCirculo(formas_max, iteracoes_max, preenchimento_max, c);
+                tempo_retornado = preencheCirculo(formas_max, iteracoes_max, preenchimento_max, opcao());
                 break;
             case "Quadrado":
-                preencheQuadrado(formas_max, iteracoes_max, preenchimento_max, c);
+                tempo_retornado = preencheQuadrado(formas_max, iteracoes_max, preenchimento_max, opcao());
                 break;
             case "Apolonio":
-                preencheApolonio(formas_max, iteracoes_max, preenchimento_max, c);
+                tempo_retornado = preencheApolonio(opcao_apollonio());
                 break;
-        } 
+            default:
+                System.out.println("aqui");
+                
+        }
+        System.out.println("tempo de execução: " + tempo_retornado + " segundos.");
     }
 
-    public static void preencheCirculo(int formas_max, int iteracoes_max, double preenchimento_max, double c) {
-
+    public static double preencheCirculo(int formas_max, int iteracoes_max, double preenchimento_max, double c) {
+        long tempoInicial = System.currentTimeMillis();
         //final double c_max = 1.48;
         // função exponencial da área
         double  teste_raio, area_preenchida,
@@ -153,10 +191,12 @@ public class TesteFractal {
         System.out.println("número de formas = " + formas);
         Area.instancia().revalidate();
         Area.instancia().repaint();
+        
+        return (System.currentTimeMillis() - tempoInicial)/1000.0;
     }
     
-    public static void preencheQuadrado(int formas_max, int iteracoes_max, double preenchimento_max, double c) {
-
+    public static double preencheQuadrado(int formas_max, int iteracoes_max, double preenchimento_max, double c) {
+        long tempoInicial = System.currentTimeMillis();
         //final double c_max = 1.48;
         // função exponencial da área
         double  teste_raio, area_preenchida,
@@ -223,47 +263,24 @@ public class TesteFractal {
         System.out.println("número de formas = " + formas);
         Area.instancia().revalidate();
         Area.instancia().repaint();
+        
+        return (System.currentTimeMillis() - tempoInicial)/1000.0;
     }
     
-    public static void preencheApolonio(int formas_max, int iteracoes_max, double preenchimento_max, double c) {
+    public static double preencheApolonio(double c) {
+        long tempoInicial = System.currentTimeMillis();
+        double  area_preenchida;
+        int     formas;
 
-        //final double c_max = 1.48;
-        // função exponencial da área
-        double  teste_raio, area_preenchida,
-                //c = 1.1 + Math.random() * 0.38, // função exponencial da área (usada pra determinar o primeiro círculo)
-                exp_u = 0.5 * c; // metade desse valor
-        
-        
-        int     formas = 1,
-                numero_iteracoes_total = 0,
-                numero_iteracoes,
-                valor_n = 2,
-                nmax = formas_max + 1;
-
-        double  valor_zeta = funcaoZeta(c, valor_n), // o valor que vai determinar a porcentagem. ex: 4 = 25%
-                
-                area_razao = 1.0 / valor_zeta, // ex: valor_zeta = 4, area_razao = 1/4 = 25%
-        
-                // raio gerado multiplicado por uma porcentagem de controle. quanto maior c, menor o valor multiplicado
-                // então menor será o raio de fato, que não será um círculo gigante preenchendo 25% da tela, mas
-                // um pouco menor
-                raio_forma = Circulo.raioGeradoEstatico(area_razao) * valorControle(valor_n, exp_u),
-        
-                raio_original_primeiro = Circulo.raioGeradoEstatico(area_razao);
-
-        boolean teste;
-        
-        System.out.println("c = " + c + " | zeta = " + valor_zeta + " | razão = " + area_razao
-        + "| raio = " + raio_forma);
-        
-        
-        Apolonio.iniciaFractal(area_razao);
+        Apolonio.iniciaFractal(c);
         int centro = Area.instancia().getAltura()/2;
         Circulo area_central = new Circulo(centro, centro, centro);
         double soma_areas = 0;
         for (FormaAbstrata x: Area.instancia().getFormas())
-            soma_areas += x.getArea();
+            if (!Area.instancia().getFormas().get(1).equals(x))
+                soma_areas += x.getArea();
         
+        System.out.println("Porcentagem do primeiro círculo: " + c*100 + "%");
         area_preenchida = soma_areas / (area_central.getArea() * 1.0) * 100;
         formas = Area.instancia().getFormas().size();
         System.out.println("área círcular preenchida = " + area_preenchida + "%");
@@ -273,6 +290,8 @@ public class TesteFractal {
         
         Area.instancia().revalidate();
         Area.instancia().repaint();
+        
+        return (System.currentTimeMillis() - tempoInicial)/1000.0;
     }
 
     public static double funcaoZeta(double c, int N) {

@@ -11,7 +11,7 @@ public abstract class Forma extends FormaAbstrata {
     public Forma(){
         x = y = 0;
         raio = 10;
-        cor = corAleatoria();
+        cor = corAleatoria2();
     }
     
     public Forma(Color cor){
@@ -24,7 +24,7 @@ public abstract class Forma extends FormaAbstrata {
         this.x = x;
         this.y = y;
         this.raio = raio;
-        cor = corAleatoria();
+        cor = corAleatoria2();
     }
     
     public Forma(int x, int y, int raio, Color cor){
@@ -32,6 +32,16 @@ public abstract class Forma extends FormaAbstrata {
         this.y = y;
         this.raio = raio;
         this.cor = cor;
+    }
+    
+    public static Color corAleatoria2(){
+        Random rand = new Random();
+
+        int r = rand.nextInt(200) + 55;
+        int g = rand.nextInt(200) + 55;
+        int b = rand.nextInt(200) + 55;
+
+        return new Color(r, g, b);
     }
     
     public static Color corAleatoriaClara(){

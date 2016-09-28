@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -78,6 +79,7 @@ public class TesteFractal {
                 preencheQuadrado(formas_max, iteracoes_max, preenchimento_max, c);
                 break;
             case "Apolonio":
+                preencheApolonio(formas_max, iteracoes_max, preenchimento_max, c);
                 break;
         } 
     }
@@ -218,6 +220,86 @@ public class TesteFractal {
         System.out.println("área preenchida = " + area_preenchida + "%");
         System.out.println("número de iterações = " + numero_iteracoes_total);
         System.out.println("número de formas = " + formas);
+        Area.instancia().revalidate();
+        Area.instancia().repaint();
+    }
+    
+    public static void preencheApolonio(int formas_max, int iteracoes_max, double preenchimento_max, double c) {
+
+        //final double c_max = 1.48;
+        // função exponencial da área
+        double  teste_raio, area_preenchida,
+                //c = 1.1 + Math.random() * 0.38, // função exponencial da área (usada pra determinar o primeiro círculo)
+                exp_u = 0.5 * c; // metade desse valor
+        
+        
+        int     formas = 1,
+                numero_iteracoes_total = 0,
+                numero_iteracoes,
+                valor_n = 2,
+                nmax = formas_max + 1;
+
+        double  valor_zeta = funcaoZeta(c, valor_n), // o valor que vai determinar a porcentagem. ex: 4 = 25%
+                
+                area_razao = 1.0 / valor_zeta, // ex: valor_zeta = 4, area_razao = 1/4 = 25%
+        
+                // raio gerado multiplicado por uma porcentagem de controle. quanto maior c, menor o valor multiplicado
+                // então menor será o raio de fato, que não será um círculo gigante preenchendo 25% da tela, mas
+                // um pouco menor
+                raio_forma = Circulo.raioGeradoEstatico(area_razao) * valorControle(valor_n, exp_u),
+        
+                raio_original_primeiro = Circulo.raioGeradoEstatico(area_razao);
+
+        boolean teste;
+        
+        System.out.println("c = " + c + " | zeta = " + valor_zeta + " | razão = " + area_razao
+        + "| raio = " + raio_forma);
+        
+        
+        double raio_primeiro = Area.instancia().getLargura()/2;
+        
+        int i = Area.instancia().getLargura()/2, j = Area.instancia().getAltura()/2;
+        Area.instancia().getFormas().add(new Circulo(i, j, (int) raio_primeiro));
+        
+        double a = 1 + 2 / Math.sqrt(3);  
+        
+        double raio_menor = raio_primeiro / a;
+        
+        double altura = raio_menor * Math.sqrt(3);
+        
+        double centro_a = raio_primeiro + (2 * raio_primeiro - raio_menor) * 1;
+        double centro_b = (raio_primeiro + raio_menor) + (2 * raio_primeiro - raio_menor - altura) * 1;
+        double centro_c = (raio_primeiro - raio_menor) + (2 * raio_primeiro - raio_menor - altura) * 1;
+        System.out.println("centro a: " + centro_a);
+        System.out.println("centro b: " + centro_b);
+        System.out.println("centro c: " + centro_c);
+        
+        Area.instancia().getFormas().add(new Circulo((int) centro_c/2, (int) centro_c/2, (int) raio_menor));
+        
+        double radius_sum = 0.0;
+        double square_radius_sum = 0.0;
+
+        
+        /*
+        double area_total = Area.instancia().getFormas().get(0).getArea();
+        do { // loop no número de círculos
+        
+            numero_iteracoes = 0;
+            numero_iteracoes++;
+
+            numero_iteracoes_total += numero_iteracoes;
+            synchronized(Area.instancia().getFormas()){
+                Area.instancia().getFormas().add(new Circulo((int) x, (int) y, (int) teste_raio));
+            }
+            
+            area_total += Area.instancia().getFormas().get(formas).getArea();
+            area_preenchida = area_total / (Area.instancia().getArea());
+            formas++;
+        } while (numero_iteracoes_total < iteracoes_max && formas < nmax && area_preenchida < preenchimento_max);
+        System.out.println("área preenchida = " + Math.round(area_preenchida * 100) + "%");
+        System.out.println("número de iterações = " + numero_iteracoes_total);
+        System.out.println("número de formas = " + formas);
+        */
         Area.instancia().revalidate();
         Area.instancia().repaint();
     }

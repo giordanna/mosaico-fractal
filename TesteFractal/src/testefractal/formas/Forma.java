@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
 
-public abstract class Forma {
-    protected Color cor;
-    protected int x, y, raio;
+public abstract class Forma extends FormaAbstrata {
+    public Color cor;
+    public int x, y, raio;
     
     public Forma(){
         x = y = 0;

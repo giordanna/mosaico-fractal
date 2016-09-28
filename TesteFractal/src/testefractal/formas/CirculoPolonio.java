@@ -8,7 +8,7 @@ import testefractal.Area;
 public class CirculoPolonio extends FormaAbstrata{
     public Color cor;
     public double x, y, raio;
-    public static int escala = Area.instancia().getLargura();
+    public static double escala = Area.instancia().getAltura();
     
     public CirculoPolonio(){
         x = y = 0;
@@ -59,10 +59,12 @@ public class CirculoPolonio extends FormaAbstrata{
     @Override
     public void desenha(Graphics g) {
         g.setColor(cor);
-        int raio_local = (int) this.raio * CirculoPolonio.escala;
-        int x_local = (int) this.x * CirculoPolonio.escala;
-        int y_local = (int) this.y * CirculoPolonio.escala;
+        int raio_local = (int) Math.abs(this.raio * escala/2);
+        int x_local = (int) Math.abs(this.x * escala/2 + escala/2);
+        int y_local = (int) Math.abs(this.y * escala/2 + escala/2);
+
         g.fillOval(x_local - raio_local, y_local - raio_local, raio_local *  2, raio_local * 2);
+        
     }
     
     @Override
@@ -74,5 +76,10 @@ public class CirculoPolonio extends FormaAbstrata{
     @Override
     public boolean teste(FormaAbstrata c){
         return false;
+    }
+    
+    @Override
+    public String toString(){
+        return "(" + (x*escala) + " , " + (y*escala) + ") | raio=" + (raio*escala/2);
     }
 }

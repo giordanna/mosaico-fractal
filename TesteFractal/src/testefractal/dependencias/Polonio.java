@@ -1,6 +1,7 @@
 package testefractal.dependencias;
 
 import java.util.ArrayList;
+import testefractal.Area;
 import testefractal.formas.CirculoPolonio;
 
 
@@ -100,7 +101,7 @@ public class Polonio {
     public static void iniciaFractal(){
         CirculoPolonio b = new CirculoPolonio(0, 0, -1);
 
-        // insert two randomly positioned touching circles
+        // insere dois círculos se encostando aleatórios
         double tr = 1-Math.random()/2;
         double pa = Math.PI/2 - Math.asin(Math.random()*(1-tr)/tr);
         double px = tr * Math.cos(pa);
@@ -125,7 +126,7 @@ public class Polonio {
 
         // fila que contém circulos para desenhar
         ArrayList<CirculoPolonio> draw = new ArrayList<>();
-        draw.add(b);
+        /*(draw.add(b);*/
         draw.add(p);
         draw.add(q);
         draw.add(cs.get(0));
@@ -147,5 +148,7 @@ public class Polonio {
                 draw.add(nc);
             }
         }
+        for (CirculoPolonio x: draw)
+            Area.instancia().getFormas().add(x);
     }
 }

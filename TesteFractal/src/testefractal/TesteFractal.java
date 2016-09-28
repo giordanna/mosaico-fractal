@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import testefractal.dependencias.Polonio;
 
 /**
  * @author Giordanna De Gregoriis
@@ -255,30 +256,7 @@ public class TesteFractal {
         + "| raio = " + raio_forma);
         
         
-        double raio_primeiro = Area.instancia().getLargura()/2;
-        
-        int i = Area.instancia().getLargura()/2, j = Area.instancia().getAltura()/2;
-        Area.instancia().getFormas().add(new Circulo(i, j, (int) raio_primeiro));
-        
-        double a = 1 + 2 / Math.sqrt(3);  
-        
-        double raio_menor = raio_primeiro / a;
-        
-        double altura = raio_menor * Math.sqrt(3);
-        
-        double centro_a = raio_primeiro + (2 * raio_primeiro - raio_menor) * 1;
-        double centro_b = (raio_primeiro + raio_menor) + (2 * raio_primeiro - raio_menor - altura) * 1;
-        double centro_c = (raio_primeiro - raio_menor) + (2 * raio_primeiro - raio_menor - altura) * 1;
-        System.out.println("centro a: " + centro_a);
-        System.out.println("centro b: " + centro_b);
-        System.out.println("centro c: " + centro_c);
-        
-        Area.instancia().getFormas().add(new Circulo((int) centro_c/2, (int) centro_c/2, (int) raio_menor));
-        
-        double radius_sum = 0.0;
-        double square_radius_sum = 0.0;
-
-        
+        Polonio.iniciaFractal();
         /*
         double area_total = Area.instancia().getFormas().get(0).getArea();
         do { // loop no número de círculos

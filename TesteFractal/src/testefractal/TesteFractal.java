@@ -1,5 +1,6 @@
 package testefractal;
 
+import java.awt.Color;
 import testefractal.formas.Circulo;
 import testefractal.formas.Quadrado;
 import java.awt.Dimension;
@@ -14,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import testefractal.dependencias.Apolonio;
 import testefractal.formas.FormaAbstrata;
 
@@ -24,22 +27,58 @@ import testefractal.formas.FormaAbstrata;
 
 public class TesteFractal {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedLookAndFeelException {
         
-        Area.instancia();
-        BufferedImage bImg = new BufferedImage(Area.instancia().getLargura(), Area.instancia().getAltura(), BufferedImage.TYPE_INT_RGB);
-        Graphics2D cg = bImg.createGraphics();
-        
-        opcao_preenchimento(90000, 400000, 0.99);
-        
-        Area.instancia().renderizador.paintAll(cg);
-        try {
-            if (ImageIO.write(bImg, "png", new File("./exemplo.png")))
-            {
-                System.out.println("-- saved");
-            }
-        } catch (IOException e) {
+        File file = new File("imagens");
+        boolean b = false;
+        if (!file.exists()) {
+            b = file.mkdirs();
         }
+        
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e){}
+        
+        int n, i = 0, cor;
+        Area.instancia();
+        do{
+            String[] cores = { "Preto", "Branco" };
+            cor = JOptionPane.showOptionDialog(null, "Deseja qual cor para o fundo da imagem?", "Informação", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, cores, cores[0]);
+            switch(cor){
+                case 0:
+                    Area.instancia().fundo = Color.BLACK;
+                    break;
+                case 1:
+                    Area.instancia().fundo = Color.WHITE;
+                    break;
+                default:
+                    break;
+            }
+            
+            Area.instancia().revalidate();
+            Area.instancia().repaint();
+            BufferedImage bImg = new BufferedImage(Area.instancia().getLargura(), Area.instancia().getAltura(), BufferedImage.TYPE_INT_RGB);
+            Graphics2D cg = bImg.createGraphics();
+
+            opcao_preenchimento(90000, 400000, 0.99);
+
+            Area.instancia().renderizador.paintAll(cg);
+            try {
+                if (ImageIO.write(bImg, "png", new File("./imagens/imagem_"+i+".png")))
+                {
+                    System.out.println("-- salvo como imagem_"+i+".png em /imagens/");
+                }
+            } catch (IOException e) {
+            }
+           
+           String[] options = { "Sim", "Não" };
+           n = JOptionPane.showOptionDialog(null, "Deseja gerar mais uma imagem?", "Informação", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+           if (n == 0){
+               Area.instancia().getFormas().clear();
+               i++;
+           }
+        } while (n == 0);
     }
     
     public static double opcao(){

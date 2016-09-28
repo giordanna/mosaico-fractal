@@ -14,6 +14,7 @@ import testefractal.formas.FormaAbstrata;
 public class Area extends JFrame {
     private static Area singleton;
     public Renderizador renderizador;
+    public Color fundo = Color.BLACK;
     
     private ArrayList<FormaAbstrata> formas;
     private final int altura = 600, largura = 600;
@@ -51,8 +52,6 @@ public class Area extends JFrame {
     public ArrayList<FormaAbstrata> getFormas() { return formas; }
 
     public void desenhaFormas(Graphics2D g2d) {
-        g2d.setColor(Color.WHITE);
-        g2d.fillRect(0, 0, largura, altura);
         
         // formas e letras não ficarão serrilhadas
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

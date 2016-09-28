@@ -113,7 +113,7 @@ public class Apolonio {
         double qx = 0;
         double qy = qr - 1;
         CirculoApolonio p = new CirculoApolonio(px, py, pr);
-        CirculoApolonio q = new CirculoApolonio(qx, qy, qr, Color.BLACK);
+        CirculoApolonio q = new CirculoApolonio(qx, qy, qr, Area.instancia().fundo);
 
         // fila para conter trincas de círculos que se encostam
         ArrayList<Tupla> queue = new ArrayList<>();
@@ -171,7 +171,7 @@ public class Apolonio {
         double qx = 0;
         double qy = qr - 1;
         CirculoApolonio p = new CirculoApolonio(px, py, pr);
-        CirculoApolonio q = new CirculoApolonio(qx, qy, qr, Color.BLACK);
+        CirculoApolonio q = new CirculoApolonio(qx, qy, qr, Area.instancia().fundo);
 
         // fila para conter trincas de círculos que se encostam
         ArrayList<Tupla> queue = new ArrayList<>();

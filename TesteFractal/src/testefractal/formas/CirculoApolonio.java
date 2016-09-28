@@ -5,31 +5,31 @@ import java.awt.Graphics;
 import java.util.Random;
 import testefractal.Area;
 
-public class CirculoPolonio extends FormaAbstrata{
+public class CirculoApolonio extends FormaAbstrata{
     public Color cor;
     public double x, y, raio;
     public static double escala = Area.instancia().getAltura();
     
-    public CirculoPolonio(){
+    public CirculoApolonio(){
         x = y = 0;
         raio = 10;
         cor = corAleatoria();
     }
     
-    public CirculoPolonio(Color cor){
+    public CirculoApolonio(Color cor){
         x = y = 0;
         raio = 10;
         this.cor = cor;
     }
     
-    public CirculoPolonio(double x, double y, double raio){
+    public CirculoApolonio(double x, double y, double raio){
         this.x = x;
         this.y = y;
         this.raio = raio;
         cor = corAleatoria();
     }
     
-    public CirculoPolonio(double x, double y, double raio, Color cor){
+    public CirculoApolonio(double x, double y, double raio, Color cor){
         this.x = x;
         this.y = y;
         this.raio = raio;
@@ -69,7 +69,7 @@ public class CirculoPolonio extends FormaAbstrata{
     
     @Override
     public double getArea() {
-        double raio_local = (int) this.raio * CirculoPolonio.escala;
+        double raio_local = (int) Math.abs(this.raio * escala/2);
         return Math.PI * raio_local * raio_local;
     }
 

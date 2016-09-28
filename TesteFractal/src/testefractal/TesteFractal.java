@@ -14,7 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-import testefractal.dependencias.Polonio;
+import testefractal.dependencias.Apolonio;
+import testefractal.formas.FormaAbstrata;
 
 /**
  * @author Giordanna De Gregoriis
@@ -256,27 +257,20 @@ public class TesteFractal {
         + "| raio = " + raio_forma);
         
         
-        Polonio.iniciaFractal();
-        /*
-        double area_total = Area.instancia().getFormas().get(0).getArea();
-        do { // loop no número de círculos
+        Apolonio.iniciaFractal(area_razao);
+        int centro = Area.instancia().getAltura()/2;
+        Circulo area_central = new Circulo(centro, centro, centro);
+        double soma_areas = 0;
+        for (FormaAbstrata x: Area.instancia().getFormas())
+            soma_areas += x.getArea();
         
-            numero_iteracoes = 0;
-            numero_iteracoes++;
-
-            numero_iteracoes_total += numero_iteracoes;
-            synchronized(Area.instancia().getFormas()){
-                Area.instancia().getFormas().add(new Circulo((int) x, (int) y, (int) teste_raio));
-            }
-            
-            area_total += Area.instancia().getFormas().get(formas).getArea();
-            area_preenchida = area_total / (Area.instancia().getArea());
-            formas++;
-        } while (numero_iteracoes_total < iteracoes_max && formas < nmax && area_preenchida < preenchimento_max);
-        System.out.println("área preenchida = " + Math.round(area_preenchida * 100) + "%");
-        System.out.println("número de iterações = " + numero_iteracoes_total);
+        area_preenchida = soma_areas / (area_central.getArea() * 1.0) * 100;
+        formas = Area.instancia().getFormas().size();
+        System.out.println("área círcular preenchida = " + area_preenchida + "%");
         System.out.println("número de formas = " + formas);
-        */
+        Area.instancia().revalidate();
+        Area.instancia().repaint();
+        
         Area.instancia().revalidate();
         Area.instancia().repaint();
     }

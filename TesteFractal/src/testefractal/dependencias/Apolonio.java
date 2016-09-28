@@ -2,18 +2,18 @@ package testefractal.dependencias;
 
 import java.util.ArrayList;
 import testefractal.Area;
-import testefractal.formas.CirculoPolonio;
+import testefractal.formas.CirculoApolonio;
 
 
-public class Polonio {
+public class Apolonio {
     public static double tamanho_minimo = 0.001;
     
     public static class Tupla{
-        public CirculoPolonio posicao_a;
-        public CirculoPolonio posicao_b;
-        public CirculoPolonio posicao_c;
+        public CirculoApolonio posicao_a;
+        public CirculoApolonio posicao_b;
+        public CirculoApolonio posicao_c;
         
-        public Tupla(CirculoPolonio posicao_a, CirculoPolonio posicao_b, CirculoPolonio posicao_c){
+        public Tupla(CirculoApolonio posicao_a, CirculoApolonio posicao_b, CirculoApolonio posicao_c){
             this.posicao_a = posicao_a;
             this.posicao_b = posicao_b;
             this.posicao_c = posicao_c;
@@ -38,7 +38,7 @@ public class Polonio {
     }
     
     // encontra o 4º círculo que encosta em 3 circulos
-    public static ArrayList<CirculoPolonio> encostado(CirculoPolonio a, CirculoPolonio b, CirculoPolonio c, boolean inicial) {
+    public static ArrayList<CirculoApolonio> encostado(CirculoApolonio a, CirculoApolonio b, CirculoApolonio c, boolean inicial) {
         double k1 = 1 / (a.raio * 1.0);
         Complexo z1 = new Complexo(a.x, a.y);
         Complexo kz1 = Complexo.multiplicacao(new Complexo(k1,0), z1);
@@ -64,7 +64,7 @@ public class Polonio {
         Complexo kz4;
         double k4b;
         Complexo kz4b;
-        ArrayList<CirculoPolonio> cs = new ArrayList<>();
+        ArrayList<CirculoApolonio> cs = new ArrayList<>();
         
         if (k4p > k4m){
             k4 = k4p;
@@ -79,19 +79,19 @@ public class Polonio {
             kz4b = kz4p;
         }
         
-        CirculoPolonio cc = new CirculoPolonio(kz4.real/k4, kz4.imaginaria/k4, Math.abs(1/k4));
+        CirculoApolonio cc = new CirculoApolonio(kz4.real/k4, kz4.imaginaria/k4, Math.abs(1/k4));
         double dx = a.x - cc.x;
         double dy = a.y - cc.y;
         double dr = a.raio + cc.raio;
         
         if (Math.abs(dx * dx + dy *dy - dr * dr) > 0.0001) {
-            cc = new CirculoPolonio(kz4b.real/k4, kz4b.imaginaria/k4, Math.abs(1/k4));
+            cc = new CirculoApolonio(kz4b.real/k4, kz4b.imaginaria/k4, Math.abs(1/k4));
         }
         
         cs.add(cc);
         
         if (inicial) {
-            cc = new CirculoPolonio(kz4b.real/k4b, kz4b.imaginaria/k4b, Math.abs(1/k4b));
+            cc = new CirculoApolonio(kz4b.real/k4b, kz4b.imaginaria/k4b, Math.abs(1/k4b));
             cs.add(cc);
         }
         
@@ -99,7 +99,7 @@ public class Polonio {
     }
     
     public static void iniciaFractal(){
-        CirculoPolonio b = new CirculoPolonio(0, 0, -1);
+        CirculoApolonio b = new CirculoApolonio(0, 0, -1);
 
         // insere dois círculos se encostando aleatórios
         double tr = 1-Math.random()/2;
@@ -111,12 +111,12 @@ public class Polonio {
                / (1 + pr - (1 - pr) * Math.cos(pa + Math.PI/2));
         double qx = 0;
         double qy = qr - 1;
-        CirculoPolonio p = new CirculoPolonio(px, py, pr);
-        CirculoPolonio q = new CirculoPolonio(qx, qy, qr);
+        CirculoApolonio p = new CirculoApolonio(px, py, pr);
+        CirculoApolonio q = new CirculoApolonio(qx, qy, qr);
 
         // fila para conter trincas de círculos que se encostam
         ArrayList<Tupla> queue = new ArrayList<>();
-        ArrayList<CirculoPolonio> cs = encostado(b,p,q, true);
+        ArrayList<CirculoApolonio> cs = encostado(b,p,q, true);
         queue.add(new Tupla(b, p, cs.get(0)));
         queue.add(new Tupla(b, cs.get(0), q));
         queue.add(new Tupla(cs.get(0), p, q));
@@ -125,7 +125,7 @@ public class Polonio {
         queue.add(new Tupla(cs.get(1), p, q));
 
         // fila que contém circulos para desenhar
-        ArrayList<CirculoPolonio> draw = new ArrayList<>();
+        ArrayList<CirculoApolonio> draw = new ArrayList<>();
         /*(draw.add(b);*/
         draw.add(p);
         draw.add(q);
@@ -136,11 +136,11 @@ public class Polonio {
         // adiciona 3 trincas para computar a fila
         int c;
         for (c = 0; c < Math.min(queue.size(), 10000); c = c + 1) {
-            CirculoPolonio c0 = queue.get(c).posicao_a;
-            CirculoPolonio c1 = queue.get(c).posicao_b;
-            CirculoPolonio c2 = queue.get(c).posicao_c;
-            ArrayList<CirculoPolonio> ncs = encostado(c0, c1, c2, false);
-            CirculoPolonio nc = ncs.get(0);
+            CirculoApolonio c0 = queue.get(c).posicao_a;
+            CirculoApolonio c1 = queue.get(c).posicao_b;
+            CirculoApolonio c2 = queue.get(c).posicao_c;
+            ArrayList<CirculoApolonio> ncs = encostado(c0, c1, c2, false);
+            CirculoApolonio nc = ncs.get(0);
             if (nc.raio > tamanho_minimo) {
                 queue.add(new Tupla(nc, c1, c2));
                 queue.add(new Tupla(c0, nc, c2));
@@ -148,7 +148,65 @@ public class Polonio {
                 draw.add(nc);
             }
         }
-        for (CirculoPolonio x: draw)
+        Area.instancia().getFormas().addAll(draw);
+    }
+    
+    public static void iniciaFractal(double area_razao){
+        CirculoApolonio b = new CirculoApolonio(0, 0, -1);
+
+        // insere dois círculos se encostando aleatórios
+        double tr;
+        if (area_razao < 0.5){
+            tr = 1-area_razao;
+            System.out.println("Valor da razão da área pequeno, usando sua inversa:" + tr);
+        }
+        else tr = area_razao;
+        double pa = Math.PI/2 - Math.asin(Math.random()*(1-tr)/tr);
+        double px = tr * Math.cos(pa);
+        double py = tr * Math.sin(pa);
+        double pr = 1 - tr;
+        double qr = (1 - pr) * (1 - Math.cos(pa + Math.PI/2))
+               / (1 + pr - (1 - pr) * Math.cos(pa + Math.PI/2));
+        double qx = 0;
+        double qy = qr - 1;
+        CirculoApolonio p = new CirculoApolonio(px, py, pr);
+        CirculoApolonio q = new CirculoApolonio(qx, qy, qr);
+
+        // fila para conter trincas de círculos que se encostam
+        ArrayList<Tupla> queue = new ArrayList<>();
+        ArrayList<CirculoApolonio> cs = encostado(b,p,q, true);
+        queue.add(new Tupla(b, p, cs.get(0)));
+        queue.add(new Tupla(b, cs.get(0), q));
+        queue.add(new Tupla(cs.get(0), p, q));
+        queue.add(new Tupla(b, p, cs.get(1)));
+        queue.add(new Tupla(b, cs.get(1), q));
+        queue.add(new Tupla(cs.get(1), p, q));
+
+        // fila que contém circulos para desenhar
+        ArrayList<CirculoApolonio> draw = new ArrayList<>();
+        /*(draw.add(b);*/
+        draw.add(p);
+        draw.add(q);
+        draw.add(cs.get(0));
+        draw.add(cs.get(1));
+
+        // adiciona 10000 mais círculos na fila
+        // adiciona 3 trincas para computar a fila
+        int c;
+        for (c = 0; c < Math.min(queue.size(), 10000); c = c + 1) {
+            CirculoApolonio c0 = queue.get(c).posicao_a;
+            CirculoApolonio c1 = queue.get(c).posicao_b;
+            CirculoApolonio c2 = queue.get(c).posicao_c;
+            ArrayList<CirculoApolonio> ncs = encostado(c0, c1, c2, false);
+            CirculoApolonio nc = ncs.get(0);
+            if (nc.raio > tamanho_minimo) {
+                queue.add(new Tupla(nc, c1, c2));
+                queue.add(new Tupla(c0, nc, c2));
+                queue.add(new Tupla(c0, c1, nc));
+                draw.add(nc);
+            }
+        }
+        for (CirculoApolonio x: draw)
             Area.instancia().getFormas().add(x);
     }
 }

@@ -55,8 +55,11 @@ public abstract class Forma extends FormaAbstrata {
     }
     
     public abstract double distancia(Forma c2);
-    public abstract boolean teste(Forma c2);
+    @Override
+    public abstract boolean teste(FormaAbstrata c2);
     public abstract double raioGerado(double area_razao);
+    @Override
     public abstract double getArea();
+    @Override
     public abstract void desenha(Graphics g);
 }

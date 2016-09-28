@@ -1,11 +1,14 @@
 package testefractal.formas;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Random;
+import testefractal.Area;
 
-public class CirculoPolonio {
+public class CirculoPolonio extends FormaAbstrata{
     public Color cor;
     public double x, y, raio;
+    public static int escala = Area.instancia().getLargura();
     
     public CirculoPolonio(){
         x = y = 0;
@@ -51,5 +54,25 @@ public class CirculoPolonio {
         int b = rand.nextInt(254) + 1;
 
         return new Color(r, g, b);
+    }
+
+    @Override
+    public void desenha(Graphics g) {
+        g.setColor(cor);
+        int raio_local = (int) this.raio * CirculoPolonio.escala;
+        int x_local = (int) this.x * CirculoPolonio.escala;
+        int y_local = (int) this.y * CirculoPolonio.escala;
+        g.fillOval(x_local - raio_local, y_local - raio_local, raio_local *  2, raio_local * 2);
+    }
+    
+    @Override
+    public double getArea() {
+        double raio_local = (int) this.raio * CirculoPolonio.escala;
+        return Math.PI * raio_local * raio_local;
+    }
+
+    @Override
+    public boolean teste(FormaAbstrata c){
+        return false;
     }
 }

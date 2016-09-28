@@ -25,7 +25,8 @@ public class Circulo extends Forma {
     }
     
     @Override
-    public boolean teste(Forma c2){
+    public boolean teste(FormaAbstrata c){
+        Circulo c2 = (Circulo) c;
         double deltax = Math.abs(c2.x - x), deltay;
         
         if (deltax < (c2.raio + raio)) {

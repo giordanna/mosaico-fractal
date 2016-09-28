@@ -25,7 +25,8 @@ public class Quadrado extends Forma {
     }
     
     @Override
-    public boolean teste(Forma c2){
+    public boolean teste(FormaAbstrata c){
+        Quadrado c2 = (Quadrado) c;
         if (!(x <= c2.x + c2.raio * 2 && x + raio * 2 >= c2.x && y <= c2.y + c2.raio * 2 && y + raio * 2 >= c2.y)) {
             return distancia(c2) > (c2.raio + raio);
         }

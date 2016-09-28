@@ -9,12 +9,13 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JFrame;
+import testefractal.formas.FormaAbstrata;
 
 public class Area extends JFrame {
     private static Area singleton;
     public Renderizador renderizador;
     
-    private ArrayList<Forma> formas;
+    private ArrayList<FormaAbstrata> formas;
     private final int altura = 600, largura = 600;
     
     private Area(){
@@ -47,7 +48,7 @@ public class Area extends JFrame {
     public int getAltura() { return altura; }
     public int getLargura() { return altura; }
     
-    public ArrayList<Forma> getFormas() { return formas; }
+    public ArrayList<FormaAbstrata> getFormas() { return formas; }
 
     public void desenhaFormas(Graphics2D g2d) {
         g2d.setColor(Color.WHITE);
@@ -55,8 +56,8 @@ public class Area extends JFrame {
         
         // formas e letras não ficarão serrilhadas
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        for (Iterator<Forma> x = formas.iterator() ; x.hasNext();){
-            Forma forma = x.next();
+        for (Iterator<FormaAbstrata> x = formas.iterator() ; x.hasNext();){
+            FormaAbstrata forma = x.next();
             forma.desenha(g2d);
         }
     }

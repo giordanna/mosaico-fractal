@@ -11,6 +11,7 @@ public class Renderizador extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private final Dimension dimensao;
+    private static int qtd = 0;
 
     public Renderizador(){
         dimensao = new Dimension(600, 600);
@@ -21,7 +22,7 @@ public class Renderizador extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Area.instancia().fundo);
-        g2d.fillRect(0, 0, Area.instancia().getLargura(), Area.instancia().getAltura());
+        g2d.fillRect(0, 0, Area.instancia().getLargura(), Area.instancia().getAltura());;
         
         // formas e letras não ficarão serrilhadas
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -30,6 +31,8 @@ public class Renderizador extends JPanel {
                 forma.desenha(g2d);
             }); //Area.instancia().desenhaFormas((Graphics2D) g);
         }
+        Area.instancia().revalidate();
+        Area.instancia().repaint();
     }
     
     @Override

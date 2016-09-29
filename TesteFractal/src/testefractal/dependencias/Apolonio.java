@@ -149,7 +149,10 @@ public class Apolonio {
                 draw.add(nc);
             }
         }
-        Area.instancia().getFormas().addAll(draw);
+        synchronized(Area.instancia().getFormas()){
+            for (CirculoApolonio x: draw)
+                Area.instancia().getFormas().add(x);
+        }
     }
     
     public static void iniciaFractal(double area_razao){
@@ -207,7 +210,9 @@ public class Apolonio {
                 draw.add(nc);
             }
         }
-        for (CirculoApolonio x: draw)
-            Area.instancia().getFormas().add(x);
+        synchronized(Area.instancia().getFormas()){
+            for (CirculoApolonio x: draw)
+                Area.instancia().getFormas().add(x);
+        }
     }
 }

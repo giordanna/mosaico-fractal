@@ -2,6 +2,10 @@ package testefractal.dependencias;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import testefractal.Area;
 import testefractal.formas.CirculoApolonio;
 
@@ -149,9 +153,19 @@ public class Apolonio {
                 draw.add(nc);
             }
         }
-        synchronized(Area.instancia().getFormas()){
-            for (CirculoApolonio x: draw)
+        Collections.sort(draw);
+        
+        for (CirculoApolonio x: draw){
+            synchronized(Area.instancia().getFormas()){
                 Area.instancia().getFormas().add(x);
+            }
+            if (Area.instancia().getFormas().size() < 150){
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Apolonio.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
     
@@ -210,9 +224,21 @@ public class Apolonio {
                 draw.add(nc);
             }
         }
-        synchronized(Area.instancia().getFormas()){
-            for (CirculoApolonio x: draw)
+        
+        Collections.sort(draw);
+        
+        for (CirculoApolonio x: draw){
+            synchronized(Area.instancia().getFormas()){
                 Area.instancia().getFormas().add(x);
+            }
+            if (Area.instancia().getFormas().size() < 150){
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Apolonio.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
+        
     }
 }

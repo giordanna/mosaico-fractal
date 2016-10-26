@@ -2,6 +2,15 @@ package testefractal.formas;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.TexturePaint;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import testefractal.Area;
 
 public class Circulo extends Forma {
@@ -53,8 +62,18 @@ public class Circulo extends Forma {
     
     @Override
     public void desenha(Graphics g) {
-        g.setColor(cor);
-        g.fillOval(x - raio, y - raio, raio *  2, raio * 2);
+        //try {
+            //Graphics2D g2d = (Graphics2D) g;
+            //BufferedImage img = ImageIO.read(new File("./basquete.png"));
+            //TexturePaint tp = new TexturePaint(img, new Rectangle(x - raio, y - raio, raio *  2, raio * 2));
+            //g2d.setPaint(tp);
+            //g2d.setColor(cor);
+            //g2d.fillOval(x - raio, y - raio, raio *  2, raio * 2);
+            g.setColor(cor);
+            g.fillOval(x - raio, y - raio, raio *  2, raio * 2);
+        //} catch (IOException ex) {
+        //    Logger.getLogger(Circulo.class.getName()).log(Level.SEVERE, null, ex);
+        //}
     }
 
     @Override

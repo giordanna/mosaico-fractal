@@ -38,7 +38,7 @@ public class Estampa {
         return !areaA.isEmpty();
     }
     
-    public void desenha(int largura, int altura, Graphics2D g2){
+    public void desenha(Graphics2D g2){
         if (preenchimento.isTextura()) {
             TexturePaint tp = new TexturePaint(preenchimento.getTextura(), estampa.getBounds());
             g2.setPaint(tp);

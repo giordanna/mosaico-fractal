@@ -5,6 +5,10 @@
  */
 package mosaicofractal.gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.UnsupportedLookAndFeelException;
+
 /**
  *
  * @author Giordanna
@@ -27,21 +31,314 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroupBordaTela = new javax.swing.ButtonGroup();
+        buttonGroupRotacionarEstampas = new javax.swing.ButtonGroup();
+        buttonGroupTelaForma = new javax.swing.ButtonGroup();
+        buttonGroupTipoPreenchimento = new javax.swing.ButtonGroup();
+        panelCorpo = new javax.swing.JPanel();
+        textoValorC = new javax.swing.JLabel();
+        spinnerValorC = new javax.swing.JSpinner();
+        textoPreview = new javax.swing.JLabel();
+        botaoIniciar = new javax.swing.JButton();
+        textoBordaTela = new javax.swing.JLabel();
+        radioBordaTelaSim = new javax.swing.JRadioButton();
+        radioBordaTelaNao = new javax.swing.JRadioButton();
+        textoRotacionarEstampas = new javax.swing.JLabel();
+        radioRotacionarEstampasSim = new javax.swing.JRadioButton();
+        radioRotacionarEstampasNao = new javax.swing.JRadioButton();
+        textoTelaForma = new javax.swing.JLabel();
+        radioTelaFormaSim = new javax.swing.JRadioButton();
+        radioTelaFormaNao = new javax.swing.JRadioButton();
+        textoTipoPreenchimento = new javax.swing.JLabel();
+        radioTipoPreenchimentoCores = new javax.swing.JRadioButton();
+        radioTipoPreenchimentoTexturas = new javax.swing.JRadioButton();
+        panelPreview = new javax.swing.JPanel();
+        panelSeparador = new javax.swing.JSeparator();
+        textoTitulo = new javax.swing.JLabel();
+        barraMenu = new javax.swing.JMenuBar();
+        menuEstampas = new javax.swing.JMenu();
+        estampaAdicionar = new javax.swing.JMenuItem();
+        estampaSelecionar = new javax.swing.JMenuItem();
+        estampaRemover = new javax.swing.JMenuItem();
+        menuPreenchimento = new javax.swing.JMenu();
+        menuCores = new javax.swing.JMenu();
+        itemCoresAdicionar = new javax.swing.JMenuItem();
+        itemCoresSelecionar = new javax.swing.JMenuItem();
+        itemCoresRemover = new javax.swing.JMenuItem();
+        menuTextura = new javax.swing.JMenu();
+        itemTexturaAdicionar = new javax.swing.JMenuItem();
+        itemTexturaSelecionar = new javax.swing.JMenuItem();
+        itemTexturaRemover = new javax.swing.JMenuItem();
+        menuAjuda = new javax.swing.JMenu();
+        itemManual = new javax.swing.JMenuItem();
+        itemSobre = new javax.swing.JMenuItem();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Mosaico Fractal");
+        setPreferredSize(new java.awt.Dimension(500, 500));
+        setResizable(false);
+
+        textoValorC.setText("Valor de c:");
+
+        spinnerValorC.setModel(new javax.swing.SpinnerNumberModel(1.48d, 1.0d, 1.48d, 0.01d));
+
+        textoPreview.setText("Preview:");
+
+        botaoIniciar.setText("Iniciar");
+
+        textoBordaTela.setText("Considerar as bordas da tela como limites do mosaico?");
+
+        buttonGroupBordaTela.add(radioBordaTelaSim);
+        radioBordaTelaSim.setSelected(true);
+        radioBordaTelaSim.setText("Sim");
+
+        buttonGroupBordaTela.add(radioBordaTelaNao);
+        radioBordaTelaNao.setText("Não");
+        radioBordaTelaNao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioBordaTelaNaoActionPerformed(evt);
+            }
+        });
+
+        textoRotacionarEstampas.setText("Rotacionar as estampas aleatoriamente?");
+
+        buttonGroupRotacionarEstampas.add(radioRotacionarEstampasSim);
+        radioRotacionarEstampasSim.setText("Sim");
+
+        buttonGroupRotacionarEstampas.add(radioRotacionarEstampasNao);
+        radioRotacionarEstampasNao.setSelected(true);
+        radioRotacionarEstampasNao.setText("Não");
+
+        textoTelaForma.setText("A tela terá uma forma específica?");
+
+        buttonGroupTelaForma.add(radioTelaFormaSim);
+        radioTelaFormaSim.setText("Sim");
+        radioTelaFormaSim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioTelaFormaSimActionPerformed(evt);
+            }
+        });
+
+        buttonGroupTelaForma.add(radioTelaFormaNao);
+        radioTelaFormaNao.setSelected(true);
+        radioTelaFormaNao.setText("Não");
+        radioTelaFormaNao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioTelaFormaNaoActionPerformed(evt);
+            }
+        });
+
+        textoTipoPreenchimento.setText("O que será usado como preenchimento?");
+
+        buttonGroupTipoPreenchimento.add(radioTipoPreenchimentoCores);
+        radioTipoPreenchimentoCores.setSelected(true);
+        radioTipoPreenchimentoCores.setText("Cores");
+
+        buttonGroupTipoPreenchimento.add(radioTipoPreenchimentoTexturas);
+        radioTipoPreenchimentoTexturas.setText("Texturas");
+
+        javax.swing.GroupLayout panelPreviewLayout = new javax.swing.GroupLayout(panelPreview);
+        panelPreview.setLayout(panelPreviewLayout);
+        panelPreviewLayout.setHorizontalGroup(
+            panelPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 460, Short.MAX_VALUE)
+        );
+        panelPreviewLayout.setVerticalGroup(
+            panelPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 216, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout panelCorpoLayout = new javax.swing.GroupLayout(panelCorpo);
+        panelCorpo.setLayout(panelCorpoLayout);
+        panelCorpoLayout.setHorizontalGroup(
+            panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelCorpoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelSeparador)
+                    .addGroup(panelCorpoLayout.createSequentialGroup()
+                        .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(panelPreview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(panelCorpoLayout.createSequentialGroup()
+                                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelCorpoLayout.createSequentialGroup()
+                                        .addComponent(radioTelaFormaSim)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(radioTelaFormaNao))
+                                    .addGroup(panelCorpoLayout.createSequentialGroup()
+                                        .addComponent(radioRotacionarEstampasSim)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(radioRotacionarEstampasNao))
+                                    .addComponent(textoPreview)
+                                    .addGroup(panelCorpoLayout.createSequentialGroup()
+                                        .addComponent(textoValorC)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spinnerValorC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(botaoIniciar)
+                                    .addComponent(textoBordaTela)
+                                    .addGroup(panelCorpoLayout.createSequentialGroup()
+                                        .addComponent(radioBordaTelaSim)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(radioBordaTelaNao))
+                                    .addComponent(textoRotacionarEstampas)
+                                    .addComponent(textoTelaForma)
+                                    .addComponent(textoTipoPreenchimento)
+                                    .addGroup(panelCorpoLayout.createSequentialGroup()
+                                        .addComponent(radioTipoPreenchimentoCores)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(radioTipoPreenchimentoTexturas)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
+        );
+        panelCorpoLayout.setVerticalGroup(
+            panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelCorpoLayout.createSequentialGroup()
+                .addComponent(textoBordaTela)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(radioBordaTelaSim)
+                    .addComponent(radioBordaTelaNao))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(textoRotacionarEstampas)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(radioRotacionarEstampasSim)
+                    .addComponent(radioRotacionarEstampasNao))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(textoTelaForma)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(radioTelaFormaSim)
+                    .addComponent(radioTelaFormaNao))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(textoTipoPreenchimento, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(radioTipoPreenchimentoCores)
+                    .addComponent(radioTipoPreenchimentoTexturas))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textoValorC)
+                    .addComponent(spinnerValorC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botaoIniciar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(textoPreview)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelSeparador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelPreview, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        textoTitulo.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        textoTitulo.setText("Mosaico Fractal");
+
+        menuEstampas.setText("Estampas");
+
+        estampaAdicionar.setText("Adicionar...");
+        menuEstampas.add(estampaAdicionar);
+
+        estampaSelecionar.setText("Selecionar...");
+        menuEstampas.add(estampaSelecionar);
+
+        estampaRemover.setText("Remover...");
+        estampaRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                estampaRemoverActionPerformed(evt);
+            }
+        });
+        menuEstampas.add(estampaRemover);
+
+        barraMenu.add(menuEstampas);
+
+        menuPreenchimento.setText("Preenchimento");
+
+        menuCores.setText("Cores");
+
+        itemCoresAdicionar.setText("Adicionar...");
+        menuCores.add(itemCoresAdicionar);
+
+        itemCoresSelecionar.setText("Selecionar...");
+        menuCores.add(itemCoresSelecionar);
+
+        itemCoresRemover.setText("Remover...");
+        menuCores.add(itemCoresRemover);
+
+        menuPreenchimento.add(menuCores);
+
+        menuTextura.setText("Textura");
+
+        itemTexturaAdicionar.setText("Adicionar...");
+        menuTextura.add(itemTexturaAdicionar);
+
+        itemTexturaSelecionar.setText("Selecionar...");
+        menuTextura.add(itemTexturaSelecionar);
+
+        itemTexturaRemover.setText("Remover...");
+        menuTextura.add(itemTexturaRemover);
+
+        menuPreenchimento.add(menuTextura);
+
+        barraMenu.add(menuPreenchimento);
+
+        menuAjuda.setText("Ajuda");
+
+        itemManual.setText("Manual");
+        menuAjuda.add(itemManual);
+
+        itemSobre.setText("Sobre");
+        menuAjuda.add(itemSobre);
+
+        barraMenu.add(menuAjuda);
+
+        setJMenuBar(barraMenu);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelCorpo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(textoTitulo)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addComponent(textoTitulo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelCorpo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void estampaRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estampaRemoverActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_estampaRemoverActionPerformed
+
+    private void radioTelaFormaSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTelaFormaSimActionPerformed
+        if (!radioBordaTelaSim.isSelected()){
+            radioBordaTelaSim.setSelected(true);
+        }
+    }//GEN-LAST:event_radioTelaFormaSimActionPerformed
+
+    private void radioBordaTelaNaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBordaTelaNaoActionPerformed
+        if (!radioTelaFormaNao.isSelected()){
+            radioTelaFormaNao.setSelected(true);
+        }
+    }//GEN-LAST:event_radioBordaTelaNaoActionPerformed
+
+    private void radioTelaFormaNaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTelaFormaNaoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioTelaFormaNaoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -53,31 +350,60 @@ public class InterfaceUsuario extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InterfaceUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InterfaceUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InterfaceUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InterfaceUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new InterfaceUsuario().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new InterfaceUsuario().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuBar barraMenu;
+    private javax.swing.JButton botaoIniciar;
+    private javax.swing.ButtonGroup buttonGroupBordaTela;
+    private javax.swing.ButtonGroup buttonGroupRotacionarEstampas;
+    private javax.swing.ButtonGroup buttonGroupTelaForma;
+    private javax.swing.ButtonGroup buttonGroupTipoPreenchimento;
+    private javax.swing.JMenuItem estampaAdicionar;
+    private javax.swing.JMenuItem estampaRemover;
+    private javax.swing.JMenuItem estampaSelecionar;
+    private javax.swing.JMenuItem itemCoresAdicionar;
+    private javax.swing.JMenuItem itemCoresRemover;
+    private javax.swing.JMenuItem itemCoresSelecionar;
+    private javax.swing.JMenuItem itemManual;
+    private javax.swing.JMenuItem itemSobre;
+    private javax.swing.JMenuItem itemTexturaAdicionar;
+    private javax.swing.JMenuItem itemTexturaRemover;
+    private javax.swing.JMenuItem itemTexturaSelecionar;
+    private javax.swing.JMenu menuAjuda;
+    private javax.swing.JMenu menuCores;
+    private javax.swing.JMenu menuEstampas;
+    private javax.swing.JMenu menuPreenchimento;
+    private javax.swing.JMenu menuTextura;
+    private javax.swing.JPanel panelCorpo;
+    private javax.swing.JPanel panelPreview;
+    private javax.swing.JSeparator panelSeparador;
+    private javax.swing.JRadioButton radioBordaTelaNao;
+    private javax.swing.JRadioButton radioBordaTelaSim;
+    private javax.swing.JRadioButton radioRotacionarEstampasNao;
+    private javax.swing.JRadioButton radioRotacionarEstampasSim;
+    private javax.swing.JRadioButton radioTelaFormaNao;
+    private javax.swing.JRadioButton radioTelaFormaSim;
+    private javax.swing.JRadioButton radioTipoPreenchimentoCores;
+    private javax.swing.JRadioButton radioTipoPreenchimentoTexturas;
+    private javax.swing.JSpinner spinnerValorC;
+    private javax.swing.JLabel textoBordaTela;
+    private javax.swing.JLabel textoPreview;
+    private javax.swing.JLabel textoRotacionarEstampas;
+    private javax.swing.JLabel textoTelaForma;
+    private javax.swing.JLabel textoTipoPreenchimento;
+    private javax.swing.JLabel textoTitulo;
+    private javax.swing.JLabel textoValorC;
     // End of variables declaration//GEN-END:variables
 }

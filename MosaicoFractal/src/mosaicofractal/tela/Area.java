@@ -116,8 +116,88 @@ public class Area extends JPanel{
         return this.forma_area;
     }
     
-    public void preencherArea(ArrayList<Shape> formas, ArrayList<Preenchimento> preenchimentos) {
-        // faz a mágica
+    public void preencherArea(ArrayList<Shape> formas, ArrayList<Preenchimento> preenchimentos, double c) {
+        final int formas_max = 90000, iteracoes_max = 400000;
+        final double preenchimento_max = 0.99;
+        
+        long tempoInicial = System.currentTimeMillis();
+        double teste_raio, area_preenchida,
+               exp_u = 0.5 * c; // metade desse valor
+        
+        int qtd_formas = 1,
+            numero_iteracoes_total = 0,
+            numero_iteracoes,
+            valor_n = 2,
+            nmax = formas_max + 1;
+
+        double  valor_zeta = funcaoZeta(c, valor_n), // o valor que vai determinar a porcentagem. ex: 4 = 25%
+                area_razao = 1.0 / valor_zeta, // ex: valor_zeta = 4, area_razao = 1/4 = 25%
+                // raio gerado multiplicado por uma porcentagem de controle. quanto maior c, menor o valor multiplicado
+                // então menor será o raio de fato, que não será um círculo gigante preenchendo 25% da tela, mas
+                // um pouco menor
+                raio_forma = Circulo.raioGeradoEstatico(area_razao) * valorControle(valor_n, exp_u),
+                raio_original_primeiro = Circulo.raioGeradoEstatico(area_razao);
+
+        boolean teste;
+        System.out.println("c = " + c + " | zeta = " + valor_zeta + " | razão = " + area_razao
+        + "| raio = " + raio_forma);
+        
+        double x = (int) (raio_forma + Math.random() * (Area.instancia().getLargura() -  raio_forma * 2));
+        double y = (int) (raio_forma + Math.random() * (Area.instancia().getAltura() -  raio_forma * 2));
+        
+        Area.instancia().getFormas().add(new Circulo((int) x, (int) y, (int) raio_forma));
+
+        double area_total = Area.instancia().getFormas().get(0).getArea();
+        do { // loop no número de círculos
+        
+            numero_iteracoes = 0;
+            teste_raio = raio_original_primeiro * valorControle(qtd_formas + valor_n, exp_u);
+            do { // busca aleatória
+            
+                x = teste_raio + Math.random() * (Area.instancia().getLargura() -  teste_raio * 2);
+                y = teste_raio + Math.random() * (Area.instancia().getAltura() - teste_raio * 2);
+                numero_iteracoes++;
+                teste = true;
+                Circulo obj_teste = new Circulo((int) x, (int) y, (int) teste_raio);
+                for (int k = 0; k < qtd_formas; k++) {//loop over old placements
+                    teste = obj_teste.teste(Area.instancia().getFormas().get(k));
+                    if (!teste) break;
+                } // próximo k
+            } while (!teste); // repetir se ficou muito perto de um círculo
+
+            numero_iteracoes_total += numero_iteracoes;
+            synchronized(Area.instancia().getFormas()){
+                Area.instancia().getFormas().add(new Circulo((int) x, (int) y, (int) teste_raio));
+            }
+            
+            area_total += Area.instancia().getFormas().get(qtd_formas).getArea();
+            area_preenchida = area_total / (Area.instancia().getArea());
+            qtd_formas++;
+        } while (numero_iteracoes_total < iteracoes_max && qtd_formas < nmax && area_preenchida < preenchimento_max);
+        System.out.println("área preenchida = " + Math.round(area_preenchida * 100) + "%");
+        System.out.println("número de iterações = " + numero_iteracoes_total);
+        System.out.println("número de formas = " + qtd_formas);
+        Area.instancia().revalidate();
+        Area.instancia().repaint();
+        
+        System.out.println((System.currentTimeMillis() - tempoInicial)/1000.0);
+    }
+    
+    public double funcaoZeta(double c, int N) {
+        double soma = 0;
+        int NEXP = 100000;
+        for (double i = N; i < NEXP; i++) {
+            soma += Math.pow(i, -c);
+        }
+        return soma + soma_estimada(c, NEXP);
+    }
+
+    public double soma_estimada(double c, double n) {
+        return (1.0 / (c - 1)) * Math.pow(n, 1 - c);
+    }
+    
+    public double valorControle(double valor_n, double exp_u){
+        return Math.pow(valor_n, -exp_u);
     }
     
     public void salvarImagem() {

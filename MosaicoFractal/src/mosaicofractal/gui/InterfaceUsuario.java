@@ -5,14 +5,12 @@
  */
 package mosaicofractal.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFileChooser;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
@@ -20,7 +18,9 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author Giordanna
  */
 public class InterfaceUsuario extends javax.swing.JFrame {
-
+    
+    private Color cor_fundo_selecionada = Color.WHITE;
+    
     /**
      * Creates new form InterfaceUsuario
      */
@@ -69,10 +69,12 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         textoPreviewPreenchimentoCores = new javax.swing.JLabel();
         textoPreviewPreenchimentoTextura = new javax.swing.JLabel();
         canvasPreviewEstampa = new org.apache.batik.swing.JSVGCanvas();
-        previewCorPaleta2 = new javax.swing.JPanel();
         previewCorPaleta1 = new javax.swing.JPanel();
-        previewCorPaleta4 = new javax.swing.JPanel();
+        previewCorPaleta2 = new javax.swing.JPanel();
         previewCorPaleta3 = new javax.swing.JPanel();
+        previewCorPaleta4 = new javax.swing.JPanel();
+        textoPreviewCorFundo = new javax.swing.JLabel();
+        previewCorFundo = new javax.swing.JPanel();
         textoTitulo = new javax.swing.JLabel();
         barraMenu = new javax.swing.JMenuBar();
         menuEstampas = new javax.swing.JMenu();
@@ -211,6 +213,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         textoPreviewPreenchimentoCores.setText("Cores? Sim. Sendo elas:");
 
+        textoPreviewPreenchimentoTextura.setForeground(java.awt.SystemColor.textInactiveText);
         textoPreviewPreenchimentoTextura.setText("Textura? Não.");
 
         canvasPreviewEstampa.setBackground(new java.awt.Color(240, 240, 240));
@@ -221,22 +224,14 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         canvasPreviewEstampa.setEnableZoomInteractor(false);
         canvasPreviewEstampa.setPreferredSize(new java.awt.Dimension(100, 100));
 
-        previewCorPaleta2.setBackground(new java.awt.Color(255, 255, 255));
-        previewCorPaleta2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        previewCorPaleta2.setPreferredSize(new java.awt.Dimension(20, 20));
+        try{
+            File g = new File("src/mosaicofractal/arquivos/estampas/estampa1.svg").getCanonicalFile();
+            canvasPreviewEstampa.setURI(g.toURI().toString());
+        }
+        catch(java.io.IOException e){
+        }
 
-        javax.swing.GroupLayout previewCorPaleta2Layout = new javax.swing.GroupLayout(previewCorPaleta2);
-        previewCorPaleta2.setLayout(previewCorPaleta2Layout);
-        previewCorPaleta2Layout.setHorizontalGroup(
-            previewCorPaleta2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
-        );
-        previewCorPaleta2Layout.setVerticalGroup(
-            previewCorPaleta2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
-        );
-
-        previewCorPaleta1.setBackground(new java.awt.Color(255, 255, 255));
+        previewCorPaleta1.setBackground(new java.awt.Color(0, 0, 0));
         previewCorPaleta1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         previewCorPaleta1.setPreferredSize(new java.awt.Dimension(20, 20));
 
@@ -251,33 +246,62 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        previewCorPaleta4.setBackground(new java.awt.Color(255, 255, 255));
-        previewCorPaleta4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        previewCorPaleta4.setPreferredSize(new java.awt.Dimension(20, 20));
+        previewCorPaleta2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        previewCorPaleta2.setPreferredSize(new java.awt.Dimension(20, 20));
 
-        javax.swing.GroupLayout previewCorPaleta4Layout = new javax.swing.GroupLayout(previewCorPaleta4);
-        previewCorPaleta4.setLayout(previewCorPaleta4Layout);
-        previewCorPaleta4Layout.setHorizontalGroup(
-            previewCorPaleta4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+        javax.swing.GroupLayout previewCorPaleta2Layout = new javax.swing.GroupLayout(previewCorPaleta2);
+        previewCorPaleta2.setLayout(previewCorPaleta2Layout);
+        previewCorPaleta2Layout.setHorizontalGroup(
+            previewCorPaleta2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 16, Short.MAX_VALUE)
         );
-        previewCorPaleta4Layout.setVerticalGroup(
-            previewCorPaleta4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+        previewCorPaleta2Layout.setVerticalGroup(
+            previewCorPaleta2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 16, Short.MAX_VALUE)
         );
 
-        previewCorPaleta3.setBackground(new java.awt.Color(255, 255, 255));
-        previewCorPaleta3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        previewCorPaleta3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         previewCorPaleta3.setPreferredSize(new java.awt.Dimension(20, 20));
 
         javax.swing.GroupLayout previewCorPaleta3Layout = new javax.swing.GroupLayout(previewCorPaleta3);
         previewCorPaleta3.setLayout(previewCorPaleta3Layout);
         previewCorPaleta3Layout.setHorizontalGroup(
             previewCorPaleta3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
+            .addGap(0, 16, Short.MAX_VALUE)
         );
         previewCorPaleta3Layout.setVerticalGroup(
             previewCorPaleta3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 16, Short.MAX_VALUE)
+        );
+
+        previewCorPaleta4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        previewCorPaleta4.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout previewCorPaleta4Layout = new javax.swing.GroupLayout(previewCorPaleta4);
+        previewCorPaleta4.setLayout(previewCorPaleta4Layout);
+        previewCorPaleta4Layout.setHorizontalGroup(
+            previewCorPaleta4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 16, Short.MAX_VALUE)
+        );
+        previewCorPaleta4Layout.setVerticalGroup(
+            previewCorPaleta4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 16, Short.MAX_VALUE)
+        );
+
+        textoPreviewCorFundo.setText("Cor do Fundo:");
+
+        previewCorFundo.setBackground(new java.awt.Color(255, 255, 255));
+        previewCorFundo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        previewCorFundo.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        javax.swing.GroupLayout previewCorFundoLayout = new javax.swing.GroupLayout(previewCorFundo);
+        previewCorFundo.setLayout(previewCorFundoLayout);
+        previewCorFundoLayout.setHorizontalGroup(
+            previewCorFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 18, Short.MAX_VALUE)
+        );
+        previewCorFundoLayout.setVerticalGroup(
+            previewCorFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
@@ -306,11 +330,6 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                                         .addGap(10, 10, 10)
                                         .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addGroup(panelCorpoLayout.createSequentialGroup()
-                                                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(textoPreviewPreenchimentoCores)
-                                                    .addComponent(textoPreviewPreenchimentoTextura))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                            .addGroup(panelCorpoLayout.createSequentialGroup()
                                                 .addComponent(previewCorPaleta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(previewCorPaleta2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -318,7 +337,14 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                                                 .addComponent(previewCorPaleta3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(previewCorPaleta4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(31, 31, 31)))
+                                                .addGap(31, 31, 31))
+                                            .addGroup(panelCorpoLayout.createSequentialGroup()
+                                                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(textoPreviewPreenchimentoCores)
+                                                    .addComponent(textoPreviewPreenchimentoTextura)
+                                                    .addComponent(textoPreviewCorFundo)
+                                                    .addComponent(previewCorFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                                         .addComponent(canvasPreviewPreenchimento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(panelCorpoLayout.createSequentialGroup()
                                 .addComponent(radioTelaFormaSim)
@@ -390,9 +416,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                     .addComponent(textoPreviewEstampa)
                     .addComponent(textoPreviewPreenchimento))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(canvasPreviewModo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(canvasPreviewPreenchimento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(canvasPreviewEstampa, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelCorpoLayout.createSequentialGroup()
                         .addComponent(textoPreviewPreenchimentoCores)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -402,8 +429,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                             .addComponent(previewCorPaleta4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(previewCorPaleta3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textoPreviewPreenchimentoTextura))
-                    .addComponent(canvasPreviewEstampa, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(textoPreviewPreenchimentoTextura)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textoPreviewCorFundo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(previewCorFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -506,10 +536,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
         if (radioTelaFormaSim.isSelected()) {
             if (radioRotacionarEstampasSim.isSelected()) {
-                trocaIcone("modo_com_forma_sim_rotaciona");
+                trocaIconeModo("modo_com_forma_sim_rotaciona");
             }
             else {
-                trocaIcone("modo_com_forma_nao_rotaciona");
+                trocaIconeModo("modo_com_forma_nao_rotaciona");
             }
         }
     }//GEN-LAST:event_radioTelaFormaSimActionPerformed
@@ -520,10 +550,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
         if (radioBordaTelaNao.isSelected()) {
             if (radioRotacionarEstampasSim.isSelected()) {
-                trocaIcone("modo_sem_forma_sim_rotaciona_sem_limite");
+                trocaIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
             }
             else {
-                trocaIcone("modo_sem_forma_nao_rotaciona_sem_limite");
+                trocaIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
             }
         }
     }//GEN-LAST:event_radioBordaTelaNaoActionPerformed
@@ -532,18 +562,18 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         if (radioTelaFormaNao.isSelected()) {
             if (radioRotacionarEstampasSim.isSelected()) {
                 if (radioBordaTelaSim.isSelected()) {
-                    trocaIcone("modo_sem_forma_sim_rotaciona_com_limite");
+                    trocaIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
                 }
                 else {
-                    trocaIcone("modo_sem_forma_sim_rotaciona_sem_limite");
+                    trocaIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
                 }
             }
             else {
                 if (radioBordaTelaSim.isSelected()) {
-                    trocaIcone("modo_sem_forma_nao_rotaciona_com_limite");
+                    trocaIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
                 }
                 else {
-                    trocaIcone("modo_sem_forma_nao_rotaciona_sem_limite");
+                    trocaIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
                 }
             }
         }
@@ -552,37 +582,53 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private void radioTipoPreenchimentoCoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTipoPreenchimentoCoresActionPerformed
         if (!"Cores? Sim. Sendo elas:".equals(textoPreviewPreenchimentoCores.getText())){
             textoPreviewPreenchimentoCores.setText("Cores? Sim. Sendo elas:");
+            textoPreviewPreenchimentoCores.setForeground(java.awt.Color.BLACK);
+            
+            previewCorPaleta1.setVisible(true);
+            previewCorPaleta2.setVisible(true);
+            previewCorPaleta3.setVisible(true);
+            previewCorPaleta4.setVisible(true);
         }
         if ("Textura? Sim. Sendo ela:".equals(textoPreviewPreenchimentoTextura.getText())){
             textoPreviewPreenchimentoTextura.setText("Textura? Não.");
+            textoPreviewPreenchimentoTextura.setForeground(java.awt.SystemColor.textInactiveText);
+            canvasPreviewPreenchimento.setVisible(false);
         }
     }//GEN-LAST:event_radioTipoPreenchimentoCoresActionPerformed
 
     private void radioTipoPreenchimentoTexturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTipoPreenchimentoTexturasActionPerformed
         if ("Cores? Sim. Sendo elas:".equals(textoPreviewPreenchimentoCores.getText())){
             textoPreviewPreenchimentoCores.setText("Cores? Não.");
+            textoPreviewPreenchimentoCores.setForeground(java.awt.SystemColor.textInactiveText);
+            
+            previewCorPaleta1.setVisible(false);
+            previewCorPaleta2.setVisible(false);
+            previewCorPaleta3.setVisible(false);
+            previewCorPaleta4.setVisible(false);
         }
         if (!"Textura? Sim. Sendo ela:".equals(textoPreviewPreenchimentoTextura.getText())){
             textoPreviewPreenchimentoTextura.setText("Textura? Sim. Sendo ela:");
-        }
+            textoPreviewPreenchimentoTextura.setForeground(java.awt.Color.BLACK);
+            canvasPreviewPreenchimento.setVisible(true);
+        }  
     }//GEN-LAST:event_radioTipoPreenchimentoTexturasActionPerformed
 
     private void radioBordaTelaSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBordaTelaSimActionPerformed
         if (radioBordaTelaSim.isSelected()) {
             if (radioTelaFormaSim.isSelected()) {
                 if (radioRotacionarEstampasSim.isSelected()) {
-                    trocaIcone("modo_com_forma_sim_rotaciona");
+                    trocaIconeModo("modo_com_forma_sim_rotaciona");
                 }
                 else {
-                    trocaIcone("modo_com_forma_nao_rotaciona");
+                    trocaIconeModo("modo_com_forma_nao_rotaciona");
                 }
             }
             else {
                 if (radioRotacionarEstampasSim.isSelected()) {
-                    trocaIcone("modo_sem_forma_sim_rotaciona_com_limite");
+                    trocaIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
                 }
                 else {
-                    trocaIcone("modo_sem_forma_nao_rotaciona_com_limite");
+                    trocaIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
                 }
             }
         }
@@ -591,14 +637,14 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private void radioRotacionarEstampasSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioRotacionarEstampasSimActionPerformed
         if (radioRotacionarEstampasSim.isSelected()) {
             if (radioTelaFormaSim.isSelected()) {
-                trocaIcone("modo_com_forma_sim_rotaciona");
+                trocaIconeModo("modo_com_forma_sim_rotaciona");
             }
             else {
                 if (radioBordaTelaSim.isSelected()) {
-                    trocaIcone("modo_sem_forma_sim_rotaciona_com_limite");
+                    trocaIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
                 }
                 else {
-                    trocaIcone("modo_sem_forma_sim_rotaciona_sem_limite");
+                    trocaIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
                 }
             }
         }
@@ -607,14 +653,14 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private void radioRotacionarEstampasNaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioRotacionarEstampasNaoActionPerformed
         if (radioRotacionarEstampasNao.isSelected()) {
             if (radioTelaFormaSim.isSelected()) {
-                trocaIcone("modo_com_forma_nao_rotaciona");
+                trocaIconeModo("modo_com_forma_nao_rotaciona");
             }
             else {
                 if (radioBordaTelaSim.isSelected()) {
-                    trocaIcone("modo_sem_forma_nao_rotaciona_com_limite");
+                    trocaIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
                 }
                 else {
-                    trocaIcone("modo_sem_forma_nao_rotaciona_sem_limite");
+                    trocaIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
                 }
             }
         }
@@ -643,10 +689,26 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         });
     }
     
-    public void trocaIcone(String arquivo) {
+    public void trocaIconeModo(String arquivo) {
         try{
             File g = new File("src/mosaicofractal/gui/icones/" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewModo.setURI(g.toURI().toString());
+        }
+        catch(java.io.IOException e){}
+    }
+    
+    public void trocaIconeEstampa(String arquivo) {
+        try{
+            File g = new File("src/mosaicofractal/arquivos/estampas/estampa" + arquivo + ".svg").getCanonicalFile();
+            canvasPreviewEstampa.setURI(g.toURI().toString());
+        }
+        catch(java.io.IOException e){}
+    }
+    
+    public void trocaIconeTextura(String arquivo) {
+        try{
+            File g = new File("src/mosaicofractal/arquivos/texturas/textura" + arquivo + ".svg").getCanonicalFile();
+            canvasPreviewPreenchimento.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
     }
@@ -679,6 +741,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JMenu menuTextura;
     private javax.swing.JPanel panelCorpo;
     private javax.swing.JSeparator panelSeparador;
+    private javax.swing.JPanel previewCorFundo;
     private javax.swing.JPanel previewCorPaleta1;
     private javax.swing.JPanel previewCorPaleta2;
     private javax.swing.JPanel previewCorPaleta3;
@@ -694,6 +757,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JSpinner spinnerValorC;
     private javax.swing.JLabel textoBordaTela;
     private javax.swing.JLabel textoPreview;
+    private javax.swing.JLabel textoPreviewCorFundo;
     private javax.swing.JLabel textoPreviewEstampa;
     private javax.swing.JLabel textoPreviewModo;
     private javax.swing.JLabel textoPreviewPreenchimento;

@@ -20,6 +20,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class InterfaceUsuario extends javax.swing.JFrame {
     
     private Color cor_fundo_selecionada = Color.WHITE;
+    private int textura = 1;
+    private int estampa = 1;
+    private int forma_fundo = 1;
     
     /**
      * Creates new form InterfaceUsuario
@@ -75,6 +78,8 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         previewCorPaleta4 = new javax.swing.JPanel();
         textoPreviewCorFundo = new javax.swing.JLabel();
         previewCorFundo = new javax.swing.JPanel();
+        textoPreviewFormaFundo = new javax.swing.JLabel();
+        canvasPreviewFormaFundo = new org.apache.batik.swing.JSVGCanvas();
         textoTitulo = new javax.swing.JLabel();
         barraMenu = new javax.swing.JMenuBar();
         menuEstampas = new javax.swing.JMenu();
@@ -305,6 +310,16 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
+        textoPreviewFormaFundo.setText("Fundo normal.");
+
+        canvasPreviewFormaFundo.setBackground(new java.awt.Color(240, 240, 240));
+        canvasPreviewFormaFundo.setEnableImageZoomInteractor(false);
+        canvasPreviewFormaFundo.setEnablePanInteractor(false);
+        canvasPreviewFormaFundo.setEnableResetTransformInteractor(false);
+        canvasPreviewFormaFundo.setEnableRotateInteractor(false);
+        canvasPreviewFormaFundo.setEnableZoomInteractor(false);
+        canvasPreviewFormaFundo.setPreferredSize(new java.awt.Dimension(100, 100));
+
         javax.swing.GroupLayout panelCorpoLayout = new javax.swing.GroupLayout(panelCorpo);
         panelCorpo.setLayout(panelCorpoLayout);
         panelCorpoLayout.setHorizontalGroup(
@@ -321,58 +336,62 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                                     .addComponent(canvasPreviewModo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(canvasPreviewEstampa, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textoPreviewEstampa))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(textoPreviewFormaFundo)
+                                    .addComponent(canvasPreviewFormaFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(textoPreviewPreenchimento)
                                     .addGroup(panelCorpoLayout.createSequentialGroup()
-                                        .addComponent(textoPreviewEstampa)
-                                        .addGap(64, 64, 64)
-                                        .addComponent(textoPreviewPreenchimento))
-                                    .addGroup(panelCorpoLayout.createSequentialGroup()
-                                        .addComponent(canvasPreviewEstampa, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(10, 10, 10)
-                                        .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGap(1, 1, 1)
+                                        .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(panelCorpoLayout.createSequentialGroup()
                                                 .addComponent(previewCorPaleta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(previewCorPaleta2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(previewCorPaleta3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(previewCorPaleta4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(31, 31, 31))
-                                            .addGroup(panelCorpoLayout.createSequentialGroup()
-                                                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(textoPreviewPreenchimentoCores)
-                                                    .addComponent(textoPreviewPreenchimentoTextura)
-                                                    .addComponent(textoPreviewCorFundo)
-                                                    .addComponent(previewCorFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                        .addComponent(canvasPreviewPreenchimento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                .addComponent(previewCorPaleta4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(textoPreviewPreenchimentoCores)
+                                            .addComponent(textoPreviewPreenchimentoTextura)
+                                            .addComponent(textoPreviewCorFundo)
+                                            .addComponent(previewCorFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                                .addComponent(canvasPreviewPreenchimento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelCorpoLayout.createSequentialGroup()
-                                .addComponent(radioTelaFormaSim)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(radioTelaFormaNao))
-                            .addGroup(panelCorpoLayout.createSequentialGroup()
-                                .addComponent(radioRotacionarEstampasSim)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(radioRotacionarEstampasNao))
-                            .addComponent(textoBordaTela)
-                            .addGroup(panelCorpoLayout.createSequentialGroup()
-                                .addComponent(radioBordaTelaSim)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(radioBordaTelaNao))
-                            .addComponent(textoRotacionarEstampas)
-                            .addComponent(textoTelaForma)
-                            .addGroup(panelCorpoLayout.createSequentialGroup()
-                                .addComponent(textoValorC)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spinnerValorC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(textoTipoPreenchimento)
-                            .addGroup(panelCorpoLayout.createSequentialGroup()
-                                .addComponent(radioTipoPreenchimentoCores)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(radioTipoPreenchimentoTexturas))
-                            .addComponent(textoPreview)
-                            .addComponent(botaoIniciar))
-                        .addContainerGap(21, Short.MAX_VALUE))))
+                                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelCorpoLayout.createSequentialGroup()
+                                        .addComponent(radioTelaFormaSim)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(radioTelaFormaNao))
+                                    .addGroup(panelCorpoLayout.createSequentialGroup()
+                                        .addComponent(radioRotacionarEstampasSim)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(radioRotacionarEstampasNao))
+                                    .addComponent(textoBordaTela)
+                                    .addGroup(panelCorpoLayout.createSequentialGroup()
+                                        .addComponent(radioBordaTelaSim)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(radioBordaTelaNao))
+                                    .addComponent(textoRotacionarEstampas)
+                                    .addComponent(textoTelaForma)
+                                    .addGroup(panelCorpoLayout.createSequentialGroup()
+                                        .addComponent(textoValorC)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spinnerValorC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(textoTipoPreenchimento)
+                                    .addGroup(panelCorpoLayout.createSequentialGroup()
+                                        .addComponent(radioTipoPreenchimentoCores)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(radioTipoPreenchimentoTexturas))
+                                    .addComponent(textoPreview)
+                                    .addComponent(botaoIniciar))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         panelCorpoLayout.setVerticalGroup(
             panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -414,7 +433,8 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                 .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoPreviewModo)
                     .addComponent(textoPreviewEstampa)
-                    .addComponent(textoPreviewPreenchimento))
+                    .addComponent(textoPreviewPreenchimento)
+                    .addComponent(textoPreviewFormaFundo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(canvasPreviewModo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -433,7 +453,8 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(textoPreviewCorFundo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(previewCorFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(previewCorFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(canvasPreviewFormaFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -542,11 +563,15 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                 trocaIconeModo("modo_com_forma_nao_rotaciona");
             }
         }
+        textoPreviewFormaFundo.setText("Forma do fundo:");
+        trocaIconeForma(forma_fundo);
     }//GEN-LAST:event_radioTelaFormaSimActionPerformed
 
     private void radioBordaTelaNaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBordaTelaNaoActionPerformed
         if (!radioTelaFormaNao.isSelected()){
             radioTelaFormaNao.setSelected(true);
+            textoPreviewFormaFundo.setText("Fundo normal.");
+            deixaVazio(canvasPreviewFormaFundo);
         }
         if (radioBordaTelaNao.isSelected()) {
             if (radioRotacionarEstampasSim.isSelected()) {
@@ -577,6 +602,8 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                 }
             }
         }
+        textoPreviewFormaFundo.setText("Fundo normal.");
+        deixaVazio(canvasPreviewFormaFundo);
     }//GEN-LAST:event_radioTelaFormaNaoActionPerformed
 
     private void radioTipoPreenchimentoCoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTipoPreenchimentoCoresActionPerformed
@@ -592,7 +619,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         if ("Textura? Sim. Sendo ela:".equals(textoPreviewPreenchimentoTextura.getText())){
             textoPreviewPreenchimentoTextura.setText("Textura? Não.");
             textoPreviewPreenchimentoTextura.setForeground(java.awt.SystemColor.textInactiveText);
-            canvasPreviewPreenchimento.setVisible(false);
+            deixaVazio(canvasPreviewPreenchimento);
         }
     }//GEN-LAST:event_radioTipoPreenchimentoCoresActionPerformed
 
@@ -609,8 +636,9 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         if (!"Textura? Sim. Sendo ela:".equals(textoPreviewPreenchimentoTextura.getText())){
             textoPreviewPreenchimentoTextura.setText("Textura? Sim. Sendo ela:");
             textoPreviewPreenchimentoTextura.setForeground(java.awt.Color.BLACK);
-            canvasPreviewPreenchimento.setVisible(true);
-        }  
+        }
+        
+        trocaIconeTextura(textura);
     }//GEN-LAST:event_radioTipoPreenchimentoTexturasActionPerformed
 
     private void radioBordaTelaSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBordaTelaSimActionPerformed
@@ -697,7 +725,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         catch(java.io.IOException e){}
     }
     
-    public void trocaIconeEstampa(String arquivo) {
+    public void trocaIconeEstampa(int arquivo) {
         try{
             File g = new File("src/mosaicofractal/arquivos/estampas/estampa" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewEstampa.setURI(g.toURI().toString());
@@ -705,10 +733,26 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         catch(java.io.IOException e){}
     }
     
-    public void trocaIconeTextura(String arquivo) {
+    public void trocaIconeTextura(int arquivo) {
         try{
             File g = new File("src/mosaicofractal/arquivos/texturas/textura" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewPreenchimento.setURI(g.toURI().toString());
+        }
+        catch(java.io.IOException e){}
+    }
+    
+    public void trocaIconeForma(int arquivo) {
+        try{
+            File g = new File("src/mosaicofractal/arquivos/estampas/estampa" + arquivo + ".svg").getCanonicalFile();
+            canvasPreviewFormaFundo.setURI(g.toURI().toString());
+        }
+        catch(java.io.IOException e){}
+    }
+    
+    public void deixaVazio(org.apache.batik.swing.JSVGCanvas canvas) {
+        try{
+            File g = new File("src/mosaicofractal/arquivos/vazio.svg").getCanonicalFile();
+            canvas.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
     }
@@ -721,6 +765,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroupTelaForma;
     private javax.swing.ButtonGroup buttonGroupTipoPreenchimento;
     private org.apache.batik.swing.JSVGCanvas canvasPreviewEstampa;
+    private org.apache.batik.swing.JSVGCanvas canvasPreviewFormaFundo;
     private org.apache.batik.swing.JSVGCanvas canvasPreviewModo;
     private org.apache.batik.swing.JSVGCanvas canvasPreviewPreenchimento;
     private javax.swing.JMenuItem estampaAdicionar;
@@ -759,6 +804,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel textoPreview;
     private javax.swing.JLabel textoPreviewCorFundo;
     private javax.swing.JLabel textoPreviewEstampa;
+    private javax.swing.JLabel textoPreviewFormaFundo;
     private javax.swing.JLabel textoPreviewModo;
     private javax.swing.JLabel textoPreviewPreenchimento;
     private javax.swing.JLabel textoPreviewPreenchimentoCores;

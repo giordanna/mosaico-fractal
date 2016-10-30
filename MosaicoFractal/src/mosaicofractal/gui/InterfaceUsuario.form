@@ -177,72 +177,77 @@
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="textoPreviewEstampa" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
-                                          <Component id="textoPreviewPreenchimento" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="canvasPreviewEstampa" min="-2" pref="100" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="canvasPreviewEstampa" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                                      <Component id="textoPreviewEstampa" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="textoPreviewFormaFundo" min="-2" max="-2" attributes="0"/>
+                                      <Component id="canvasPreviewFormaFundo" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="textoPreviewPreenchimento" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
                                               <Group type="102" alignment="0" attributes="0">
                                                   <Component id="previewCorPaleta1" min="-2" max="-2" attributes="0"/>
                                                   <EmptySpace max="-2" attributes="0"/>
                                                   <Component id="previewCorPaleta2" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace max="32767" attributes="0"/>
+                                                  <EmptySpace max="-2" attributes="0"/>
                                                   <Component id="previewCorPaleta3" min="-2" max="-2" attributes="0"/>
                                                   <EmptySpace max="-2" attributes="0"/>
                                                   <Component id="previewCorPaleta4" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                                               </Group>
-                                              <Group type="102" attributes="0">
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="textoPreviewPreenchimentoCores" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="textoPreviewPreenchimentoTextura" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="textoPreviewCorFundo" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="previewCorFundo" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <EmptySpace max="-2" attributes="0"/>
-                                              </Group>
+                                              <Component id="textoPreviewPreenchimentoCores" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="textoPreviewPreenchimentoTextura" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="textoPreviewCorFundo" min="-2" max="-2" attributes="0"/>
+                                              <Component id="previewCorFundo" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <Component id="canvasPreviewPreenchimento" min="-2" pref="100" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
+                                  <EmptySpace pref="6" max="32767" attributes="0"/>
+                                  <Component id="canvasPreviewPreenchimento" min="-2" pref="100" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
-                                  <Component id="radioTelaFormaSim" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="radioTelaFormaNao" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <Component id="radioTelaFormaSim" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="radioTelaFormaNao" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Component id="radioRotacionarEstampasSim" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="radioRotacionarEstampasNao" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="textoBordaTela" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="radioBordaTelaSim" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="radioBordaTelaNao" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="textoRotacionarEstampas" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="textoTelaForma" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="textoValorC" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="spinnerValorC" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="textoTipoPreenchimento" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="radioTipoPreenchimentoCores" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="radioTipoPreenchimentoTexturas" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="textoPreview" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="botaoIniciar" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
-                              <Group type="102" attributes="0">
-                                  <Component id="radioRotacionarEstampasSim" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="radioRotacionarEstampasNao" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="textoBordaTela" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="radioBordaTelaSim" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="radioBordaTelaNao" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="textoRotacionarEstampas" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="textoTelaForma" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="textoValorC" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="spinnerValorC" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="textoTipoPreenchimento" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="radioTipoPreenchimentoCores" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="radioTipoPreenchimentoTexturas" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="textoPreview" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="botaoIniciar" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="21" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -294,6 +299,7 @@
                       <Component id="textoPreviewModo" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="textoPreviewEstampa" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="textoPreviewPreenchimento" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="textoPreviewFormaFundo" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -316,6 +322,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="previewCorFundo" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="canvasPreviewFormaFundo" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -684,6 +691,30 @@
                   <EmptySpace min="0" pref="18" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
+          </Layout>
+        </Container>
+        <Component class="javax.swing.JLabel" name="textoPreviewFormaFundo">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Fundo normal."/>
+          </Properties>
+        </Component>
+        <Container class="org.apache.batik.swing.JSVGCanvas" name="canvasPreviewFormaFundo">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="f0" green="f0" red="f0" type="rgb"/>
+            </Property>
+            <Property name="enableImageZoomInteractor" type="boolean" value="false"/>
+            <Property name="enablePanInteractor" type="boolean" value="false"/>
+            <Property name="enableResetTransformInteractor" type="boolean" value="false"/>
+            <Property name="enableRotateInteractor" type="boolean" value="false"/>
+            <Property name="enableZoomInteractor" type="boolean" value="false"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[100, 100]"/>
+            </Property>
+          </Properties>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+            <Property name="useNullLayout" type="boolean" value="true"/>
           </Layout>
         </Container>
       </SubComponents>

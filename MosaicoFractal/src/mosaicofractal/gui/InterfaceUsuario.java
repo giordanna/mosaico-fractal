@@ -9,9 +9,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -20,6 +26,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class InterfaceUsuario extends javax.swing.JFrame {
     
     private Color cor_fundo_selecionada = Color.WHITE;
+    private int qtd_cores = 1;
+    private Color [] cores_estampas = {Color.BLACK, null, null, null};
     private int textura = 1;
     private int estampa = 1;
     private int forma_fundo = 1;
@@ -46,6 +54,35 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         buttonGroupRotacionarEstampas = new javax.swing.ButtonGroup();
         buttonGroupTelaForma = new javax.swing.ButtonGroup();
         buttonGroupTipoPreenchimento = new javax.swing.ButtonGroup();
+        fileEstampaAdicionar = new javax.swing.JFileChooser();
+        filePreenchimentoAdicionar = new javax.swing.JFileChooser();
+        frameEstampaEscolher = new javax.swing.JFrame();
+        comboboxEstampas = new javax.swing.JComboBox<>();
+        textoFrameEstampaCorpo = new javax.swing.JLabel();
+        canvasframeEstampa = new org.apache.batik.swing.JSVGCanvas();
+        botaoEstampaSelecionar = new javax.swing.JButton();
+        botaoEstampaExcluir = new javax.swing.JButton();
+        textoFrameEstampaPreview = new javax.swing.JLabel();
+        frameTexturasEscolher = new javax.swing.JFrame();
+        comboboxTexturas = new javax.swing.JComboBox<>();
+        textoFrameTexturaCorpo = new javax.swing.JLabel();
+        canvasframeTextura = new org.apache.batik.swing.JSVGCanvas();
+        botaoTexturaSelecionar = new javax.swing.JButton();
+        botaoTexturaExcluir = new javax.swing.JButton();
+        textoFrameTexturaPreview = new javax.swing.JLabel();
+        frameCoresEscolher = new javax.swing.JFrame();
+        textoFrameCoresCorpo = new javax.swing.JLabel();
+        textoFrameCoresEstampas = new javax.swing.JLabel();
+        textoFrameCoresFundo = new javax.swing.JLabel();
+        panelFrameCoresEstampa1 = new javax.swing.JPanel();
+        panelFrameCoresEstampa2 = new javax.swing.JPanel();
+        panelFrameCoresEstampa3 = new javax.swing.JPanel();
+        panelFrameCoresEstampa4 = new javax.swing.JPanel();
+        panelFrameCoresFundo = new javax.swing.JPanel();
+        botaoFrameCoresEstampaSelecionar = new javax.swing.JButton();
+        botaoFrameCoresEstampaApagar = new javax.swing.JButton();
+        botaoFrameCoresFundoSelecionar = new javax.swing.JButton();
+        escolherCor = new javax.swing.JColorChooser();
         panelCorpo = new javax.swing.JPanel();
         textoValorC = new javax.swing.JLabel();
         spinnerValorC = new javax.swing.JSpinner();
@@ -85,19 +122,277 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         menuEstampas = new javax.swing.JMenu();
         estampaAdicionar = new javax.swing.JMenuItem();
         estampaSelecionar = new javax.swing.JMenuItem();
-        estampaRemover = new javax.swing.JMenuItem();
         menuPreenchimento = new javax.swing.JMenu();
         menuCores = new javax.swing.JMenu();
-        itemCoresAdicionar = new javax.swing.JMenuItem();
         itemCoresSelecionar = new javax.swing.JMenuItem();
-        itemCoresRemover = new javax.swing.JMenuItem();
         menuTextura = new javax.swing.JMenu();
         itemTexturaAdicionar = new javax.swing.JMenuItem();
         itemTexturaSelecionar = new javax.swing.JMenuItem();
-        itemTexturaRemover = new javax.swing.JMenuItem();
         menuAjuda = new javax.swing.JMenu();
         itemManual = new javax.swing.JMenuItem();
         itemSobre = new javax.swing.JMenuItem();
+
+        fileEstampaAdicionar.setFileFilter(new FileNameExtensionFilter("SVG", "svg"));
+
+        filePreenchimentoAdicionar.setFileFilter(new FileNameExtensionFilter("SVG", "svg"));
+
+        frameEstampaEscolher.setTitle("Escolher Estampas");
+
+        comboboxEstampas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        textoFrameEstampaCorpo.setText("Escolha uma das estampas disponíveis e selecione a sua opção desejada:");
+
+        canvasframeEstampa.setEnableImageZoomInteractor(false);
+        canvasframeEstampa.setEnablePanInteractor(false);
+        canvasframeEstampa.setEnableResetTransformInteractor(false);
+        canvasframeEstampa.setEnableRotateInteractor(false);
+        canvasframeEstampa.setEnableZoomInteractor(false);
+        canvasframeEstampa.setPreferredSize(new java.awt.Dimension(150, 150));
+
+        botaoEstampaSelecionar.setText("Selecionar");
+
+        botaoEstampaExcluir.setText("Excluir");
+
+        textoFrameEstampaPreview.setText("Preview:");
+
+        javax.swing.GroupLayout frameEstampaEscolherLayout = new javax.swing.GroupLayout(frameEstampaEscolher.getContentPane());
+        frameEstampaEscolher.getContentPane().setLayout(frameEstampaEscolherLayout);
+        frameEstampaEscolherLayout.setHorizontalGroup(
+            frameEstampaEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameEstampaEscolherLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(frameEstampaEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(textoFrameEstampaCorpo)
+                    .addGroup(frameEstampaEscolherLayout.createSequentialGroup()
+                        .addGroup(frameEstampaEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(frameEstampaEscolherLayout.createSequentialGroup()
+                                .addComponent(botaoEstampaSelecionar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(botaoEstampaExcluir))
+                            .addGroup(frameEstampaEscolherLayout.createSequentialGroup()
+                                .addComponent(comboboxEstampas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(textoFrameEstampaPreview)))
+                        .addGap(18, 18, 18)
+                        .addComponent(canvasframeEstampa, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        frameEstampaEscolherLayout.setVerticalGroup(
+            frameEstampaEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameEstampaEscolherLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(textoFrameEstampaCorpo)
+                .addGap(18, 18, 18)
+                .addGroup(frameEstampaEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(frameEstampaEscolherLayout.createSequentialGroup()
+                        .addGroup(frameEstampaEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(comboboxEstampas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textoFrameEstampaPreview))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(frameEstampaEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(botaoEstampaSelecionar)
+                            .addComponent(botaoEstampaExcluir)))
+                    .addComponent(canvasframeEstampa, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        frameTexturasEscolher.setTitle("Escolher Texturas");
+
+        comboboxTexturas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        textoFrameTexturaCorpo.setText("Escolha uma das texturas disponíveis e selecione a sua opção desejada:");
+
+        canvasframeTextura.setEnableImageZoomInteractor(false);
+        canvasframeTextura.setEnablePanInteractor(false);
+        canvasframeTextura.setEnableResetTransformInteractor(false);
+        canvasframeTextura.setEnableRotateInteractor(false);
+        canvasframeTextura.setEnableZoomInteractor(false);
+        canvasframeTextura.setPreferredSize(new java.awt.Dimension(150, 150));
+
+        botaoTexturaSelecionar.setText("Selecionar");
+
+        botaoTexturaExcluir.setText("Excluir");
+
+        textoFrameTexturaPreview.setText("Preview:");
+
+        javax.swing.GroupLayout frameTexturasEscolherLayout = new javax.swing.GroupLayout(frameTexturasEscolher.getContentPane());
+        frameTexturasEscolher.getContentPane().setLayout(frameTexturasEscolherLayout);
+        frameTexturasEscolherLayout.setHorizontalGroup(
+            frameTexturasEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameTexturasEscolherLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(frameTexturasEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(frameTexturasEscolherLayout.createSequentialGroup()
+                        .addComponent(textoFrameTexturaCorpo)
+                        .addGap(0, 5, Short.MAX_VALUE))
+                    .addGroup(frameTexturasEscolherLayout.createSequentialGroup()
+                        .addGroup(frameTexturasEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(frameTexturasEscolherLayout.createSequentialGroup()
+                                .addComponent(botaoTexturaSelecionar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(botaoTexturaExcluir))
+                            .addGroup(frameTexturasEscolherLayout.createSequentialGroup()
+                                .addComponent(comboboxTexturas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(textoFrameTexturaPreview)))
+                        .addGap(18, 18, 18)
+                        .addComponent(canvasframeTextura, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        frameTexturasEscolherLayout.setVerticalGroup(
+            frameTexturasEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameTexturasEscolherLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(textoFrameTexturaCorpo)
+                .addGap(18, 18, 18)
+                .addGroup(frameTexturasEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(frameTexturasEscolherLayout.createSequentialGroup()
+                        .addGroup(frameTexturasEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(comboboxTexturas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textoFrameTexturaPreview))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(frameTexturasEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(botaoTexturaSelecionar)
+                            .addComponent(botaoTexturaExcluir)))
+                    .addComponent(canvasframeTextura, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        frameCoresEscolher.setTitle("Escolher Cores");
+
+        textoFrameCoresCorpo.setText("Escolha as cores desejadas:");
+
+        textoFrameCoresEstampas.setText("Estampas:");
+
+        textoFrameCoresFundo.setText("Para o fundo:");
+
+        panelFrameCoresEstampa1.setBackground(new java.awt.Color(0, 0, 0));
+        panelFrameCoresEstampa1.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2)));
+
+        javax.swing.GroupLayout panelFrameCoresEstampa1Layout = new javax.swing.GroupLayout(panelFrameCoresEstampa1);
+        panelFrameCoresEstampa1.setLayout(panelFrameCoresEstampa1Layout);
+        panelFrameCoresEstampa1Layout.setHorizontalGroup(
+            panelFrameCoresEstampa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelFrameCoresEstampa1Layout.setVerticalGroup(
+            panelFrameCoresEstampa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelFrameCoresEstampa2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout panelFrameCoresEstampa2Layout = new javax.swing.GroupLayout(panelFrameCoresEstampa2);
+        panelFrameCoresEstampa2.setLayout(panelFrameCoresEstampa2Layout);
+        panelFrameCoresEstampa2Layout.setHorizontalGroup(
+            panelFrameCoresEstampa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelFrameCoresEstampa2Layout.setVerticalGroup(
+            panelFrameCoresEstampa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelFrameCoresEstampa3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout panelFrameCoresEstampa3Layout = new javax.swing.GroupLayout(panelFrameCoresEstampa3);
+        panelFrameCoresEstampa3.setLayout(panelFrameCoresEstampa3Layout);
+        panelFrameCoresEstampa3Layout.setHorizontalGroup(
+            panelFrameCoresEstampa3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelFrameCoresEstampa3Layout.setVerticalGroup(
+            panelFrameCoresEstampa3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelFrameCoresEstampa4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout panelFrameCoresEstampa4Layout = new javax.swing.GroupLayout(panelFrameCoresEstampa4);
+        panelFrameCoresEstampa4.setLayout(panelFrameCoresEstampa4Layout);
+        panelFrameCoresEstampa4Layout.setHorizontalGroup(
+            panelFrameCoresEstampa4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelFrameCoresEstampa4Layout.setVerticalGroup(
+            panelFrameCoresEstampa4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        panelFrameCoresFundo.setBackground(new java.awt.Color(255, 255, 255));
+        panelFrameCoresFundo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        javax.swing.GroupLayout panelFrameCoresFundoLayout = new javax.swing.GroupLayout(panelFrameCoresFundo);
+        panelFrameCoresFundo.setLayout(panelFrameCoresFundoLayout);
+        panelFrameCoresFundoLayout.setHorizontalGroup(
+            panelFrameCoresFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        panelFrameCoresFundoLayout.setVerticalGroup(
+            panelFrameCoresFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        botaoFrameCoresEstampaSelecionar.setText("Selecionar");
+
+        botaoFrameCoresEstampaApagar.setText("Apagar");
+
+        botaoFrameCoresFundoSelecionar.setText("Selecionar");
+
+        javax.swing.GroupLayout frameCoresEscolherLayout = new javax.swing.GroupLayout(frameCoresEscolher.getContentPane());
+        frameCoresEscolher.getContentPane().setLayout(frameCoresEscolherLayout);
+        frameCoresEscolherLayout.setHorizontalGroup(
+            frameCoresEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameCoresEscolherLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(frameCoresEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textoFrameCoresCorpo)
+                    .addComponent(textoFrameCoresEstampas)
+                    .addComponent(textoFrameCoresFundo)
+                    .addGroup(frameCoresEscolherLayout.createSequentialGroup()
+                        .addComponent(panelFrameCoresEstampa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelFrameCoresEstampa2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelFrameCoresEstampa3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelFrameCoresEstampa4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botaoFrameCoresEstampaSelecionar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botaoFrameCoresEstampaApagar))
+                    .addGroup(frameCoresEscolherLayout.createSequentialGroup()
+                        .addComponent(panelFrameCoresFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botaoFrameCoresFundoSelecionar)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        frameCoresEscolherLayout.setVerticalGroup(
+            frameCoresEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameCoresEscolherLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(textoFrameCoresCorpo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(textoFrameCoresEstampas)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(frameCoresEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(frameCoresEscolherLayout.createSequentialGroup()
+                        .addGroup(frameCoresEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(panelFrameCoresEstampa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(panelFrameCoresEstampa2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(panelFrameCoresEstampa4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(frameCoresEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(botaoFrameCoresEstampaSelecionar)
+                                .addComponent(botaoFrameCoresEstampaApagar)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textoFrameCoresFundo))
+                    .addComponent(panelFrameCoresEstampa3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(frameCoresEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelFrameCoresFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botaoFrameCoresFundoSelecionar))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Mosaico Fractal");
@@ -464,18 +759,20 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         menuEstampas.setText("Estampas");
 
         estampaAdicionar.setText("Adicionar...");
+        estampaAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                estampaAdicionarActionPerformed(evt);
+            }
+        });
         menuEstampas.add(estampaAdicionar);
 
         estampaSelecionar.setText("Selecionar...");
-        menuEstampas.add(estampaSelecionar);
-
-        estampaRemover.setText("Remover...");
-        estampaRemover.addActionListener(new java.awt.event.ActionListener() {
+        estampaSelecionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                estampaRemoverActionPerformed(evt);
+                estampaSelecionarActionPerformed(evt);
             }
         });
-        menuEstampas.add(estampaRemover);
+        menuEstampas.add(estampaSelecionar);
 
         barraMenu.add(menuEstampas);
 
@@ -483,27 +780,23 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         menuCores.setText("Cores");
 
-        itemCoresAdicionar.setText("Adicionar...");
-        menuCores.add(itemCoresAdicionar);
-
         itemCoresSelecionar.setText("Selecionar...");
         menuCores.add(itemCoresSelecionar);
-
-        itemCoresRemover.setText("Remover...");
-        menuCores.add(itemCoresRemover);
 
         menuPreenchimento.add(menuCores);
 
         menuTextura.setText("Textura");
 
         itemTexturaAdicionar.setText("Adicionar...");
+        itemTexturaAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemTexturaAdicionarActionPerformed(evt);
+            }
+        });
         menuTextura.add(itemTexturaAdicionar);
 
         itemTexturaSelecionar.setText("Selecionar...");
         menuTextura.add(itemTexturaSelecionar);
-
-        itemTexturaRemover.setText("Remover...");
-        menuTextura.add(itemTexturaRemover);
 
         menuPreenchimento.add(menuTextura);
 
@@ -546,10 +839,6 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void estampaRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estampaRemoverActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_estampaRemoverActionPerformed
 
     private void radioTelaFormaSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTelaFormaSimActionPerformed
         if (!radioBordaTelaSim.isSelected()){
@@ -694,6 +983,50 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_radioRotacionarEstampasNaoActionPerformed
 
+    private void estampaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estampaSelecionarActionPerformed
+        File folder = new File("src/mosaicofractal/arquivos/estampas");
+        File[] lista_arquivos = folder.listFiles();
+        ArrayList<String> nomes_arquivos = new ArrayList<>();
+        for (File x : lista_arquivos) {
+            if (x.isFile()) {
+                nomes_arquivos.add(x.getName());
+            }
+        }
+        Object [] valores = nomes_arquivos.toArray();
+        Object valor_selecionado = JOptionPane.showInputDialog(this,
+                "Selecione uma das Estampas abaixo", "Mosaico Fractal",
+                JOptionPane.PLAIN_MESSAGE, null,
+                valores, valores[0]);
+    }//GEN-LAST:event_estampaSelecionarActionPerformed
+
+    private void estampaAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estampaAdicionarActionPerformed
+        int retorno = fileEstampaAdicionar.showOpenDialog(this);
+        if (retorno == javax.swing.JFileChooser.APPROVE_OPTION){
+            File arquivo = fileEstampaAdicionar.getSelectedFile();
+            File copia;
+            try {
+                copia = new File("src/mosaicofractal/arquivos/estampas/estampa" + numeroEstampa() + ".svg").getCanonicalFile();
+                Files.copy(arquivo.toPath(),copia.toPath(), REPLACE_EXISTING);
+            } catch (IOException ex) {
+                Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_estampaAdicionarActionPerformed
+
+    private void itemTexturaAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemTexturaAdicionarActionPerformed
+        int retorno = filePreenchimentoAdicionar.showOpenDialog(this);
+        if (retorno == javax.swing.JFileChooser.APPROVE_OPTION){
+            File arquivo = filePreenchimentoAdicionar.getSelectedFile();
+            File copia;
+            try {
+                copia = new File("src/mosaicofractal/arquivos/texturas/textura" + numeroTextura() + ".svg").getCanonicalFile();
+                Files.copy(arquivo.toPath(),copia.toPath(), REPLACE_EXISTING);
+            } catch (IOException ex) {
+                Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_itemTexturaAdicionarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -756,10 +1089,49 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
         catch(java.io.IOException e){}
     }
+    
+    private int numeroEstampa() {
+        try {
+            int v = 1;
+            File salva = new File("src/mosaicofractal/arquivos/estampas/estampa" + v + ".svg").getCanonicalFile();
+            while (salva.exists()){
+                v++;
+                salva = new File("src/mosaicofractal/arquivos/estampas/estampa" + v + ".svg").getCanonicalFile();
+            }
+            return v;
+        } catch (IOException ex) {
+            Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return 0;
+    }
+    
+    private int numeroTextura(){
+        try{
+            int v = 1;
+            File salva = new File("src/mosaicofractal/arquivos/texturas/textura" + v + ".svg").getCanonicalFile();
+            while (salva.exists()){
+                v++;
+                salva = new File("src/mosaicofractal/arquivos/texturas/textura" + v + ".svg").getCanonicalFile();
+            }
+            return v;
+        } catch (IOException ex) {
+            Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return 0;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraMenu;
+    private javax.swing.JButton botaoEstampaExcluir;
+    private javax.swing.JButton botaoEstampaSelecionar;
+    private javax.swing.JButton botaoFrameCoresEstampaApagar;
+    private javax.swing.JButton botaoFrameCoresEstampaSelecionar;
+    private javax.swing.JButton botaoFrameCoresFundoSelecionar;
     private javax.swing.JButton botaoIniciar;
+    private javax.swing.JButton botaoTexturaExcluir;
+    private javax.swing.JButton botaoTexturaSelecionar;
     private javax.swing.ButtonGroup buttonGroupBordaTela;
     private javax.swing.ButtonGroup buttonGroupRotacionarEstampas;
     private javax.swing.ButtonGroup buttonGroupTelaForma;
@@ -768,16 +1140,22 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private org.apache.batik.swing.JSVGCanvas canvasPreviewFormaFundo;
     private org.apache.batik.swing.JSVGCanvas canvasPreviewModo;
     private org.apache.batik.swing.JSVGCanvas canvasPreviewPreenchimento;
+    private org.apache.batik.swing.JSVGCanvas canvasframeEstampa;
+    private org.apache.batik.swing.JSVGCanvas canvasframeTextura;
+    private javax.swing.JComboBox<String> comboboxEstampas;
+    private javax.swing.JComboBox<String> comboboxTexturas;
+    private javax.swing.JColorChooser escolherCor;
     private javax.swing.JMenuItem estampaAdicionar;
-    private javax.swing.JMenuItem estampaRemover;
     private javax.swing.JMenuItem estampaSelecionar;
-    private javax.swing.JMenuItem itemCoresAdicionar;
-    private javax.swing.JMenuItem itemCoresRemover;
+    private javax.swing.JFileChooser fileEstampaAdicionar;
+    private javax.swing.JFileChooser filePreenchimentoAdicionar;
+    private javax.swing.JFrame frameCoresEscolher;
+    private javax.swing.JFrame frameEstampaEscolher;
+    private javax.swing.JFrame frameTexturasEscolher;
     private javax.swing.JMenuItem itemCoresSelecionar;
     private javax.swing.JMenuItem itemManual;
     private javax.swing.JMenuItem itemSobre;
     private javax.swing.JMenuItem itemTexturaAdicionar;
-    private javax.swing.JMenuItem itemTexturaRemover;
     private javax.swing.JMenuItem itemTexturaSelecionar;
     private javax.swing.JMenu menuAjuda;
     private javax.swing.JMenu menuCores;
@@ -785,6 +1163,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JMenu menuPreenchimento;
     private javax.swing.JMenu menuTextura;
     private javax.swing.JPanel panelCorpo;
+    private javax.swing.JPanel panelFrameCoresEstampa1;
+    private javax.swing.JPanel panelFrameCoresEstampa2;
+    private javax.swing.JPanel panelFrameCoresEstampa3;
+    private javax.swing.JPanel panelFrameCoresEstampa4;
+    private javax.swing.JPanel panelFrameCoresFundo;
     private javax.swing.JSeparator panelSeparador;
     private javax.swing.JPanel previewCorFundo;
     private javax.swing.JPanel previewCorPaleta1;
@@ -801,6 +1184,13 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JRadioButton radioTipoPreenchimentoTexturas;
     private javax.swing.JSpinner spinnerValorC;
     private javax.swing.JLabel textoBordaTela;
+    private javax.swing.JLabel textoFrameCoresCorpo;
+    private javax.swing.JLabel textoFrameCoresEstampas;
+    private javax.swing.JLabel textoFrameCoresFundo;
+    private javax.swing.JLabel textoFrameEstampaCorpo;
+    private javax.swing.JLabel textoFrameEstampaPreview;
+    private javax.swing.JLabel textoFrameTexturaCorpo;
+    private javax.swing.JLabel textoFrameTexturaPreview;
     private javax.swing.JLabel textoPreview;
     private javax.swing.JLabel textoPreviewCorFundo;
     private javax.swing.JLabel textoPreviewEstampa;

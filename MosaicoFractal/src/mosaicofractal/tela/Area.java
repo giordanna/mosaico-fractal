@@ -115,7 +115,7 @@ public class Area extends JPanel{
     public Shape getFormaFundo() {
         return this.forma_area;
     }
-    
+    /*
     public void preencherArea(ArrayList<Shape> formas, ArrayList<Preenchimento> preenchimentos, double c) {
         final int formas_max = 90000, iteracoes_max = 400000;
         final double preenchimento_max = 0.99;
@@ -182,7 +182,7 @@ public class Area extends JPanel{
         
         System.out.println((System.currentTimeMillis() - tempoInicial)/1000.0);
     }
-    
+    */
     public double funcaoZeta(double c, int N) {
         double soma = 0;
         int NEXP = 100000;

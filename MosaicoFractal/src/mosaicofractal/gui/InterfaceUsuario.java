@@ -12,10 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -31,14 +29,25 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private int textura = 1;
     private int estampa = 1;
     private int forma_fundo = 1;
+    private Dimension dim;
     
     /**
      * Creates new form InterfaceUsuario
      */
     public InterfaceUsuario() {
         initComponents();
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2);
+        
+        frameEstampaEscolher.pack();
+        frameEstampaEscolher.setLocation(dim.width/2-frameEstampaEscolher.getSize().width/2, dim.height/2-frameEstampaEscolher.getSize().height/2);
+        
+        frameTexturasEscolher.pack();
+        frameTexturasEscolher.setLocation(dim.width/2-frameTexturasEscolher.getSize().width/2, dim.height/2-frameTexturasEscolher.getSize().height/2);
+        
+        frameCoresEscolher.pack();
+        frameCoresEscolher.setLocation(dim.width/2-frameCoresEscolher.getSize().width/2, dim.height/2-frameCoresEscolher.getSize().height/2);
+        
     }
 
     /**
@@ -137,8 +146,15 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         filePreenchimentoAdicionar.setFileFilter(new FileNameExtensionFilter("SVG", "svg"));
 
         frameEstampaEscolher.setTitle("Escolher Estampas");
+        frameEstampaEscolher.setResizable(false);
+        frameEstampaEscolher.setType(java.awt.Window.Type.POPUP);
 
         comboboxEstampas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboboxEstampas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboboxEstampasActionPerformed(evt);
+            }
+        });
 
         textoFrameEstampaCorpo.setText("Escolha uma das estampas disponíveis e selecione a sua opção desejada:");
 
@@ -197,6 +213,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         );
 
         frameTexturasEscolher.setTitle("Escolher Texturas");
+        frameTexturasEscolher.setResizable(false);
 
         comboboxTexturas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -259,6 +276,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         );
 
         frameCoresEscolher.setTitle("Escolher Cores");
+        frameCoresEscolher.setResizable(false);
 
         textoFrameCoresCorpo.setText("Escolha as cores desejadas:");
 
@@ -491,7 +509,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         canvasPreviewModo.setPreferredSize(new java.awt.Dimension(100, 100));
 
         try{
-            File g = new File("src/mosaicofractal/gui/icones/modo_sem_forma_nao_rotaciona_com_limite.svg").getCanonicalFile();
+            File g = new File("img/icones/modo_sem_forma_nao_rotaciona_com_limite.svg").getCanonicalFile();
             canvasPreviewModo.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){
@@ -525,7 +543,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         canvasPreviewEstampa.setPreferredSize(new java.awt.Dimension(100, 100));
 
         try{
-            File g = new File("src/mosaicofractal/arquivos/estampas/estampa1.svg").getCanonicalFile();
+            File g = new File("img/estampas/estampa1.svg").getCanonicalFile();
             canvasPreviewEstampa.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){
@@ -781,6 +799,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         menuCores.setText("Cores");
 
         itemCoresSelecionar.setText("Selecionar...");
+        itemCoresSelecionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemCoresSelecionarActionPerformed(evt);
+            }
+        });
         menuCores.add(itemCoresSelecionar);
 
         menuPreenchimento.add(menuCores);
@@ -796,6 +819,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         menuTextura.add(itemTexturaAdicionar);
 
         itemTexturaSelecionar.setText("Selecionar...");
+        itemTexturaSelecionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemTexturaSelecionarActionPerformed(evt);
+            }
+        });
         menuTextura.add(itemTexturaSelecionar);
 
         menuPreenchimento.add(menuTextura);
@@ -984,19 +1012,8 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_radioRotacionarEstampasNaoActionPerformed
 
     private void estampaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estampaSelecionarActionPerformed
-        File folder = new File("src/mosaicofractal/arquivos/estampas");
-        File[] lista_arquivos = folder.listFiles();
-        ArrayList<String> nomes_arquivos = new ArrayList<>();
-        for (File x : lista_arquivos) {
-            if (x.isFile()) {
-                nomes_arquivos.add(x.getName());
-            }
-        }
-        Object [] valores = nomes_arquivos.toArray();
-        Object valor_selecionado = JOptionPane.showInputDialog(this,
-                "Selecione uma das Estampas abaixo", "Mosaico Fractal",
-                JOptionPane.PLAIN_MESSAGE, null,
-                valores, valores[0]);
+        frameEstampaEscolher.setLocation(dim.width/2-frameEstampaEscolher.getSize().width/2, dim.height/2-frameEstampaEscolher.getSize().height/2);
+        frameEstampaEscolher.setVisible(true);
     }//GEN-LAST:event_estampaSelecionarActionPerformed
 
     private void estampaAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estampaAdicionarActionPerformed
@@ -1005,7 +1022,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             File arquivo = fileEstampaAdicionar.getSelectedFile();
             File copia;
             try {
-                copia = new File("src/mosaicofractal/arquivos/estampas/estampa" + numeroEstampa() + ".svg").getCanonicalFile();
+                copia = new File("img/estampas/estampa" + numeroEstampa() + ".svg").getCanonicalFile();
                 Files.copy(arquivo.toPath(),copia.toPath(), REPLACE_EXISTING);
             } catch (IOException ex) {
                 Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -1019,13 +1036,27 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             File arquivo = filePreenchimentoAdicionar.getSelectedFile();
             File copia;
             try {
-                copia = new File("src/mosaicofractal/arquivos/texturas/textura" + numeroTextura() + ".svg").getCanonicalFile();
+                copia = new File("img/texturas/textura" + numeroTextura() + ".svg").getCanonicalFile();
                 Files.copy(arquivo.toPath(),copia.toPath(), REPLACE_EXISTING);
             } catch (IOException ex) {
                 Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_itemTexturaAdicionarActionPerformed
+
+    private void comboboxEstampasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxEstampasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboboxEstampasActionPerformed
+
+    private void itemTexturaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemTexturaSelecionarActionPerformed
+        frameTexturasEscolher.setLocation(dim.width/2-frameTexturasEscolher.getSize().width/2, dim.height/2-frameTexturasEscolher.getSize().height/2);
+        frameTexturasEscolher.setVisible(true);
+    }//GEN-LAST:event_itemTexturaSelecionarActionPerformed
+
+    private void itemCoresSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCoresSelecionarActionPerformed
+        frameCoresEscolher.setLocation(dim.width/2-frameCoresEscolher.getSize().width/2, dim.height/2-frameCoresEscolher.getSize().height/2);
+        frameCoresEscolher.setVisible(true);
+    }//GEN-LAST:event_itemCoresSelecionarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1052,7 +1083,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     
     public void trocaIconeModo(String arquivo) {
         try{
-            File g = new File("src/mosaicofractal/gui/icones/" + arquivo + ".svg").getCanonicalFile();
+            File g = new File("img/icones/" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewModo.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
@@ -1060,7 +1091,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     
     public void trocaIconeEstampa(int arquivo) {
         try{
-            File g = new File("src/mosaicofractal/arquivos/estampas/estampa" + arquivo + ".svg").getCanonicalFile();
+            File g = new File("img/estampas/estampa" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewEstampa.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
@@ -1068,7 +1099,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     
     public void trocaIconeTextura(int arquivo) {
         try{
-            File g = new File("src/mosaicofractal/arquivos/texturas/textura" + arquivo + ".svg").getCanonicalFile();
+            File g = new File("img/texturas/textura" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewPreenchimento.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
@@ -1076,7 +1107,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     
     public void trocaIconeForma(int arquivo) {
         try{
-            File g = new File("src/mosaicofractal/arquivos/estampas/estampa" + arquivo + ".svg").getCanonicalFile();
+            File g = new File("img/estampas/estampa" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewFormaFundo.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
@@ -1084,7 +1115,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     
     public void deixaVazio(org.apache.batik.swing.JSVGCanvas canvas) {
         try{
-            File g = new File("src/mosaicofractal/arquivos/vazio.svg").getCanonicalFile();
+            File g = new File("img/vazio.svg").getCanonicalFile();
             canvas.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
@@ -1093,10 +1124,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private int numeroEstampa() {
         try {
             int v = 1;
-            File salva = new File("src/mosaicofractal/arquivos/estampas/estampa" + v + ".svg").getCanonicalFile();
+            File salva = new File("img/estampas/estampa" + v + ".svg").getCanonicalFile();
             while (salva.exists()){
                 v++;
-                salva = new File("src/mosaicofractal/arquivos/estampas/estampa" + v + ".svg").getCanonicalFile();
+                salva = new File("img/estampas/estampa" + v + ".svg").getCanonicalFile();
             }
             return v;
         } catch (IOException ex) {
@@ -1109,10 +1140,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private int numeroTextura(){
         try{
             int v = 1;
-            File salva = new File("src/mosaicofractal/arquivos/texturas/textura" + v + ".svg").getCanonicalFile();
+            File salva = new File("img/texturas/textura" + v + ".svg").getCanonicalFile();
             while (salva.exists()){
                 v++;
-                salva = new File("src/mosaicofractal/arquivos/texturas/textura" + v + ".svg").getCanonicalFile();
+                salva = new File("img/texturas/textura" + v + ".svg").getCanonicalFile();
             }
             return v;
         } catch (IOException ex) {

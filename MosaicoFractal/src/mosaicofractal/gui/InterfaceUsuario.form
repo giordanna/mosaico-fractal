@@ -43,17 +43,20 @@
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="botaoEstampaSelecionar" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="botaoEstampaExcluir" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="comboboxEstampas" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="textoFrameEstampaPreview" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="botaoEstampaSelecionar" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="botaoEstampaSelecionarFundo" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="botaoEstampaExcluir" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="32767" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                           <Component id="canvasframeEstampa" min="-2" pref="150" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -74,10 +77,11 @@
                               <Component id="textoFrameEstampaPreview" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="botaoEstampaSelecionar" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="botaoEstampaExcluir" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="botaoEstampaSelecionar" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="botaoEstampaSelecionarFundo" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="botaoEstampaExcluir" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="canvasframeEstampa" min="-2" pref="150" max="-2" attributes="0"/>
                   </Group>
@@ -90,11 +94,9 @@
         <Component class="javax.swing.JComboBox" name="comboboxEstampas">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
+              <StringArray count="2">
+                <StringItem index="0" value="estampa1.svg"/>
+                <StringItem index="1" value="estampa2.svg"/>
               </StringArray>
             </Property>
           </Properties>
@@ -112,6 +114,9 @@
         </Component>
         <Container class="org.apache.batik.swing.JSVGCanvas" name="canvasframeEstampa">
           <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="f0" green="f0" id="Controle" palette="2" red="f0" type="palette"/>
+            </Property>
             <Property name="enableImageZoomInteractor" type="boolean" value="false"/>
             <Property name="enablePanInteractor" type="boolean" value="false"/>
             <Property name="enableResetTransformInteractor" type="boolean" value="false"/>
@@ -121,6 +126,9 @@
               <Dimension value="[150, 150]"/>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="try{&#xa;    File g = new File(&quot;img/estampas/estampa1.svg&quot;).getCanonicalFile();&#xa;    canvasframeEstampa.setURI(g.toURI().toString());&#xa;}&#xa;catch(java.io.IOException e){&#xa;}"/>
+          </AuxValues>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
             <Property name="useNullLayout" type="boolean" value="true"/>
@@ -128,17 +136,22 @@
         </Container>
         <Component class="javax.swing.JButton" name="botaoEstampaSelecionar">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Selecionar"/>
+            <Property name="text" type="java.lang.String" value="Selecionar como Estampa"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="botaoEstampaExcluir">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Excluir"/>
+            <Property name="text" type="java.lang.String" value="Excluir Arquivo"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="textoFrameEstampaPreview">
           <Properties>
             <Property name="text" type="java.lang.String" value="Preview:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="botaoEstampaSelecionarFundo">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Selecionar como Fundo"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -209,14 +222,14 @@
         <Component class="javax.swing.JComboBox" name="comboboxTexturas">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
+              <StringArray count="1">
+                <StringItem index="0" value="textura1.svg"/>
               </StringArray>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comboboxTexturasActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -228,6 +241,9 @@
         </Component>
         <Container class="org.apache.batik.swing.JSVGCanvas" name="canvasframeTextura">
           <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="f0" green="f0" id="Controle" palette="2" red="f0" type="palette"/>
+            </Property>
             <Property name="enableImageZoomInteractor" type="boolean" value="false"/>
             <Property name="enablePanInteractor" type="boolean" value="false"/>
             <Property name="enableResetTransformInteractor" type="boolean" value="false"/>
@@ -237,6 +253,9 @@
               <Dimension value="[150, 150]"/>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="try{&#xa;    File g = new File(&quot;img/texturas/textura1.svg&quot;).getCanonicalFile();&#xa;    canvasframeTextura.setURI(g.toURI().toString());&#xa;}&#xa;catch(java.io.IOException e){&#xa;}"/>
+          </AuxValues>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
             <Property name="useNullLayout" type="boolean" value="true"/>
@@ -954,7 +973,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="try{&#xa;    File g = new File(&quot;src/mosaicofractal/gui/icones/modo_sem_forma_nao_rotaciona_com_limite.svg&quot;).getCanonicalFile();&#xa;    canvasPreviewModo.setURI(g.toURI().toString());&#xa;}&#xa;catch(java.io.IOException e){&#xa;}"/>
+            <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="try{&#xa;    File g = new File(&quot;img/icones/modo_sem_forma_nao_rotaciona_com_limite.svg&quot;).getCanonicalFile();&#xa;    canvasPreviewModo.setURI(g.toURI().toString());&#xa;}&#xa;catch(java.io.IOException e){&#xa;}"/>
           </AuxValues>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
@@ -1023,7 +1042,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="try{&#xa;    File g = new File(&quot;src/mosaicofractal/arquivos/estampas/estampa1.svg&quot;).getCanonicalFile();&#xa;    canvasPreviewEstampa.setURI(g.toURI().toString());&#xa;}&#xa;catch(java.io.IOException e){&#xa;}"/>
+            <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="try{&#xa;    File g = new File(&quot;img/estampas/estampa1.svg&quot;).getCanonicalFile();&#xa;    canvasPreviewEstampa.setURI(g.toURI().toString());&#xa;}&#xa;catch(java.io.IOException e){&#xa;}"/>
           </AuxValues>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -72,6 +73,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         botaoEstampaSelecionar = new javax.swing.JButton();
         botaoEstampaExcluir = new javax.swing.JButton();
         textoFrameEstampaPreview = new javax.swing.JLabel();
+        botaoEstampaSelecionarFundo = new javax.swing.JButton();
         frameTexturasEscolher = new javax.swing.JFrame();
         comboboxTexturas = new javax.swing.JComboBox<>();
         textoFrameTexturaCorpo = new javax.swing.JLabel();
@@ -149,7 +151,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         frameEstampaEscolher.setResizable(false);
         frameEstampaEscolher.setType(java.awt.Window.Type.POPUP);
 
-        comboboxEstampas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboboxEstampas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "estampa1.svg", "estampa2.svg" }));
         comboboxEstampas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboboxEstampasActionPerformed(evt);
@@ -158,6 +160,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         textoFrameEstampaCorpo.setText("Escolha uma das estampas disponíveis e selecione a sua opção desejada:");
 
+        canvasframeEstampa.setBackground(java.awt.SystemColor.control);
         canvasframeEstampa.setEnableImageZoomInteractor(false);
         canvasframeEstampa.setEnablePanInteractor(false);
         canvasframeEstampa.setEnableResetTransformInteractor(false);
@@ -165,11 +168,20 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         canvasframeEstampa.setEnableZoomInteractor(false);
         canvasframeEstampa.setPreferredSize(new java.awt.Dimension(150, 150));
 
-        botaoEstampaSelecionar.setText("Selecionar");
+        try{
+            File g = new File("img/estampas/estampa1.svg").getCanonicalFile();
+            canvasframeEstampa.setURI(g.toURI().toString());
+        }
+        catch(java.io.IOException e){
+        }
 
-        botaoEstampaExcluir.setText("Excluir");
+        botaoEstampaSelecionar.setText("Selecionar como Estampa");
+
+        botaoEstampaExcluir.setText("Excluir Arquivo");
 
         textoFrameEstampaPreview.setText("Preview:");
+
+        botaoEstampaSelecionarFundo.setText("Selecionar como Fundo");
 
         javax.swing.GroupLayout frameEstampaEscolherLayout = new javax.swing.GroupLayout(frameEstampaEscolher.getContentPane());
         frameEstampaEscolher.getContentPane().setLayout(frameEstampaEscolherLayout);
@@ -182,14 +194,16 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                     .addGroup(frameEstampaEscolherLayout.createSequentialGroup()
                         .addGroup(frameEstampaEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(frameEstampaEscolherLayout.createSequentialGroup()
-                                .addComponent(botaoEstampaSelecionar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(botaoEstampaExcluir))
-                            .addGroup(frameEstampaEscolherLayout.createSequentialGroup()
                                 .addComponent(comboboxEstampas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(textoFrameEstampaPreview)))
-                        .addGap(18, 18, 18)
+                                .addComponent(textoFrameEstampaPreview)
+                                .addGap(18, 18, 18))
+                            .addGroup(frameEstampaEscolherLayout.createSequentialGroup()
+                                .addGroup(frameEstampaEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(botaoEstampaSelecionar)
+                                    .addComponent(botaoEstampaSelecionarFundo)
+                                    .addComponent(botaoEstampaExcluir))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(canvasframeEstampa, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -205,9 +219,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                             .addComponent(comboboxEstampas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(textoFrameEstampaPreview))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(frameEstampaEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(botaoEstampaSelecionar)
-                            .addComponent(botaoEstampaExcluir)))
+                        .addComponent(botaoEstampaSelecionar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botaoEstampaSelecionarFundo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botaoEstampaExcluir))
                     .addComponent(canvasframeEstampa, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -215,16 +231,29 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         frameTexturasEscolher.setTitle("Escolher Texturas");
         frameTexturasEscolher.setResizable(false);
 
-        comboboxTexturas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboboxTexturas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "textura1.svg" }));
+        comboboxTexturas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboboxTexturasActionPerformed(evt);
+            }
+        });
 
         textoFrameTexturaCorpo.setText("Escolha uma das texturas disponíveis e selecione a sua opção desejada:");
 
+        canvasframeTextura.setBackground(java.awt.SystemColor.control);
         canvasframeTextura.setEnableImageZoomInteractor(false);
         canvasframeTextura.setEnablePanInteractor(false);
         canvasframeTextura.setEnableResetTransformInteractor(false);
         canvasframeTextura.setEnableRotateInteractor(false);
         canvasframeTextura.setEnableZoomInteractor(false);
         canvasframeTextura.setPreferredSize(new java.awt.Dimension(150, 150));
+
+        try{
+            File g = new File("img/texturas/textura1.svg").getCanonicalFile();
+            canvasframeTextura.setURI(g.toURI().toString());
+        }
+        catch(java.io.IOException e){
+        }
 
         botaoTexturaSelecionar.setText("Selecionar");
 
@@ -874,14 +903,14 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
         if (radioTelaFormaSim.isSelected()) {
             if (radioRotacionarEstampasSim.isSelected()) {
-                trocaIconeModo("modo_com_forma_sim_rotaciona");
+                trocaPreviewIconeModo("modo_com_forma_sim_rotaciona");
             }
             else {
-                trocaIconeModo("modo_com_forma_nao_rotaciona");
+                trocaPreviewIconeModo("modo_com_forma_nao_rotaciona");
             }
         }
         textoPreviewFormaFundo.setText("Forma do fundo:");
-        trocaIconeForma(forma_fundo);
+        trocaPreviewIconeForma(forma_fundo);
     }//GEN-LAST:event_radioTelaFormaSimActionPerformed
 
     private void radioBordaTelaNaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBordaTelaNaoActionPerformed
@@ -892,10 +921,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
         if (radioBordaTelaNao.isSelected()) {
             if (radioRotacionarEstampasSim.isSelected()) {
-                trocaIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
+                trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
             }
             else {
-                trocaIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
+                trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
             }
         }
     }//GEN-LAST:event_radioBordaTelaNaoActionPerformed
@@ -904,18 +933,18 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         if (radioTelaFormaNao.isSelected()) {
             if (radioRotacionarEstampasSim.isSelected()) {
                 if (radioBordaTelaSim.isSelected()) {
-                    trocaIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
+                    trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
                 }
                 else {
-                    trocaIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
+                    trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
                 }
             }
             else {
                 if (radioBordaTelaSim.isSelected()) {
-                    trocaIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
+                    trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
                 }
                 else {
-                    trocaIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
+                    trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
                 }
             }
         }
@@ -955,25 +984,25 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             textoPreviewPreenchimentoTextura.setForeground(java.awt.Color.BLACK);
         }
         
-        trocaIconeTextura(textura);
+        trocaPreviewIconeTextura(textura);
     }//GEN-LAST:event_radioTipoPreenchimentoTexturasActionPerformed
 
     private void radioBordaTelaSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBordaTelaSimActionPerformed
         if (radioBordaTelaSim.isSelected()) {
             if (radioTelaFormaSim.isSelected()) {
                 if (radioRotacionarEstampasSim.isSelected()) {
-                    trocaIconeModo("modo_com_forma_sim_rotaciona");
+                    trocaPreviewIconeModo("modo_com_forma_sim_rotaciona");
                 }
                 else {
-                    trocaIconeModo("modo_com_forma_nao_rotaciona");
+                    trocaPreviewIconeModo("modo_com_forma_nao_rotaciona");
                 }
             }
             else {
                 if (radioRotacionarEstampasSim.isSelected()) {
-                    trocaIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
+                    trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
                 }
                 else {
-                    trocaIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
+                    trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
                 }
             }
         }
@@ -982,14 +1011,14 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private void radioRotacionarEstampasSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioRotacionarEstampasSimActionPerformed
         if (radioRotacionarEstampasSim.isSelected()) {
             if (radioTelaFormaSim.isSelected()) {
-                trocaIconeModo("modo_com_forma_sim_rotaciona");
+                trocaPreviewIconeModo("modo_com_forma_sim_rotaciona");
             }
             else {
                 if (radioBordaTelaSim.isSelected()) {
-                    trocaIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
+                    trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
                 }
                 else {
-                    trocaIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
+                    trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
                 }
             }
         }
@@ -998,20 +1027,21 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private void radioRotacionarEstampasNaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioRotacionarEstampasNaoActionPerformed
         if (radioRotacionarEstampasNao.isSelected()) {
             if (radioTelaFormaSim.isSelected()) {
-                trocaIconeModo("modo_com_forma_nao_rotaciona");
+                trocaPreviewIconeModo("modo_com_forma_nao_rotaciona");
             }
             else {
                 if (radioBordaTelaSim.isSelected()) {
-                    trocaIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
+                    trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
                 }
                 else {
-                    trocaIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
+                    trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
                 }
             }
         }
     }//GEN-LAST:event_radioRotacionarEstampasNaoActionPerformed
 
     private void estampaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estampaSelecionarActionPerformed
+        atualizarEstampas();
         frameEstampaEscolher.setLocation(dim.width/2-frameEstampaEscolher.getSize().width/2, dim.height/2-frameEstampaEscolher.getSize().height/2);
         frameEstampaEscolher.setVisible(true);
     }//GEN-LAST:event_estampaSelecionarActionPerformed
@@ -1045,10 +1075,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_itemTexturaAdicionarActionPerformed
 
     private void comboboxEstampasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxEstampasActionPerformed
-        // TODO add your handling code here:
+        trocaFrameIconeEstampa((String) comboboxEstampas.getSelectedItem());
     }//GEN-LAST:event_comboboxEstampasActionPerformed
 
     private void itemTexturaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemTexturaSelecionarActionPerformed
+        atualizarTexturas();
         frameTexturasEscolher.setLocation(dim.width/2-frameTexturasEscolher.getSize().width/2, dim.height/2-frameTexturasEscolher.getSize().height/2);
         frameTexturasEscolher.setVisible(true);
     }//GEN-LAST:event_itemTexturaSelecionarActionPerformed
@@ -1057,6 +1088,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         frameCoresEscolher.setLocation(dim.width/2-frameCoresEscolher.getSize().width/2, dim.height/2-frameCoresEscolher.getSize().height/2);
         frameCoresEscolher.setVisible(true);
     }//GEN-LAST:event_itemCoresSelecionarActionPerformed
+
+    private void comboboxTexturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxTexturasActionPerformed
+        trocaFrameIconeTextura((String) comboboxTexturas.getSelectedItem());
+    }//GEN-LAST:event_comboboxTexturasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1081,7 +1116,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         });
     }
     
-    public void trocaIconeModo(String arquivo) {
+    public void trocaPreviewIconeModo(String arquivo) {
         try{
             File g = new File("img/icones/" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewModo.setURI(g.toURI().toString());
@@ -1089,7 +1124,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         catch(java.io.IOException e){}
     }
     
-    public void trocaIconeEstampa(int arquivo) {
+    public void trocaPreviewIconeEstampa(int arquivo) {
         try{
             File g = new File("img/estampas/estampa" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewEstampa.setURI(g.toURI().toString());
@@ -1097,7 +1132,23 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         catch(java.io.IOException e){}
     }
     
-    public void trocaIconeTextura(int arquivo) {
+    public void trocaFrameIconeEstampa(String arquivo) {
+        try{
+            File g = new File("img/estampas/" + arquivo).getCanonicalFile();
+            canvasframeEstampa.setURI(g.toURI().toString());
+        }
+        catch(java.io.IOException e){}
+    }
+    
+    public void trocaFrameIconeTextura(String arquivo) {
+        try{
+            File g = new File("img/texturas/" + arquivo).getCanonicalFile();
+            canvasframeTextura.setURI(g.toURI().toString());
+        }
+        catch(java.io.IOException e){}
+    }
+    
+    public void trocaPreviewIconeTextura(int arquivo) {
         try{
             File g = new File("img/texturas/textura" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewPreenchimento.setURI(g.toURI().toString());
@@ -1105,7 +1156,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         catch(java.io.IOException e){}
     }
     
-    public void trocaIconeForma(int arquivo) {
+    public void trocaPreviewIconeForma(int arquivo) {
         try{
             File g = new File("img/estampas/estampa" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewFormaFundo.setURI(g.toURI().toString());
@@ -1152,11 +1203,47 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         
         return 0;
     }
+    
+    private void atualizarEstampas() {
+        File folder = new File("img/estampas");
+
+        File[] lista_arquivos = folder.listFiles();
+        ArrayList<String> nomes_arquivos = new ArrayList<>();
+        for (File x : lista_arquivos) {
+            if (x.isFile()) {
+                nomes_arquivos.add(x.getName());
+            }
+        }
+        String [] valores = new String[nomes_arquivos.size()];
+        for (int i = 0 ; i < nomes_arquivos.size() ; i++)
+            valores[i] = nomes_arquivos.get(i);
+        
+        comboboxEstampas.setModel(new javax.swing.DefaultComboBoxModel<>(valores));
+    }
+    
+    private void atualizarTexturas() {
+        File folder = new File("img/texturas");
+
+        File[] lista_arquivos = folder.listFiles();
+        ArrayList<String> nomes_arquivos = new ArrayList<>();
+        for (File x : lista_arquivos) {
+            if (x.isFile()) {
+                nomes_arquivos.add(x.getName());
+            }
+        }
+        
+        String [] valores = new String[nomes_arquivos.size()];
+        for (int i = 0 ; i < nomes_arquivos.size() ; i++)
+            valores[i] = nomes_arquivos.get(i);
+        
+        comboboxTexturas.setModel(new javax.swing.DefaultComboBoxModel<>(valores));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraMenu;
     private javax.swing.JButton botaoEstampaExcluir;
     private javax.swing.JButton botaoEstampaSelecionar;
+    private javax.swing.JButton botaoEstampaSelecionarFundo;
     private javax.swing.JButton botaoFrameCoresEstampaApagar;
     private javax.swing.JButton botaoFrameCoresEstampaSelecionar;
     private javax.swing.JButton botaoFrameCoresFundoSelecionar;

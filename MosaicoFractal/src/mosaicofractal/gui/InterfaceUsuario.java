@@ -183,6 +183,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         });
 
         botaoEstampaExcluir.setText("Excluir Arquivo");
+        botaoEstampaExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoEstampaExcluirActionPerformed(evt);
+            }
+        });
 
         textoFrameEstampaPreview.setText("Preview:");
 
@@ -273,6 +278,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         });
 
         botaoTexturaExcluir.setText("Excluir");
+        botaoTexturaExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoTexturaExcluirActionPerformed(evt);
+            }
+        });
 
         textoFrameTexturaPreview.setText("Preview:");
 
@@ -1115,13 +1125,60 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
     private void botaoEstampaSelecionarFundoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEstampaSelecionarFundoActionPerformed
         forma_fundo = (String) comboboxEstampas.getSelectedItem();
-        trocaIconeEstampa(canvasPreviewFormaFundo, forma_fundo);
+        if (radioTelaFormaSim.isSelected())
+            trocaIconeEstampa(canvasPreviewFormaFundo, forma_fundo);
     }//GEN-LAST:event_botaoEstampaSelecionarFundoActionPerformed
 
     private void botaoTexturaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTexturaSelecionarActionPerformed
         textura = (String) comboboxTexturas.getSelectedItem();
-        trocaIconeTextura(canvasPreviewPreenchimento, textura);
+        if (radioTipoPreenchimentoTexturas.isSelected())
+            trocaIconeTextura(canvasPreviewPreenchimento, textura);
     }//GEN-LAST:event_botaoTexturaSelecionarActionPerformed
+
+    private void botaoTexturaExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTexturaExcluirActionPerformed
+        String nome = (String) comboboxTexturas.getSelectedItem();
+        if (nome.equals("textura1.svg") || nome.equals("textura2.svg")) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Não pode deletar este arquivo. Foi feito com muito carinho. :(",
+                    "Erro",javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+        else{
+            if (nome.equals(textura)){
+                textura = "textura1.svg";
+                if (radioTipoPreenchimentoTexturas.isSelected())
+                    trocaIconeTextura(canvasPreviewPreenchimento, textura);
+            }
+            File arquivo = new File("img/texturas/" + nome);
+            arquivo.delete();
+            atualizarTexturas();
+            
+        }
+    }//GEN-LAST:event_botaoTexturaExcluirActionPerformed
+
+    private void botaoEstampaExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEstampaExcluirActionPerformed
+        String nome = (String) comboboxEstampas.getSelectedItem();
+        if (nome.equals("estampa1.svg") || nome.equals("estampa2.svg")) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Não pode deletar este arquivo. Foi feito com muito carinho. :(",
+                    "Erro",javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+        else{
+            if (nome.equals(estampa)){
+                estampa = "estampa1.svg";
+                trocaIconeEstampa(canvasPreviewEstampa, estampa);
+            }
+            
+            if (nome.equals(forma_fundo)){
+                forma_fundo = "estampa1.svg";
+                if (radioTelaFormaSim.isSelected())
+                    trocaIconeEstampa(canvasPreviewFormaFundo, forma_fundo);
+            }
+            
+            File arquivo = new File("img/estampas/" + nome);
+            arquivo.delete();
+            atualizarEstampas();
+        }
+    }//GEN-LAST:event_botaoEstampaExcluirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1225,6 +1282,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             valores[i] = nomes_arquivos.get(i);
         
         comboboxEstampas.setModel(new javax.swing.DefaultComboBoxModel<>(valores));
+        trocaIconeEstampa(canvasframeEstampa, (String) comboboxEstampas.getSelectedItem());
     }
     
     private void atualizarTexturas() {
@@ -1243,6 +1301,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             valores[i] = nomes_arquivos.get(i);
         
         comboboxTexturas.setModel(new javax.swing.DefaultComboBoxModel<>(valores));
+        trocaIconeTextura(canvasframeTextura, (String) comboboxTexturas.getSelectedItem());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

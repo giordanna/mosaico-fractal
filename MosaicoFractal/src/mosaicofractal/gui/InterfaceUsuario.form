@@ -879,6 +879,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Iniciar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoIniciarActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="textoBordaTela">
           <Properties>

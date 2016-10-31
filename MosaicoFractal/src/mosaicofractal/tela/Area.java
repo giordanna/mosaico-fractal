@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.JPanel;
 import mosaicofractal.elementos.Estampa;
 import mosaicofractal.elementos.Preenchimento;
@@ -20,6 +21,7 @@ public class Area extends JPanel{
     private boolean considerar_bordas = false, mudar_angulo = false, forma_personalizada = false;
     private Shape forma_area = null;
     private ArrayList<Estampa> estampas;
+    private static Random r = new Random();
     
     public Area() {
         estampas = new ArrayList<>();
@@ -115,7 +117,7 @@ public class Area extends JPanel{
     public Shape getFormaFundo() {
         return this.forma_area;
     }
-    /*
+    
     public void preencherArea(ArrayList<Shape> formas, ArrayList<Preenchimento> preenchimentos, double c) {
         final int formas_max = 90000, iteracoes_max = 400000;
         final double preenchimento_max = 0.99;
@@ -135,19 +137,36 @@ public class Area extends JPanel{
                 // raio gerado multiplicado por uma porcentagem de controle. quanto maior c, menor o valor multiplicado
                 // então menor será o raio de fato, que não será um círculo gigante preenchendo 25% da tela, mas
                 // um pouco menor
-                raio_forma = Circulo.raioGeradoEstatico(area_razao) * valorControle(valor_n, exp_u),
-                raio_original_primeiro = Circulo.raioGeradoEstatico(area_razao);
+                raio_forma = (area_razao/2.0) * valorControle(valor_n, exp_u),
+                raio_original_primeiro = area_razao/2.0;
 
         boolean teste;
+        
+        Random r = new Random();
+        
         System.out.println("c = " + c + " | zeta = " + valor_zeta + " | razão = " + area_razao
         + "| raio = " + raio_forma);
         
-        double x = (int) (raio_forma + Math.random() * (Area.instancia().getLargura() -  raio_forma * 2));
-        double y = (int) (raio_forma + Math.random() * (Area.instancia().getAltura() -  raio_forma * 2));
+        double x = 1 - r.nextDouble();
+        double y = 1 - r.nextDouble();
         
-        Area.instancia().getFormas().add(new Circulo((int) x, (int) y, (int) raio_forma));
+        if (forma_area != null) {
+            // encontrar ponto aleatório dentro da forma
+            while (!forma_area.contains(x, y)){
+                x = 1 - r.nextDouble();
+                y = 1 - r.nextDouble();
+            }
+        }
+        
+        Estampa estampa_escolhida = new Estampa(estampas.get(r.nextInt(estampas.size())));
+        if (!considerar_bordas){
+            Area.instancia().getEstampas().add(estampa_escolhida);
+        }
+        else{
+            
+        }
 
-        double area_total = Area.instancia().getFormas().get(0).getArea();
+        double area_total = Area.instancia().getEstampas().get(0).getArea();
         do { // loop no número de círculos
         
             numero_iteracoes = 0;
@@ -182,7 +201,7 @@ public class Area extends JPanel{
         
         System.out.println((System.currentTimeMillis() - tempoInicial)/1000.0);
     }
-    */
+    
     public double funcaoZeta(double c, int N) {
         double soma = 0;
         int NEXP = 100000;

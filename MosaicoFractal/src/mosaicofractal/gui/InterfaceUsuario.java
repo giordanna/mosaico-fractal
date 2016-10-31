@@ -512,6 +512,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         textoPreview.setText("Preview:");
 
         botaoIniciar.setText("Iniciar");
+        botaoIniciar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoIniciarActionPerformed(evt);
+            }
+        });
 
         textoBordaTela.setText("Considerar as bordas da tela como limites do mosaico?");
 
@@ -1317,6 +1322,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                     "Erro",javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_botaoFrameCoresEstampaApagarActionPerformed
+
+    private void botaoIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIniciarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botaoIniciarActionPerformed
 
     /**
      * @param args the command line arguments

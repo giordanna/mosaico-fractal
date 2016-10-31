@@ -28,6 +28,11 @@ public class Estampa {
         this.estampa = estampa;
     }
     
+    public Estampa(Estampa copia) {
+        this.preenchimento = copia.preenchimento;
+        this.estampa = copia.estampa;
+    }
+    
     public Shape getShape() {
         return estampa;
     }

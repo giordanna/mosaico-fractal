@@ -305,9 +305,6 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="textoFrameCoresCorpo" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="textoFrameCoresEstampas" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="textoFrameCoresFundo" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="panelFrameCoresEstampa1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -316,18 +313,26 @@
                           <Component id="panelFrameCoresEstampa3" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="panelFrameCoresEstampa4" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="botaoFrameCoresEstampaSelecionar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="botaoFrameCoresEstampaApagar" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="panelFrameCoresFundo" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="botaoFrameCoresFundoSelecionar" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="textoFrameCoresCorpo" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="textoFrameCoresEstampas" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="textoFrameCoresFundo" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="panelFrameCoresFundo" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="botaoFrameCoresFundoSelecionar" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -340,27 +345,22 @@
                   <Component id="textoFrameCoresEstampas" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="panelFrameCoresEstampa1" min="-2" max="-2" attributes="0"/>
-                              <Component id="panelFrameCoresEstampa2" min="-2" max="-2" attributes="0"/>
-                              <Component id="panelFrameCoresEstampa4" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="botaoFrameCoresEstampaSelecionar" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="botaoFrameCoresEstampaApagar" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="textoFrameCoresFundo" min="-2" max="-2" attributes="0"/>
+                      <Component id="panelFrameCoresEstampa1" min="-2" max="-2" attributes="0"/>
+                      <Component id="panelFrameCoresEstampa2" min="-2" max="-2" attributes="0"/>
+                      <Component id="panelFrameCoresEstampa4" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="botaoFrameCoresEstampaSelecionar" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="botaoFrameCoresEstampaApagar" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="panelFrameCoresEstampa3" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace pref="17" max="32767" attributes="0"/>
+                  <Component id="textoFrameCoresFundo" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="panelFrameCoresFundo" min="-2" max="-2" attributes="0"/>
                       <Component id="botaoFrameCoresFundoSelecionar" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -401,6 +401,9 @@
               </Border>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="panelFrameCoresEstampa1MouseClicked"/>
+          </Events>
 
           <Layout>
             <DimensionLayout dim="0">
@@ -423,6 +426,9 @@
               </Border>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="panelFrameCoresEstampa2MouseClicked"/>
+          </Events>
 
           <Layout>
             <DimensionLayout dim="0">
@@ -445,6 +451,9 @@
               </Border>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="panelFrameCoresEstampa3MouseClicked"/>
+          </Events>
 
           <Layout>
             <DimensionLayout dim="0">
@@ -467,6 +476,9 @@
               </Border>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="panelFrameCoresEstampa4MouseClicked"/>
+          </Events>
 
           <Layout>
             <DimensionLayout dim="0">
@@ -510,16 +522,25 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Selecionar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoFrameCoresEstampaSelecionarActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="botaoFrameCoresEstampaApagar">
           <Properties>
             <Property name="text" type="java.lang.String" value="Apagar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoFrameCoresEstampaApagarActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="botaoFrameCoresFundoSelecionar">
           <Properties>
             <Property name="text" type="java.lang.String" value="Selecionar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoFrameCoresFundoSelecionarActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

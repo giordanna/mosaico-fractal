@@ -7,6 +7,7 @@ package mosaicofractal.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Shape;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.batik.bridge.BridgeContext;
+import org.apache.batik.gvt.GraphicsNode;
+import org.apache.batik.gvt.ShapeNode;
+import static org.apache.batik.swing.svg.JSVGComponent.ALWAYS_DYNAMIC;
+import org.w3c.dom.Element;
+import org.w3c.dom.svg.SVGDocument;
 
 /**
  *
@@ -610,6 +617,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
 
         canvasPreviewPreenchimento.setBackground(new java.awt.Color(240, 240, 240));
+        canvasPreviewPreenchimento.setDocumentState(ALWAYS_DYNAMIC);
         canvasPreviewPreenchimento.setEnableImageZoomInteractor(false);
         canvasPreviewPreenchimento.setEnablePanInteractor(false);
         canvasPreviewPreenchimento.setEnableResetTransformInteractor(false);
@@ -629,6 +637,8 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         textoPreviewPreenchimentoTextura.setText("Textura? Não.");
 
         canvasPreviewEstampa.setBackground(new java.awt.Color(240, 240, 240));
+        canvasPreviewEstampa.setDocument(null);
+        canvasPreviewEstampa.setDocumentState(ALWAYS_DYNAMIC);
         canvasPreviewEstampa.setEnableImageZoomInteractor(false);
         canvasPreviewEstampa.setEnablePanInteractor(false);
         canvasPreviewEstampa.setEnableResetTransformInteractor(false);
@@ -720,6 +730,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         textoPreviewFormaFundo.setText("Fundo normal.");
 
         canvasPreviewFormaFundo.setBackground(new java.awt.Color(240, 240, 240));
+        canvasPreviewFormaFundo.setDocumentState(ALWAYS_DYNAMIC);
         canvasPreviewFormaFundo.setEnableImageZoomInteractor(false);
         canvasPreviewFormaFundo.setEnablePanInteractor(false);
         canvasPreviewFormaFundo.setEnableResetTransformInteractor(false);
@@ -1324,7 +1335,14 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoFrameCoresEstampaApagarActionPerformed
 
     private void botaoIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIniciarActionPerformed
-        // TODO add your handling code here:
+        // estampa
+        BridgeContext ctx = canvasPreviewEstampa.getUpdateManager().getBridgeContext();
+        SVGDocument d = canvasPreviewEstampa.getSVGDocument();
+        Element el = d.getElementById("XMLID_1_");
+        GraphicsNode gn = ctx.getGraphicsNode(el);
+        Shape shape = ((ShapeNode)gn).getShape();
+        frameTeste teste = new frameTeste(shape, radioRotacionarEstampasSim.isSelected());
+        teste.inicia();
     }//GEN-LAST:event_botaoIniciarActionPerformed
 
     /**

@@ -1024,6 +1024,9 @@
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="f0" green="f0" red="f0" type="rgb"/>
             </Property>
+            <Property name="documentState" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="ALWAYS_DYNAMIC" type="code"/>
+            </Property>
             <Property name="enableImageZoomInteractor" type="boolean" value="false"/>
             <Property name="enablePanInteractor" type="boolean" value="false"/>
             <Property name="enableResetTransformInteractor" type="boolean" value="false"/>
@@ -1070,6 +1073,12 @@
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="f0" green="f0" red="f0" type="rgb"/>
+            </Property>
+            <Property name="document" type="org.w3c.dom.Document" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="null"/>
+            </Property>
+            <Property name="documentState" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="ALWAYS_DYNAMIC" type="code"/>
             </Property>
             <Property name="enableImageZoomInteractor" type="boolean" value="false"/>
             <Property name="enablePanInteractor" type="boolean" value="false"/>
@@ -1233,6 +1242,9 @@
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="f0" green="f0" red="f0" type="rgb"/>
+            </Property>
+            <Property name="documentState" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="ALWAYS_DYNAMIC" type="code"/>
             </Property>
             <Property name="enableImageZoomInteractor" type="boolean" value="false"/>
             <Property name="enablePanInteractor" type="boolean" value="false"/>

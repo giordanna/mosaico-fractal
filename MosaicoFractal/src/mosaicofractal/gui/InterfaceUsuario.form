@@ -138,6 +138,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Selecionar como Estampa"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoEstampaSelecionarActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="botaoEstampaExcluir">
           <Properties>
@@ -153,6 +156,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Selecionar como Fundo"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoEstampaSelecionarFundoActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -265,6 +271,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Selecionar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoTexturaSelecionarActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="botaoTexturaExcluir">
           <Properties>

@@ -27,9 +27,9 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private Color cor_fundo_selecionada = Color.WHITE;
     private int qtd_cores = 1;
     private Color [] cores_estampas = {Color.BLACK, null, null, null};
-    private int textura = 1;
-    private int estampa = 1;
-    private int forma_fundo = 1;
+    private String textura = "textura1.svg";
+    private String estampa = "estampa1.svg";
+    private String forma_fundo = "estampa1.svg";
     private Dimension dim;
     
     /**
@@ -176,12 +176,22 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
 
         botaoEstampaSelecionar.setText("Selecionar como Estampa");
+        botaoEstampaSelecionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoEstampaSelecionarActionPerformed(evt);
+            }
+        });
 
         botaoEstampaExcluir.setText("Excluir Arquivo");
 
         textoFrameEstampaPreview.setText("Preview:");
 
         botaoEstampaSelecionarFundo.setText("Selecionar como Fundo");
+        botaoEstampaSelecionarFundo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoEstampaSelecionarFundoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout frameEstampaEscolherLayout = new javax.swing.GroupLayout(frameEstampaEscolher.getContentPane());
         frameEstampaEscolher.getContentPane().setLayout(frameEstampaEscolherLayout);
@@ -256,6 +266,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
 
         botaoTexturaSelecionar.setText("Selecionar");
+        botaoTexturaSelecionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoTexturaSelecionarActionPerformed(evt);
+            }
+        });
 
         botaoTexturaExcluir.setText("Excluir");
 
@@ -910,7 +925,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             }
         }
         textoPreviewFormaFundo.setText("Forma do fundo:");
-        trocaPreviewIconeForma(forma_fundo);
+        trocaIconeEstampa(canvasPreviewFormaFundo, forma_fundo);
     }//GEN-LAST:event_radioTelaFormaSimActionPerformed
 
     private void radioBordaTelaNaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBordaTelaNaoActionPerformed
@@ -984,7 +999,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             textoPreviewPreenchimentoTextura.setForeground(java.awt.Color.BLACK);
         }
         
-        trocaPreviewIconeTextura(textura);
+        trocaIconeTextura(canvasPreviewPreenchimento, textura);
     }//GEN-LAST:event_radioTipoPreenchimentoTexturasActionPerformed
 
     private void radioBordaTelaSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBordaTelaSimActionPerformed
@@ -1075,7 +1090,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_itemTexturaAdicionarActionPerformed
 
     private void comboboxEstampasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxEstampasActionPerformed
-        trocaFrameIconeEstampa((String) comboboxEstampas.getSelectedItem());
+        trocaIconeEstampa(canvasframeEstampa, (String) comboboxEstampas.getSelectedItem());
     }//GEN-LAST:event_comboboxEstampasActionPerformed
 
     private void itemTexturaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemTexturaSelecionarActionPerformed
@@ -1090,8 +1105,23 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_itemCoresSelecionarActionPerformed
 
     private void comboboxTexturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxTexturasActionPerformed
-        trocaFrameIconeTextura((String) comboboxTexturas.getSelectedItem());
+        trocaIconeTextura(canvasframeTextura, (String) comboboxTexturas.getSelectedItem());
     }//GEN-LAST:event_comboboxTexturasActionPerformed
+
+    private void botaoEstampaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEstampaSelecionarActionPerformed
+        estampa = (String) comboboxEstampas.getSelectedItem();
+        trocaIconeEstampa(canvasPreviewEstampa, estampa);
+    }//GEN-LAST:event_botaoEstampaSelecionarActionPerformed
+
+    private void botaoEstampaSelecionarFundoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEstampaSelecionarFundoActionPerformed
+        forma_fundo = (String) comboboxEstampas.getSelectedItem();
+        trocaIconeEstampa(canvasPreviewFormaFundo, forma_fundo);
+    }//GEN-LAST:event_botaoEstampaSelecionarFundoActionPerformed
+
+    private void botaoTexturaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTexturaSelecionarActionPerformed
+        textura = (String) comboboxTexturas.getSelectedItem();
+        trocaIconeTextura(canvasPreviewPreenchimento, textura);
+    }//GEN-LAST:event_botaoTexturaSelecionarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1124,42 +1154,18 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         catch(java.io.IOException e){}
     }
     
-    public void trocaPreviewIconeEstampa(int arquivo) {
-        try{
-            File g = new File("img/estampas/estampa" + arquivo + ".svg").getCanonicalFile();
-            canvasPreviewEstampa.setURI(g.toURI().toString());
-        }
-        catch(java.io.IOException e){}
-    }
-    
-    public void trocaFrameIconeEstampa(String arquivo) {
-        try{
-            File g = new File("img/estampas/" + arquivo).getCanonicalFile();
-            canvasframeEstampa.setURI(g.toURI().toString());
-        }
-        catch(java.io.IOException e){}
-    }
-    
-    public void trocaFrameIconeTextura(String arquivo) {
+    public void trocaIconeTextura(org.apache.batik.swing.JSVGCanvas canvas, String arquivo) {
         try{
             File g = new File("img/texturas/" + arquivo).getCanonicalFile();
-            canvasframeTextura.setURI(g.toURI().toString());
+            canvas.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
     }
     
-    public void trocaPreviewIconeTextura(int arquivo) {
+    public void trocaIconeEstampa(org.apache.batik.swing.JSVGCanvas canvas, String arquivo) {
         try{
-            File g = new File("img/texturas/textura" + arquivo + ".svg").getCanonicalFile();
-            canvasPreviewPreenchimento.setURI(g.toURI().toString());
-        }
-        catch(java.io.IOException e){}
-    }
-    
-    public void trocaPreviewIconeForma(int arquivo) {
-        try{
-            File g = new File("img/estampas/estampa" + arquivo + ".svg").getCanonicalFile();
-            canvasPreviewFormaFundo.setURI(g.toURI().toString());
+            File g = new File("img/estampas/" + arquivo).getCanonicalFile();
+            canvas.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
     }

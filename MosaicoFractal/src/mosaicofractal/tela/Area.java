@@ -18,13 +18,17 @@ public class Area extends JPanel{
     private final Dimension dimensao;
     private int largura_salva = 500, altura_salva = 500;
     private Color cor_fundo = Color.WHITE;
-    private boolean considerar_bordas = false, mudar_angulo = false, forma_personalizada = false;
-    private Shape forma_area = null;
+    private boolean considerar_bordas = false, mudar_angulo = false, tela_personalizada = false;
+    private Shape forma_tela = null;
     private ArrayList<Estampa> estampas;
+    private ArrayList<Shape> formas;
+    private ArrayList<Preenchimento> preenchimentos;
     private static Random r = new Random();
     
     public Area() {
         estampas = new ArrayList<>();
+        formas = new ArrayList<>();
+        preenchimentos = new ArrayList<>();
         dimensao = new Dimension(LARGURA, ALTURA);
     }
     
@@ -40,15 +44,15 @@ public class Area extends JPanel{
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(this.cor_fundo);
         
-        if (this.forma_personalizada) {
-            g2d.draw(this.forma_area);
+        if (this.tela_personalizada) {
+            g2d.draw(this.forma_tela);
         }
         else{
             g2d.fillRect(0, 0, LARGURA, ALTURA);
         }
         
-        estampas.stream().forEach((forma) -> {
-            forma.desenha(g2d);
+        estampas.stream().forEach((estampa) -> {
+            estampa.desenha(g2d);
         });
         
         revalidate();
@@ -70,25 +74,25 @@ public class Area extends JPanel{
         this.altura_salva = altura;
     }
 
-    public void considerarBordas() {
-        this.considerar_bordas = !this.considerar_bordas;
+    public void considerarBordas(boolean bordas) {
+        this.considerar_bordas = bordas;
     }
     
-    public void mudarAngulo() {
-        this.mudar_angulo = !this.mudar_angulo;
+    public void mudarAngulo(boolean angulo) {
+        this.mudar_angulo = angulo;
     }
     
     public void mudarCorFundo(Color cor) {
         this.cor_fundo = cor;
     }
     
-    public void setFormaArea(Shape forma) {
-        this.forma_area = forma;
-        this.forma_personalizada = this.forma_area != null;
+    public void setFormaFundo(Shape forma) {
+        this.forma_tela = forma;
+        this.tela_personalizada = this.forma_tela != null;
     }
     
     public double getArea() {
-        if (!forma_personalizada){
+        if (!tela_personalizada){
             return largura_salva * altura_salva;
         }
         return 0; // ver como calcular área de qualquer shape
@@ -110,12 +114,8 @@ public class Area extends JPanel{
         return this.altura_salva;
     }
     
-    public boolean isFormaPersonalizada() {
-        return this.forma_personalizada;
-    }
-    
     public Shape getFormaFundo() {
-        return this.forma_area;
+        return this.forma_tela;
     }
     
     public void preencherArea(ArrayList<Shape> formas, ArrayList<Preenchimento> preenchimentos, double c) {
@@ -150,9 +150,9 @@ public class Area extends JPanel{
         double x = 1 - r.nextDouble();
         double y = 1 - r.nextDouble();
         
-        if (forma_area != null) {
+        if (forma_tela != null) {
             // encontrar ponto aleatório dentro da forma
-            while (!forma_area.contains(x, y)){
+            while (!forma_tela.contains(x, y)){
                 x = 1 - r.nextDouble();
                 y = 1 - r.nextDouble();
             }
@@ -160,13 +160,13 @@ public class Area extends JPanel{
         
         Estampa estampa_escolhida = new Estampa(estampas.get(r.nextInt(estampas.size())));
         if (!considerar_bordas){
-            Area.instancia().getEstampas().add(estampa_escolhida);
+            estampas.add(estampa_escolhida);
         }
         else{
             
         }
 
-        double area_total = Area.instancia().getEstampas().get(0).getArea();
+        double area_total = estampas.get(0).getArea();
         do { // loop no número de círculos
         
             numero_iteracoes = 0;
@@ -185,11 +185,11 @@ public class Area extends JPanel{
             } while (!teste); // repetir se ficou muito perto de um círculo
 
             numero_iteracoes_total += numero_iteracoes;
-            synchronized(Area.instancia().getFormas()){
-                Area.instancia().getFormas().add(new Circulo((int) x, (int) y, (int) teste_raio));
+            synchronized(estampas){
+                estampas.add(new Circulo((int) x, (int) y, (int) teste_raio));
             }
             
-            area_total += Area.instancia().getFormas().get(qtd_formas).getArea();
+            area_total += estampas.get(qtd_formas).getArea();
             area_preenchida = area_total / (Area.instancia().getArea());
             qtd_formas++;
         } while (numero_iteracoes_total < iteracoes_max && qtd_formas < nmax && area_preenchida < preenchimento_max);

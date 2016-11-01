@@ -2,20 +2,20 @@ package mosaicofractal.tela;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import mosaicofractal.elementos.Estampa;
 import mosaicofractal.elementos.Preenchimento;
 
 public class Area extends JFrame{
     
     public static Area area;
-    public final static int LARGURA = 500, ALTURA = 500;
+    public static int LARGURA = 500, ALTURA = 500;
     private int largura_salva = 500, altura_salva = 500;
     private Color cor_fundo = Color.WHITE;
     private boolean considerar_bordas = false, mudar_angulo = false, tela_personalizada = false, usa_textura = false;
@@ -37,38 +37,22 @@ public class Area extends JFrame{
         renderizador = new Renderizador();
         
         setTitle("Resultado");
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        
         add(renderizador);
         setContentPane(renderizador);
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        
         
         pack();
-        setVisible(true);
-        
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2);
+        
+        setVisible(true);
     }
     
     public static void iniciar(boolean considerar_bordas, boolean mudar_angulo, boolean tela_personalizada, boolean usa_textura) {
         area = new Area(considerar_bordas, mudar_angulo, tela_personalizada, usa_textura);
-    }
-    
-    public void pintar(Graphics2D g2d){
-        g2d.setColor(this.cor_fundo);
-        
-        if (this.tela_personalizada) {
-            g2d.fill(this.forma_tela);
-        }
-        else{
-            g2d.fillRect(0, 0, LARGURA, ALTURA);
-        }
-        synchronized(estampas){
-            estampas.stream().forEach((estampa) -> {
-                estampa.desenha(g2d);
-            });
-        }
-        revalidate();
-        repaint();
     }
     
     public void setLargura(int largura) {
@@ -94,6 +78,10 @@ public class Area extends JFrame{
     public void setFormaFundo(Shape forma) {
         this.forma_tela = forma;
         this.tela_personalizada = this.forma_tela != null;
+    }
+    
+    public boolean isTelaPersonalizada() {
+        return tela_personalizada;
     }
     
     public double getArea() {
@@ -212,8 +200,6 @@ public class Area extends JFrame{
             synchronized(estampas){
                 estampas.add(new Estampa(forma_escolhida, preenchimentos.get(index), x, y));
             }
-            revalidate();
-            repaint();
             
             area_total += estampas.get(qtd_formas).getArea();
             area_preenchida = area_total / getArea();
@@ -226,7 +212,9 @@ public class Area extends JFrame{
         revalidate();
         repaint();
         
-        System.out.println((System.currentTimeMillis() - tempoInicial)/1000.0);
+        System.out.println("Tempo de execução = " + (System.currentTimeMillis() - tempoInicial)/1000.0);
+        
+        salvarImagem();
     }
     
     public void encontraXeY(Shape forma) {
@@ -270,6 +258,46 @@ public class Area extends JFrame{
     }
     
     public void salvarImagem() {
-        // faz a mágica
+        int n;
+        do {
+            String[] opcao_salva = { "Salvar como PNG", "Salvar como SVG", "Não" };
+            n = JOptionPane.showOptionDialog(this, "Deseja salvar esta imagem?", "Salvar?", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcao_salva, opcao_salva[0]);
+            
+            if (n == 0 || n == 1){
+                String [] opcao_tamanho = {"Normal (500x500)", "Grande (1000x1000)", "Gigante (1500x1500)"};
+                String opcao = "";
+                opcao = (String) JOptionPane.showInputDialog(null, "Escolha um tamanho para o seu arquivo:", "Escolha",
+                        JOptionPane.PLAIN_MESSAGE, null, opcao_tamanho, opcao_tamanho[0]);
+                
+                if(opcao == null || (opcao != null && ("".equals(opcao)))){}
+                else{
+                    switch (opcao){
+                        case "Normal (500x500)":
+                            break;
+                        case "Grande (1000x1000)":
+                            LARGURA = 1000;
+                            ALTURA = 1000;
+                            break;
+                        case "Gigante (1500x1500)":
+                            LARGURA = 1500;
+                            ALTURA = 1500;
+                            break;
+                        default:
+                            break;
+                    }
+                } 
+            }
+            
+            switch(n) {
+                case 0:{
+                    SalvaImagem.salvarPNG();
+                    break;
+                }
+                case 1:{
+                    SalvaImagem.salvarSVG();
+                    break;
+                }
+            }
+        } while (n != -1 && n != 2);
     }
 }

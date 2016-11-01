@@ -1,5 +1,6 @@
 package mosaicofractal.tela;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -31,6 +32,9 @@ public class SalvaImagem {
         
         BufferedImage bImg = new BufferedImage(Area.area.LARGURA, Area.area.ALTURA, BufferedImage.TYPE_INT_ARGB);
         Graphics2D cg = bImg.createGraphics();
+        
+        Area.area.renderizador.setOpaque(false);
+        
         Area.area.renderizador.paintAll(cg);
         
         try {
@@ -63,6 +67,7 @@ public class SalvaImagem {
         SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 
         // Render into the SVG Graphics2D implementation
+        Area.area.renderizador.setOpaque(false);
         Area.area.renderizador.paintAll(svgGenerator);
 
         // Finally, stream out SVG to the standard output using UTF-8

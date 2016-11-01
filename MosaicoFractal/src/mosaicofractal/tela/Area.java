@@ -2,6 +2,7 @@ package mosaicofractal.tela;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
@@ -12,9 +13,12 @@ import javax.swing.JOptionPane;
 import mosaicofractal.elementos.Estampa;
 import mosaicofractal.elementos.Preenchimento;
 
-public class Area extends JFrame{
+public class Area {
     
     public static Area area;
+    
+    private JFrame jframe;
+    
     public static int LARGURA = 500, ALTURA = 500;
     private int largura_salva = 500, altura_salva = 500;
     private Color cor_fundo = Color.WHITE;
@@ -36,17 +40,36 @@ public class Area extends JFrame{
         estampas = new ArrayList<>();
         renderizador = new Renderizador();
         
-        setTitle("Resultado");
+        jframe = new JFrame("Resultado");
+
+        renderizador = new Renderizador();
         
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        add(renderizador);
-        setContentPane(renderizador);
-        pack();
-        setVisible(true);
+        jframe.setResizable(false);
+        jframe.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        jframe.add(renderizador);
+        jframe.setContentPane(renderizador);
+        jframe.pack();
+        jframe.setVisible(true);
         
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2);
+        jframe.setLocation(dim.width/2-jframe.getSize().width/2, dim.height/2-jframe.getSize().height/2);
+    }
+    
+    public void pintaTela(Graphics2D g2d) {
+        g2d.setColor(cor_fundo);
+        
+        if (Area.area.isTelaPersonalizada()) {
+            g2d.fill(forma_tela);
+        }
+        else{
+            g2d.fillRect(0, 0, LARGURA, ALTURA);
+        }
+        
+        synchronized(estampas){
+            estampas.stream().forEach((estampa) -> {
+                estampa.desenha(g2d);
+            });
+        }
     }
     
     public static void iniciar(boolean considerar_bordas, boolean mudar_angulo, boolean tela_personalizada, boolean usa_textura) {
@@ -137,7 +160,7 @@ public class Area extends JFrame{
                 porcentagem_original = area_razao;
 
         boolean teste;
-        
+        boolean caso_excepcional = false;
         System.out.println("c = " + c + " | zeta = " + valor_zeta + " | razão = " + area_razao
         + "| primeira forma = " + porcentagem);
         
@@ -149,7 +172,14 @@ public class Area extends JFrame{
             forma_escolhida = ajusta.createTransformedShape(forma_escolhida);
         }
         
-        encontraXeY(forma_escolhida);
+        caso_excepcional = encontraXeY(forma_escolhida, iteracoes_max);
+        while (caso_excepcional) {
+            valor_n++;
+            porcentagem = area_razao * valorControle(valor_n, exp_u);
+            ajusta = AffineTransform.getScaleInstance(porcentagem, porcentagem);
+            forma_escolhida = ajusta.createTransformedShape(this.forma);
+            caso_excepcional = encontraXeY(forma_escolhida, iteracoes_max);
+        }
         
         if (usa_textura) {
             estampas.add(new Estampa(forma_escolhida, preenchimentos.get(0), x, y));
@@ -159,22 +189,30 @@ public class Area extends JFrame{
         }
         
         double area_total = estampas.get(0).getArea();
+        area_preenchida = area_total / getArea();
         
         do { // loop no número de círculos
         
             numero_iteracoes = 0;
             int index = 0;
+            
             teste_porcentagem = porcentagem_original * valorControle(qtd_formas + valor_n, exp_u);
             
             ajusta = AffineTransform.getScaleInstance(teste_porcentagem, teste_porcentagem);
             forma_escolhida = ajusta.createTransformedShape(this.forma);
+            
             do { // busca aleatória
                 
                 if (mudar_angulo) {
                     ajusta = AffineTransform.getRotateInstance(Math.random() * Math.PI * 2, forma_escolhida.getBounds2D().getCenterX(), forma_escolhida.getBounds2D().getCenterY());
                     forma_escolhida = ajusta.createTransformedShape(forma_escolhida);
                 }
-                encontraXeY(forma_escolhida);
+                caso_excepcional = encontraXeY(forma_escolhida, iteracoes_max);
+                
+                if (caso_excepcional) {
+                    System.out.println("opa! a estampa não consegue ser colocada na forma! vamos terminar o processo mais cedo...");
+                    break;
+                }
                 
                 numero_iteracoes++;
                 teste = true;
@@ -194,6 +232,9 @@ public class Area extends JFrame{
                     if (teste) break;
                 } // próximo k
             } while (teste); // repetir se ficou muito perto de um círculo
+            
+            if (caso_excepcional) break;
+            
             numero_iteracoes_total += numero_iteracoes;
             synchronized(estampas){
                 estampas.add(new Estampa(forma_escolhida, preenchimentos.get(index), x, y));
@@ -207,31 +248,38 @@ public class Area extends JFrame{
         System.out.println("área preenchida = " + Math.round(area_preenchida * 100) + "%");
         System.out.println("número de iterações = " + numero_iteracoes_total);
         System.out.println("número de formas = " + qtd_formas);
-        revalidate();
-        repaint();
+        jframe.revalidate();
+        jframe.repaint();
         
         System.out.println("Tempo de execução = " + (System.currentTimeMillis() - tempoInicial)/1000.0);
         
         salvarImagem();
     }
     
-    public void encontraXeY(Shape forma) {
+    public boolean encontraXeY(Shape forma, int iteracoes_max) {
         if (considerar_bordas) {
             x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
             y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
             if (tela_personalizada) {
+                int iteracoes_posicao = 0;
                 // encontrar ponto aleatório dentro da forma
                 while (!forma_tela.contains(x, y) ||
                         Estampa.estaDentro(x, y, forma_tela, forma)){
+                    
                     x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
                     y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
+                    iteracoes_posicao++;
+                    if (iteracoes_posicao > iteracoes_max) {
+                        return true; // caso exepcional
+                    }
                 }
             }
         }
         else {
-            x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
-            y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
+            x = Math.random() * LARGURA;
+            y = Math.random() * ALTURA;
         }
+        return false;
     }
     
     public double funcaoZeta(double c, int N) {
@@ -254,8 +302,17 @@ public class Area extends JFrame{
     public void salvarImagem() {
         int n;
         do {
-            String[] opcao_salva = { "Salvar como PNG", "Salvar como SVG", "Não" };
-            n = JOptionPane.showOptionDialog(this, "Deseja salvar esta imagem?", "Salvar?", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcao_salva, opcao_salva[0]);
+            String[] opcao_salva;
+            if (usa_textura){
+                opcao_salva = new String[1];
+                opcao_salva[0] = "Salvar como PNG";
+            }
+            else{
+                opcao_salva = new String[2];
+                opcao_salva[0] = "Salvar como PNG";
+                opcao_salva[1] = "Salvar como SVG";
+            }
+            n = JOptionPane.showOptionDialog(jframe, "Deseja salvar esta imagem?", "Salvar?", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcao_salva, opcao_salva[0]);
             switch(n) {
                 case 0:{
                     SalvaImagem.salvarPNG();
@@ -266,6 +323,6 @@ public class Area extends JFrame{
                     break;
                 }
             }
-        } while (n != -1 && n != 2);
+        } while (n != -1);
     }
 }

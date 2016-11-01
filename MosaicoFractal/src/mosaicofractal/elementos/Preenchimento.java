@@ -17,6 +17,12 @@ public class Preenchimento {
         this.textura = textura;
     }
     
+    public Preenchimento (Preenchimento copia){
+        this.is_textura = copia.is_textura;
+        this.cor = copia.cor;
+        this.textura = copia.textura;
+    }
+    
     public boolean isTextura(){
         return is_textura;
     }

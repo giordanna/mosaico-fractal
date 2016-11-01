@@ -7,8 +7,10 @@ package mosaicofractal.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,6 +20,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import mosaicofractal.elementos.Preenchimento;
+import mosaicofractal.tela.Area;
 import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.gvt.GraphicsNode;
 import org.apache.batik.gvt.ShapeNode;
@@ -38,6 +42,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private String estampa = "estampa1.svg";
     private String forma_fundo = "estampa1.svg";
     private Dimension dim;
+    private Area area;
     
     /**
      * Creates new form InterfaceUsuario
@@ -135,6 +140,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         previewCorFundo = new javax.swing.JPanel();
         textoPreviewFormaFundo = new javax.swing.JLabel();
         canvasPreviewFormaFundo = new org.apache.batik.swing.JSVGCanvas();
+        textoQuantidadeFormas = new javax.swing.JLabel();
+        spinnerQuantidadeFormas = new javax.swing.JSpinner();
+        textoIteracoes = new javax.swing.JLabel();
+        spinnerIteracoes = new javax.swing.JSpinner();
         textoTitulo = new javax.swing.JLabel();
         barraMenu = new javax.swing.JMenuBar();
         menuEstampas = new javax.swing.JMenu();
@@ -738,6 +747,14 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         canvasPreviewFormaFundo.setEnableZoomInteractor(false);
         canvasPreviewFormaFundo.setPreferredSize(new java.awt.Dimension(100, 100));
 
+        textoQuantidadeFormas.setText("Quantidade de formas:");
+
+        spinnerQuantidadeFormas.setModel(new javax.swing.SpinnerNumberModel(1000, 10, 90000, 1));
+
+        textoIteracoes.setText("Iterações:");
+
+        spinnerIteracoes.setModel(new javax.swing.SpinnerNumberModel(1000, 100, 400000, 1));
+
         javax.swing.GroupLayout panelCorpoLayout = new javax.swing.GroupLayout(panelCorpo);
         panelCorpo.setLayout(panelCorpoLayout);
         panelCorpoLayout.setHorizontalGroup(
@@ -797,17 +814,25 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                                         .addComponent(radioBordaTelaNao))
                                     .addComponent(textoRotacionarEstampas)
                                     .addComponent(textoTelaForma)
-                                    .addGroup(panelCorpoLayout.createSequentialGroup()
-                                        .addComponent(textoValorC)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spinnerValorC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(textoTipoPreenchimento)
                                     .addGroup(panelCorpoLayout.createSequentialGroup()
                                         .addComponent(radioTipoPreenchimentoCores)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(radioTipoPreenchimentoTexturas))
                                     .addComponent(textoPreview)
-                                    .addComponent(botaoIniciar))
+                                    .addComponent(botaoIniciar)
+                                    .addGroup(panelCorpoLayout.createSequentialGroup()
+                                        .addComponent(textoValorC)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spinnerValorC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(textoQuantidadeFormas)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spinnerQuantidadeFormas, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(textoIteracoes)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spinnerIteracoes, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
@@ -840,7 +865,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoValorC)
-                    .addComponent(spinnerValorC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnerValorC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textoQuantidadeFormas)
+                    .addComponent(spinnerQuantidadeFormas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textoIteracoes)
+                    .addComponent(spinnerIteracoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botaoIniciar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1126,12 +1155,21 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         int retorno = fileEstampaAdicionar.showOpenDialog(this);
         if (retorno == javax.swing.JFileChooser.APPROVE_OPTION){
             File arquivo = fileEstampaAdicionar.getSelectedFile();
-            File copia;
-            try {
-                copia = new File("img/estampas/estampa" + numeroEstampa() + ".svg").getCanonicalFile();
-                Files.copy(arquivo.toPath(),copia.toPath(), REPLACE_EXISTING);
-            } catch (IOException ex) {
-                Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            canvasframeEstampa.setURI(arquivo.toURI().toString());
+            
+            if (canvasframeEstampa.getSVGDocument().getElementById("XMLID_1_") != null) {
+                File copia;
+                try {
+                    copia = new File("img/estampas/estampa" + numeroEstampa() + ".svg").getCanonicalFile();
+                    Files.copy(arquivo.toPath(),copia.toPath(), REPLACE_EXISTING);
+                } catch (IOException ex) {
+                    Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            else {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "O arquivo SVG não possui uma tag com o id \"XMLID_1_\". Não poderá ser adicionada. :(",
+                    "Erro",javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_estampaAdicionarActionPerformed
@@ -1208,7 +1246,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
     private void botaoEstampaExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEstampaExcluirActionPerformed
         String nome = (String) comboboxEstampas.getSelectedItem();
-        if (nome.equals("estampa1.svg") || nome.equals("estampa2.svg")) {
+        if (nome.equals("estampa1.svg") || nome.equals("estampa2.svg") || nome.equals("estampa3.svg")) {
             javax.swing.JOptionPane.showMessageDialog(this,
                     "Não pode deletar este arquivo. Foi feito com muito carinho. :(",
                     "Erro",javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -1340,9 +1378,36 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         SVGDocument d = canvasPreviewEstampa.getSVGDocument();
         Element el = d.getElementById("XMLID_1_");
         GraphicsNode gn = ctx.getGraphicsNode(el);
-        Shape shape = ((ShapeNode)gn).getShape();
-        frameTeste teste = new frameTeste(shape, radioRotacionarEstampasSim.isSelected());
-        teste.inicia();
+        Shape shape_estampa = ((ShapeNode)gn).getShape();
+        Shape shape_tela = null;
+        
+        if (radioTelaFormaSim.isSelected()) {
+            // forma da tela
+            BridgeContext ctx2 = canvasPreviewFormaFundo.getUpdateManager().getBridgeContext();
+            SVGDocument d2 = canvasPreviewFormaFundo.getSVGDocument();
+            Element el2 = d2.getElementById("XMLID_1_");
+            GraphicsNode gn2 = ctx2.getGraphicsNode(el2);
+            shape_tela = ((ShapeNode)gn2).getShape();
+        }
+        
+        // cores ou textura
+        ArrayList<Preenchimento> preenchimentos = new ArrayList<>();
+        if (radioTipoPreenchimentoTexturas.isSelected()) {
+            preenchimentos.add(new Preenchimento(criarImagem(canvasPreviewPreenchimento)));
+        }
+        else { //cores
+            for (Color x: cores_estampas){
+                if (x != null){
+                    preenchimentos.add(new Preenchimento(x));
+                }
+            }
+        }
+        
+        Area.iniciar(radioBordaTelaSim.isSelected(), radioRotacionarEstampasSim.isSelected(), radioTelaFormaSim.isSelected(), radioTipoPreenchimentoTexturas.isSelected());
+        Area.area.preencherArea(shape_estampa, shape_tela, preenchimentos, cor_fundo_selecionada, (double) spinnerValorC.getValue(), (int) spinnerQuantidadeFormas.getValue(), (int) spinnerIteracoes.getValue());
+        
+        //frameTeste teste = new frameTeste(shape_estampa, radioRotacionarEstampasSim.isSelected(), preenchimentos.get(0));
+        //teste.inicia();
     }//GEN-LAST:event_botaoIniciarActionPerformed
 
     /**
@@ -1488,6 +1553,14 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             preview.setBackground(new java.awt.Color(240, 240, 240));
         }
     }
+    
+    private BufferedImage criarImagem(org.apache.batik.swing.JSVGCanvas canvas) {
+        BufferedImage imagem = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D cg = imagem.createGraphics();
+        canvas.paintAll(cg);
+        //cg.scale(5, 5);
+        return imagem;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraMenu;
@@ -1550,6 +1623,8 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JRadioButton radioTelaFormaSim;
     private javax.swing.JRadioButton radioTipoPreenchimentoCores;
     private javax.swing.JRadioButton radioTipoPreenchimentoTexturas;
+    private javax.swing.JSpinner spinnerIteracoes;
+    private javax.swing.JSpinner spinnerQuantidadeFormas;
     private javax.swing.JSpinner spinnerValorC;
     private javax.swing.JLabel textoBordaTela;
     private javax.swing.JLabel textoFrameCoresCorpo;
@@ -1559,6 +1634,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel textoFrameEstampaPreview;
     private javax.swing.JLabel textoFrameTexturaCorpo;
     private javax.swing.JLabel textoFrameTexturaPreview;
+    private javax.swing.JLabel textoIteracoes;
     private javax.swing.JLabel textoPreview;
     private javax.swing.JLabel textoPreviewCorFundo;
     private javax.swing.JLabel textoPreviewEstampa;
@@ -1567,6 +1643,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel textoPreviewPreenchimento;
     private javax.swing.JLabel textoPreviewPreenchimentoCores;
     private javax.swing.JLabel textoPreviewPreenchimentoTextura;
+    private javax.swing.JLabel textoQuantidadeFormas;
     private javax.swing.JLabel textoRotacionarEstampas;
     private javax.swing.JLabel textoTelaForma;
     private javax.swing.JLabel textoTipoPreenchimento;

@@ -758,11 +758,6 @@
                                       </Group>
                                       <Component id="textoRotacionarEstampas" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="textoTelaForma" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="textoValorC" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="spinnerValorC" min="-2" max="-2" attributes="0"/>
-                                      </Group>
                                       <Component id="textoTipoPreenchimento" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="radioTipoPreenchimentoCores" min="-2" max="-2" attributes="0"/>
@@ -771,6 +766,19 @@
                                       </Group>
                                       <Component id="textoPreview" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="botaoIniciar" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="textoValorC" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="spinnerValorC" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="textoQuantidadeFormas" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="spinnerQuantidadeFormas" min="-2" pref="60" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="textoIteracoes" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="spinnerIteracoes" min="-2" pref="60" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
@@ -815,6 +823,10 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="textoValorC" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="spinnerValorC" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="textoQuantidadeFormas" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="spinnerQuantidadeFormas" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="textoIteracoes" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="spinnerIteracoes" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="botaoIniciar" min="-2" max="-2" attributes="0"/>
@@ -1260,6 +1272,30 @@
             <Property name="useNullLayout" type="boolean" value="true"/>
           </Layout>
         </Container>
+        <Component class="javax.swing.JLabel" name="textoQuantidadeFormas">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Quantidade de formas:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JSpinner" name="spinnerQuantidadeFormas">
+          <Properties>
+            <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+              <SpinnerModel initial="1000" maximum="90000" minimum="10" numberType="java.lang.Integer" stepSize="1" type="number"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="textoIteracoes">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Itera&#xe7;&#xf5;es:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JSpinner" name="spinnerIteracoes">
+          <Properties>
+            <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+              <SpinnerModel initial="1000" maximum="400000" minimum="100" numberType="java.lang.Integer" stepSize="1" type="number"/>
+            </Property>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JLabel" name="textoTitulo">

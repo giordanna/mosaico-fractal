@@ -23,19 +23,19 @@ import org.w3c.dom.DOMImplementation;
 public class SalvaImagem {
     private static int i = 0, v = 0;
     
-    public static void salvarPNG() {
+    public static void salvarPNG(Area area) {
         File file = new File("imagens");
         if (!file.exists()) {
             file.mkdirs();
         }
         
-        Area.instancia().revalidate();
-        Area.instancia().repaint();
+        area.revalidate();
+        area.repaint();
         
-        BufferedImage bImg = new BufferedImage(Area.instancia().getLargura(), Area.instancia().getAltura(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bImg = new BufferedImage(area.getLargura(), area.getAltura(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D cg = bImg.createGraphics();
 
-        Area.instancia().paintAll(cg);
+        area.paintAll(cg);
         
         try {
             File salva = new File("./imagens/imagem_"+i+".png");
@@ -51,7 +51,7 @@ public class SalvaImagem {
         catch (IOException e) {}
     }
     
-    public static void salvarSVG() {
+    public static void salvarSVG(Area area) {
         File file = new File("vetores");
         if (!file.exists()) {
             file.mkdirs();
@@ -68,7 +68,7 @@ public class SalvaImagem {
         SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 
         // Render into the SVG Graphics2D implementation
-        Area.instancia().paintAll(svgGenerator);
+        area.paintAll(svgGenerator);
 
         // Finally, stream out SVG to the standard output using UTF-8
         // character to byte encoding

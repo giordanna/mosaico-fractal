@@ -2,68 +2,73 @@ package mosaicofractal.tela;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Random;
-import javax.swing.JPanel;
+import javax.swing.JFrame;
 import mosaicofractal.elementos.Estampa;
 import mosaicofractal.elementos.Preenchimento;
 
-public class Area extends JPanel{
-    private static Area singleton;
+public class Area extends JFrame{
+    
+    public static Area area;
     public final static int LARGURA = 500, ALTURA = 500;
-    private final Dimension dimensao;
     private int largura_salva = 500, altura_salva = 500;
     private Color cor_fundo = Color.WHITE;
-    private boolean considerar_bordas = false, mudar_angulo = false, tela_personalizada = false;
+    private boolean considerar_bordas = false, mudar_angulo = false, tela_personalizada = false, usa_textura = false;
     private Shape forma_tela = null;
-    private ArrayList<Estampa> estampas;
-    private ArrayList<Shape> formas;
-    private ArrayList<Preenchimento> preenchimentos;
-    private static Random r = new Random();
+    private final ArrayList<Estampa> estampas;
+    private Shape forma;
+    private final static Random r = new Random();
+    private static double x, y;
+    private double area_tela = LARGURA * ALTURA;
+    private Renderizador renderizador;
     
-    public Area() {
+    public Area(boolean considerar_bordas, boolean mudar_angulo, boolean tela_personalizada, boolean usa_textura) {
+        this.considerar_bordas = considerar_bordas;
+        this.mudar_angulo = mudar_angulo;
+        this.tela_personalizada = tela_personalizada;
+        this.usa_textura = usa_textura;
+        
         estampas = new ArrayList<>();
-        formas = new ArrayList<>();
-        preenchimentos = new ArrayList<>();
-        dimensao = new Dimension(LARGURA, ALTURA);
+        renderizador = new Renderizador();
+        
+        setTitle("Resultado");
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        add(renderizador);
+        setContentPane(renderizador);
+        
+        pack();
+        setVisible(true);
+        
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2);
     }
     
-    @Override
-    public Dimension getPreferredSize() {
-        return this.dimensao;
+    public static void iniciar(boolean considerar_bordas, boolean mudar_angulo, boolean tela_personalizada, boolean usa_textura) {
+        area = new Area(considerar_bordas, mudar_angulo, tela_personalizada, usa_textura);
     }
     
-    @Override
-    protected void paintComponent(Graphics g){
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    public void pintar(Graphics2D g2d){
         g2d.setColor(this.cor_fundo);
         
         if (this.tela_personalizada) {
-            g2d.draw(this.forma_tela);
+            g2d.fill(this.forma_tela);
         }
         else{
             g2d.fillRect(0, 0, LARGURA, ALTURA);
         }
-        
-        estampas.stream().forEach((estampa) -> {
-            estampa.desenha(g2d);
-        });
-        
+        synchronized(estampas){
+            estampas.stream().forEach((estampa) -> {
+                estampa.desenha(g2d);
+            });
+        }
         revalidate();
         repaint();
-    }
-    
-    public static Area instancia() {
-        if (singleton == null){
-            singleton = new Area();
-        }
-        return singleton;
     }
     
     public void setLargura(int largura) {
@@ -92,10 +97,7 @@ public class Area extends JPanel{
     }
     
     public double getArea() {
-        if (!tela_personalizada){
-            return largura_salva * altura_salva;
-        }
-        return 0; // ver como calcular área de qualquer shape
+        return area_tela;
     }
     
     public Color getCorFundo() {
@@ -118,12 +120,20 @@ public class Area extends JPanel{
         return this.forma_tela;
     }
     
-    public void preencherArea(ArrayList<Shape> formas, ArrayList<Preenchimento> preenchimentos, double c) {
-        final int formas_max = 90000, iteracoes_max = 400000;
+    public void preencherArea(Shape forma, Shape forma_tela, ArrayList<Preenchimento> preenchimentos, Color cor_fundo, double c, int formas_max, int iteracoes_max) {
         final double preenchimento_max = 0.99;
+        this.cor_fundo = cor_fundo;
+        
+        AffineTransform ajusta = AffineTransform.getScaleInstance(LARGURA/100.0, ALTURA/100.0);
+        this.forma = ajusta.createTransformedShape(forma);
+        
+        if (tela_personalizada) {
+            this.forma_tela = ajusta.createTransformedShape(forma_tela);
+            area_tela = Estampa.calculaArea(this.forma_tela);
+        }
         
         long tempoInicial = System.currentTimeMillis();
-        double teste_raio, area_preenchida,
+        double teste_porcentagem, area_preenchida,
                exp_u = 0.5 * c; // metade desse valor
         
         int qtd_formas = 1,
@@ -137,69 +147,109 @@ public class Area extends JPanel{
                 // raio gerado multiplicado por uma porcentagem de controle. quanto maior c, menor o valor multiplicado
                 // então menor será o raio de fato, que não será um círculo gigante preenchendo 25% da tela, mas
                 // um pouco menor
-                raio_forma = (area_razao/2.0) * valorControle(valor_n, exp_u),
-                raio_original_primeiro = area_razao/2.0;
+                porcentagem = area_razao * valorControle(valor_n, exp_u),
+                porcentagem_original = area_razao;
 
         boolean teste;
         
-        Random r = new Random();
-        
         System.out.println("c = " + c + " | zeta = " + valor_zeta + " | razão = " + area_razao
-        + "| raio = " + raio_forma);
+        + "| primeira forma = " + porcentagem);
         
-        double x = 1 - r.nextDouble();
-        double y = 1 - r.nextDouble();
+        ajusta = AffineTransform.getScaleInstance(porcentagem, porcentagem);
+        Shape forma_escolhida = ajusta.createTransformedShape(this.forma);
         
-        if (forma_tela != null) {
-            // encontrar ponto aleatório dentro da forma
-            while (!forma_tela.contains(x, y)){
-                x = 1 - r.nextDouble();
-                y = 1 - r.nextDouble();
-            }
+        if (mudar_angulo) {
+            ajusta = AffineTransform.getRotateInstance(Math.random() * Math.PI * 2, forma_escolhida.getBounds2D().getCenterX(), forma_escolhida.getBounds2D().getCenterY());
+            forma_escolhida = ajusta.createTransformedShape(forma_escolhida);
         }
         
-        Estampa estampa_escolhida = new Estampa(estampas.get(r.nextInt(estampas.size())));
-        if (!considerar_bordas){
-            estampas.add(estampa_escolhida);
+        encontraXeY(forma_escolhida);
+        
+        if (usa_textura) {
+            estampas.add(new Estampa(forma_escolhida, preenchimentos.get(0), x, y));
         }
-        else{
-            
+        else {
+            estampas.add(new Estampa(forma_escolhida, preenchimentos.get(r.nextInt(preenchimentos.size())), x, y));
         }
-
+        
         double area_total = estampas.get(0).getArea();
+        
         do { // loop no número de círculos
         
             numero_iteracoes = 0;
-            teste_raio = raio_original_primeiro * valorControle(qtd_formas + valor_n, exp_u);
-            do { // busca aleatória
+            int index = 0;
+            teste_porcentagem = porcentagem_original * valorControle(qtd_formas + valor_n, exp_u);
             
-                x = teste_raio + Math.random() * (Area.instancia().getLargura() -  teste_raio * 2);
-                y = teste_raio + Math.random() * (Area.instancia().getAltura() - teste_raio * 2);
+            ajusta = AffineTransform.getScaleInstance(teste_porcentagem, teste_porcentagem);
+            forma_escolhida = ajusta.createTransformedShape(this.forma);
+            do { // busca aleatória
+                
+                if (mudar_angulo) {
+                    ajusta = AffineTransform.getRotateInstance(Math.random() * Math.PI * 2, forma_escolhida.getBounds2D().getCenterX(), forma_escolhida.getBounds2D().getCenterY());
+                    forma_escolhida = ajusta.createTransformedShape(forma_escolhida);
+                }
+                encontraXeY(forma_escolhida);
+                
                 numero_iteracoes++;
                 teste = true;
-                Circulo obj_teste = new Circulo((int) x, (int) y, (int) teste_raio);
-                for (int k = 0; k < qtd_formas; k++) {//loop over old placements
-                    teste = obj_teste.teste(Area.instancia().getFormas().get(k));
-                    if (!teste) break;
+                
+                Estampa obj_teste;
+                if (usa_textura) {
+                    obj_teste = new Estampa(forma_escolhida, preenchimentos.get(0), x, y);
+                    index = 0;
+                }
+                else {
+                    index = r.nextInt(preenchimentos.size());
+                    obj_teste = new Estampa(forma_escolhida, preenchimentos.get(index), x, y);
+                }
+                
+                for (int k = 0 ; k < qtd_formas ; k++) {//loops pelas outras formas
+                    teste = Estampa.intersecta(obj_teste, estampas.get(k));
+                    if (teste) break;
                 } // próximo k
-            } while (!teste); // repetir se ficou muito perto de um círculo
-
+            } while (teste); // repetir se ficou muito perto de um círculo
             numero_iteracoes_total += numero_iteracoes;
             synchronized(estampas){
-                estampas.add(new Circulo((int) x, (int) y, (int) teste_raio));
+                estampas.add(new Estampa(forma_escolhida, preenchimentos.get(index), x, y));
             }
+            revalidate();
+            repaint();
             
             area_total += estampas.get(qtd_formas).getArea();
-            area_preenchida = area_total / (Area.instancia().getArea());
+            area_preenchida = area_total / getArea();
             qtd_formas++;
+        
         } while (numero_iteracoes_total < iteracoes_max && qtd_formas < nmax && area_preenchida < preenchimento_max);
         System.out.println("área preenchida = " + Math.round(area_preenchida * 100) + "%");
         System.out.println("número de iterações = " + numero_iteracoes_total);
         System.out.println("número de formas = " + qtd_formas);
-        Area.instancia().revalidate();
-        Area.instancia().repaint();
+        revalidate();
+        repaint();
         
         System.out.println((System.currentTimeMillis() - tempoInicial)/1000.0);
+    }
+    
+    public void encontraXeY(Shape forma) {
+        if (considerar_bordas) {
+            x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
+            y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
+            if (tela_personalizada) {
+                // encontrar ponto aleatório dentro da forma
+                while (!forma_tela.contains(x, y) ||
+                        !forma_tela.contains(x + forma.getBounds2D().getWidth(),
+                                y + forma.getBounds2D().getHeight()) ||
+                        !forma_tela.contains(x + forma.getBounds2D().getWidth(), y) ||
+                        !forma_tela.contains(x,y + forma.getBounds2D().getHeight())
+                        ){
+                    x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
+                    y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
+                }
+            }
+        }
+        else {
+            x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
+            y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
+        }
     }
     
     public double funcaoZeta(double c, int N) {

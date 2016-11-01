@@ -25,7 +25,7 @@ public class Area extends JFrame{
     private final static Random r = new Random();
     private static double x, y;
     private double area_tela = LARGURA * ALTURA;
-    private Renderizador renderizador;
+    public Renderizador renderizador;
     
     public Area(boolean considerar_bordas, boolean mudar_angulo, boolean tela_personalizada, boolean usa_textura) {
         this.considerar_bordas = considerar_bordas;
@@ -38,17 +38,15 @@ public class Area extends JFrame{
         
         setTitle("Resultado");
         
-        add(renderizador);
-        setContentPane(renderizador);
         setResizable(false);
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        
-        
+        add(renderizador);
+        setContentPane(renderizador);
         pack();
+        setVisible(true);
+        
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2-getSize().width/2, dim.height/2-getSize().height/2);
-        
-        setVisible(true);
     }
     
     public static void iniciar(boolean considerar_bordas, boolean mudar_angulo, boolean tela_personalizada, boolean usa_textura) {
@@ -262,32 +260,6 @@ public class Area extends JFrame{
         do {
             String[] opcao_salva = { "Salvar como PNG", "Salvar como SVG", "Não" };
             n = JOptionPane.showOptionDialog(this, "Deseja salvar esta imagem?", "Salvar?", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcao_salva, opcao_salva[0]);
-            
-            if (n == 0 || n == 1){
-                String [] opcao_tamanho = {"Normal (500x500)", "Grande (1000x1000)", "Gigante (1500x1500)"};
-                String opcao = "";
-                opcao = (String) JOptionPane.showInputDialog(null, "Escolha um tamanho para o seu arquivo:", "Escolha",
-                        JOptionPane.PLAIN_MESSAGE, null, opcao_tamanho, opcao_tamanho[0]);
-                
-                if(opcao == null || (opcao != null && ("".equals(opcao)))){}
-                else{
-                    switch (opcao){
-                        case "Normal (500x500)":
-                            break;
-                        case "Grande (1000x1000)":
-                            LARGURA = 1000;
-                            ALTURA = 1000;
-                            break;
-                        case "Gigante (1500x1500)":
-                            LARGURA = 1500;
-                            ALTURA = 1500;
-                            break;
-                        default:
-                            break;
-                    }
-                } 
-            }
-            
             switch(n) {
                 case 0:{
                     SalvaImagem.salvarPNG();

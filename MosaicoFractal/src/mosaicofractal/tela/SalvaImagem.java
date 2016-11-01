@@ -31,8 +31,7 @@ public class SalvaImagem {
         
         BufferedImage bImg = new BufferedImage(Area.area.LARGURA, Area.area.ALTURA, BufferedImage.TYPE_INT_ARGB);
         Graphics2D cg = bImg.createGraphics();
-        Area.area.revalidate();
-        Area.area.paintAll(cg);
+        Area.area.renderizador.paintAll(cg);
         
         try {
             File salva = new File("./imagens_salvas/imagem_"+i+".png");
@@ -53,7 +52,6 @@ public class SalvaImagem {
         if (!file.exists()) {
             file.mkdirs();
         }
-        Area.area.revalidate();
         // Get a DOMImplementation
         DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
         String svgNamespaceURI = "http://www.w3.org/2000/svg";
@@ -65,7 +63,7 @@ public class SalvaImagem {
         SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 
         // Render into the SVG Graphics2D implementation
-        Area.area.paintAll(svgGenerator);
+        Area.area.renderizador.paintAll(svgGenerator);
 
         // Finally, stream out SVG to the standard output using UTF-8
         // character to byte encoding

@@ -48,6 +48,18 @@ public class Estampa {
         return !areaA.isEmpty();
     }
     
+    public static boolean estaDentro(double x, double y, Shape area_grande, Shape forma) {
+        final AffineTransform translada = AffineTransform.getTranslateInstance(x, y);
+        Shape teste = translada.createTransformedShape(forma);
+        
+        Area areaA = new Area(area_grande);
+        Area areaB = new Area(teste);
+        
+        areaA.intersect(areaB);
+        areaB.subtract(areaA);
+        return !areaB.isEmpty();
+    }
+    
     public void desenha(Graphics2D g2){
         if (preenchimento.isTextura()) {
             TexturePaint tp = new TexturePaint(preenchimento.getTextura(), estampa.getBounds());

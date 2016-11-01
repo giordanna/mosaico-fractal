@@ -222,11 +222,7 @@ public class Area extends JFrame{
             if (tela_personalizada) {
                 // encontrar ponto aleatório dentro da forma
                 while (!forma_tela.contains(x, y) ||
-                        !forma_tela.contains(x + forma.getBounds2D().getWidth(),
-                                y + forma.getBounds2D().getHeight()) ||
-                        !forma_tela.contains(x + forma.getBounds2D().getWidth(), y) ||
-                        !forma_tela.contains(x,y + forma.getBounds2D().getHeight())
-                        ){
+                        Estampa.estaDentro(x, y, forma_tela, forma)){
                     x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
                     y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
                 }

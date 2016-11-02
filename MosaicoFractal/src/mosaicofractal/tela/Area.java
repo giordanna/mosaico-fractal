@@ -18,6 +18,7 @@ public class Area {
     public static Area area;
     
     private JFrame jframe;
+    private JFrame frameProgresso;
     
     public static int LARGURA = 500, ALTURA = 500;
     private int largura_salva = 500, altura_salva = 500;
@@ -171,7 +172,6 @@ public class Area {
             ajusta = AffineTransform.getRotateInstance(Math.random() * Math.PI * 2, forma_escolhida.getBounds2D().getCenterX(), forma_escolhida.getBounds2D().getCenterY());
             forma_escolhida = ajusta.createTransformedShape(forma_escolhida);
         }
-        
         caso_excepcional = encontraXeY(forma_escolhida, iteracoes_max);
         while (caso_excepcional) {
             valor_n++;
@@ -231,8 +231,13 @@ public class Area {
                     teste = Estampa.intersecta(obj_teste, estampas.get(k));
                     if (teste) break;
                 } // próximo k
-            } while (teste); // repetir se ficou muito perto de um círculo
-            
+                
+                if (numero_iteracoes > iteracoes_max){
+                    caso_excepcional = true;
+                    System.out.println("opa! a estampa não consegue ser colocada na forma! vamos terminar o processo mais cedo...");
+                    break;
+                }
+            } while (teste);
             if (caso_excepcional) break;
             
             numero_iteracoes_total += numero_iteracoes;

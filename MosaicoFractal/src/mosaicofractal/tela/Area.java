@@ -44,16 +44,18 @@ public class Area {
         jframe = new JFrame("Resultado");
 
         renderizador = new Renderizador();
-        
-        jframe.setResizable(false);
+
         jframe.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         jframe.add(renderizador);
         jframe.setContentPane(renderizador);
+        jframe.setPreferredSize(new Dimension(LARGURA, ALTURA));
         jframe.pack();
-        jframe.setVisible(true);
-        
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         jframe.setLocation(dim.width/2-jframe.getSize().width/2, dim.height/2-jframe.getSize().height/2);
+        jframe.setVisible(true);
+        jframe.setResizable(false);
+        
+        
     }
     
     public void pintaTela(Graphics2D g2d) {
@@ -241,9 +243,7 @@ public class Area {
             if (caso_excepcional) break;
             
             numero_iteracoes_total += numero_iteracoes;
-            synchronized(estampas){
-                estampas.add(new Estampa(forma_escolhida, preenchimentos.get(index), x, y));
-            }
+            estampas.add(new Estampa(forma_escolhida, preenchimentos.get(index), x, y));
             
             area_total += estampas.get(qtd_formas).getArea();
             area_preenchida = area_total / getArea();

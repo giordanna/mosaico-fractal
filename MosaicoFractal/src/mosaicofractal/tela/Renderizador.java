@@ -12,6 +12,7 @@ public class Renderizador extends JPanel{
 
     public Renderizador(){
         dimensao = new Dimension(Area.LARGURA, Area.ALTURA);
+        this.setPreferredSize(dimensao);
     }
 
     @Override

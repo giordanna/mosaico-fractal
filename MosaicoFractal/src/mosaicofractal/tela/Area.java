@@ -48,12 +48,11 @@ public class Area {
         jframe.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         jframe.add(renderizador);
         jframe.setContentPane(renderizador);
-        jframe.setPreferredSize(new Dimension(LARGURA, ALTURA));
         jframe.pack();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         jframe.setLocation(dim.width/2-jframe.getSize().width/2, dim.height/2-jframe.getSize().height/2);
         jframe.setVisible(true);
-        jframe.setResizable(false);
+        //jframe.setResizable(false);
         
         
     }
@@ -159,8 +158,8 @@ public class Area {
                 // raio gerado multiplicado por uma porcentagem de controle. quanto maior c, menor o valor multiplicado
                 // então menor será o raio de fato, que não será um círculo gigante preenchendo 25% da tela, mas
                 // um pouco menor
-                porcentagem = area_razao * valorControle(valor_n, exp_u),
-                porcentagem_original = area_razao;
+                porcentagem = Math.sqrt(area_razao) * valorControle(valor_n, exp_u),
+                porcentagem_original = Math.sqrt(area_razao);
 
         boolean teste;
         boolean caso_excepcional = false;

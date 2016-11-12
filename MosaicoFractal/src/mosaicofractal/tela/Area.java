@@ -31,6 +31,7 @@ public class Area {
     private static double x, y;
     private double area_tela = LARGURA * ALTURA;
     public Renderizador renderizador;
+    private double razao_forma_tela;
     
     public Area(boolean considerar_bordas, boolean mudar_angulo, boolean tela_personalizada, boolean usa_textura) {
         this.considerar_bordas = considerar_bordas;
@@ -132,20 +133,39 @@ public class Area {
     }
     
     public void preencherArea(Shape forma, Shape forma_tela, ArrayList<Preenchimento> preenchimentos, Color cor_fundo, double c, int formas_max, int iteracoes_max) {
-        final double preenchimento_max = 0.99;
-        this.cor_fundo = cor_fundo;
+        final double preenchimento_max = 0.99; // um dos critérios de parada, se o preenchimento da área for maior que 99%
+        this.cor_fundo = cor_fundo; // cor da tela do fundo
         
+        // escala a forma para o tamanho da tela (de 100x100 para 500x500)
         AffineTransform ajusta = AffineTransform.getScaleInstance(LARGURA/100.0, ALTURA/100.0);
         this.forma = ajusta.createTransformedShape(forma);
-        
-        if (tela_personalizada) {
+
+        // se a tela do fundo for uma forma específica, define a forma da tela escalada (de 100x100 para 500x500)
+        if (this.tela_personalizada) {
             this.forma_tela = ajusta.createTransformedShape(forma_tela);
-            area_tela = Estampa.calculaArea(this.forma_tela);
+            this.area_tela = Estampa.calculaArea(this.forma_tela);
+            
+            // coloca na origem
+            ajusta = AffineTransform.getTranslateInstance(-this.forma_tela.getBounds2D().getX(), -this.forma_tela.getBounds2D().getY());
+            this.forma_tela = ajusta.createTransformedShape(this.forma_tela);
+            
+            // coloca no centro da janela
+            ajusta = AffineTransform.getTranslateInstance(LARGURA/2.0 - (this.forma_tela.getBounds2D().getCenterX()), ALTURA/2.0 - (this.forma_tela.getBounds2D().getCenterY()));
+            this.forma_tela = ajusta.createTransformedShape(this.forma_tela);
         }
         
+        // coloca forma na origem
+        ajusta = AffineTransform.getTranslateInstance(-this.forma.getBounds2D().getX(), -this.forma.getBounds2D().getY());
+        this.forma = ajusta.createTransformedShape(this.forma);
+        
+        // calcula o valor a ser multiplicado na porcentagem para que a área da forma se iguale a área reduzida da iteração
+        this.razao_forma_tela = razaoArea(this.forma);
+        
+        // inicia contador para ver a duração do algoritmo
         long tempoInicial = System.currentTimeMillis();
+        
         double teste_porcentagem, area_preenchida,
-               exp_u = 0.5 * c; // metade desse valor
+               exp_u = 0.5 * c; // metade desse valor c
         
         int qtd_formas = 1,
             numero_iteracoes_total = 0,
@@ -155,40 +175,52 @@ public class Area {
 
         double  valor_zeta = funcaoZeta(c, valor_n), // o valor que vai determinar a porcentagem. ex: 4 = 25%
                 area_razao = 1.0 / valor_zeta, // ex: valor_zeta = 4, area_razao = 1/4 = 25%
-                // raio gerado multiplicado por uma porcentagem de controle. quanto maior c, menor o valor multiplicado
-                // então menor será o raio de fato, que não será um círculo gigante preenchendo 25% da tela, mas
-                // um pouco menor
-                porcentagem = Math.sqrt(area_razao) * valorControle(valor_n, exp_u),
-                porcentagem_original = Math.sqrt(area_razao);
+                porcentagem = this.razao_forma_tela * area_razao * valorControle(valor_n, exp_u),
+                porcentagem_original = this.razao_forma_tela * area_razao;
 
-        boolean teste;
-        boolean caso_excepcional = false;
-        System.out.println("c = " + c + " | zeta = " + valor_zeta + " | razão = " + area_razao
-        + "| primeira forma = " + porcentagem);
+        boolean teste; // variável para verificar se uma tarefa passou no teste
+        boolean caso_excepcional = false; // variável para tratar exceções
         
+        // escalando a forma para uma determinada porcentagem de seu tamanho original
         ajusta = AffineTransform.getScaleInstance(porcentagem, porcentagem);
         Shape forma_escolhida = ajusta.createTransformedShape(this.forma);
         
+        // se for rotacionar a forma, executa o que estiver dentro da condição
+        // rotação em radianos
         if (mudar_angulo) {
             ajusta = AffineTransform.getRotateInstance(Math.random() * Math.PI * 2, forma_escolhida.getBounds2D().getCenterX(), forma_escolhida.getBounds2D().getCenterY());
             forma_escolhida = ajusta.createTransformedShape(forma_escolhida);
         }
+        
+        // verifica se, depois de o número máximo de iterações, ainda não foi possivel encontrar as posições X e Y
+        // acontece quando o valor de c é muito grande para a relação entre a forma e a tela
         caso_excepcional = encontraXeY(forma_escolhida, iteracoes_max);
+        // se aconteceu a exceção, reduz o tamanho da primeira forma
         while (caso_excepcional) {
             valor_n++;
-            porcentagem = area_razao * valorControle(valor_n, exp_u);
+            porcentagem = this.razao_forma_tela * area_razao * valorControle(valor_n, exp_u);
             ajusta = AffineTransform.getScaleInstance(porcentagem, porcentagem);
             forma_escolhida = ajusta.createTransformedShape(this.forma);
+            if (mudar_angulo) {
+                ajusta = AffineTransform.getRotateInstance(Math.random() * Math.PI * 2, forma_escolhida.getBounds2D().getCenterX(), forma_escolhida.getBounds2D().getCenterY());
+                forma_escolhida = ajusta.createTransformedShape(forma_escolhida);
+            }
             caso_excepcional = encontraXeY(forma_escolhida, iteracoes_max);
         }
         
+        System.out.println("c = " + c + " | zeta = " + valor_zeta + " | razão = " + area_razao
+        + "| primeira forma = " + porcentagem);
+        
+        // se utiliza textura
         if (usa_textura) {
             estampas.add(new Estampa(forma_escolhida, preenchimentos.get(0), x, y));
         }
         else {
+            // cor aleatória
             estampas.add(new Estampa(forma_escolhida, preenchimentos.get(r.nextInt(preenchimentos.size())), x, y));
         }
         
+        // inicia contagem da porcentagem preenchida da área
         double area_total = estampas.get(0).getArea();
         area_preenchida = area_total / getArea();
         
@@ -328,5 +360,13 @@ public class Area {
                 }
             }
         } while (n != -1);
+    }
+    
+    public double razaoArea(Shape shape) {
+        double area_boundingBox = shape.getBounds2D().getWidth() * shape.getBounds2D().getHeight();
+        double area_forma = Estampa.calculaArea(shape);
+        double diferenca = area_boundingBox / area_forma;
+        System.out.println("Razão tela/forma= " + diferenca);
+        return diferenca;
     }
 }

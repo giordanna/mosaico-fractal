@@ -129,6 +129,7 @@ public class Estampa {
             g2.setColor(preenchimento.getCor());
         }
         
+        //g2.draw(estampa);
         g2.fill(estampa);
         
         if (apoio_1 != null){

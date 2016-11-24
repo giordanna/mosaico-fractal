@@ -136,12 +136,28 @@ public class Area {
         final double preenchimento_max = 0.99; // um dos critérios de parada, se o preenchimento da área for maior que 99%
         this.cor_fundo = cor_fundo; // cor da tela do fundo
         
+        double escala;
         // escala a forma para o tamanho da tela (de 100x100 para 500x500)
-        AffineTransform ajusta = AffineTransform.getScaleInstance(LARGURA/100.0, ALTURA/100.0);
+        if (forma.getBounds2D().getWidth() > forma.getBounds2D().getHeight()) {
+            escala = LARGURA / forma.getBounds2D().getWidth();
+        }
+        else {
+            escala = ALTURA / forma.getBounds2D().getHeight();
+        }
+        AffineTransform ajusta = AffineTransform.getScaleInstance(escala, escala);
         this.forma = ajusta.createTransformedShape(forma);
 
         // se a tela do fundo for uma forma específica, define a forma da tela escalada (de 100x100 para 500x500)
         if (this.tela_personalizada) {
+            
+            if (forma_tela.getBounds2D().getWidth() > forma_tela.getBounds2D().getHeight()) {
+                escala = LARGURA / forma_tela.getBounds2D().getWidth();
+            }
+            else {
+                escala = ALTURA / forma_tela.getBounds2D().getHeight();
+            }
+            ajusta = AffineTransform.getScaleInstance(escala, escala);
+        
             this.forma_tela = ajusta.createTransformedShape(forma_tela);
             this.area_tela = Estampa.calculaArea(this.forma_tela);
             
@@ -158,9 +174,6 @@ public class Area {
         ajusta = AffineTransform.getTranslateInstance(-this.forma.getBounds2D().getX(), -this.forma.getBounds2D().getY());
         this.forma = ajusta.createTransformedShape(this.forma);
         
-        // calcula o valor a ser multiplicado na porcentagem para que a área da forma se iguale a área reduzida da iteração
-        this.razao_forma_tela = razaoArea(this.forma);
-        
         // inicia contador para ver a duração do algoritmo
         long tempoInicial = System.currentTimeMillis();
         
@@ -175,13 +188,12 @@ public class Area {
 
         double  valor_zeta = funcaoZeta(c, valor_n), // o valor que vai determinar a porcentagem. ex: 4 = 25%
                 area_razao = 1.0 / valor_zeta, // ex: valor_zeta = 4, area_razao = 1/4 = 25%
-                porcentagem = this.razao_forma_tela * area_razao * valorControle(valor_n, exp_u),
-                porcentagem_original = this.razao_forma_tela * area_razao;
-
+                porcentagem = area_razao * valorControle(valor_n, exp_u),
+                porcentagem_original = area_razao;
+        
         boolean teste; // variável para verificar se uma tarefa passou no teste
         boolean caso_excepcional = false; // variável para tratar exceções
         
-        // escalando a forma para uma determinada porcentagem de seu tamanho original
         ajusta = AffineTransform.getScaleInstance(porcentagem, porcentagem);
         Shape forma_escolhida = ajusta.createTransformedShape(this.forma);
         
@@ -198,7 +210,7 @@ public class Area {
         // se aconteceu a exceção, reduz o tamanho da primeira forma
         while (caso_excepcional) {
             valor_n++;
-            porcentagem = this.razao_forma_tela * area_razao * valorControle(valor_n, exp_u);
+            porcentagem = area_razao * valorControle(valor_n, exp_u);
             ajusta = AffineTransform.getScaleInstance(porcentagem, porcentagem);
             forma_escolhida = ajusta.createTransformedShape(this.forma);
             if (mudar_angulo) {
@@ -210,6 +222,11 @@ public class Area {
         
         System.out.println("c = " + c + " | zeta = " + valor_zeta + " | razão = " + area_razao
         + "| primeira forma = " + porcentagem);
+        
+        System.out.println("área da tela na porcentagem de " + Math.round(porcentagem * 100) + "%: " + this.area_tela * porcentagem);
+        System.out.println("área da bounding box:" + forma_escolhida.getBounds2D().getWidth() * forma_escolhida.getBounds2D().getHeight());
+        System.out.println("área da forma na porcentagem de " + Math.round(porcentagem * 100) + "%: " + Estampa.calculaArea(forma_escolhida));
+        System.out.println("diferença: " + (this.area_tela * porcentagem - Estampa.calculaArea(forma_escolhida)));
         
         // se utiliza textura
         if (usa_textura) {
@@ -230,7 +247,6 @@ public class Area {
             int index = 0;
             
             teste_porcentagem = porcentagem_original * valorControle(qtd_formas + valor_n, exp_u);
-            
             ajusta = AffineTransform.getScaleInstance(teste_porcentagem, teste_porcentagem);
             forma_escolhida = ajusta.createTransformedShape(this.forma);
             
@@ -363,10 +379,18 @@ public class Area {
     }
     
     public double razaoArea(Shape shape) {
+        /*
         double area_boundingBox = shape.getBounds2D().getWidth() * shape.getBounds2D().getHeight();
         double area_forma = Estampa.calculaArea(shape);
         double diferenca = area_boundingBox / area_forma;
         System.out.println("Razão tela/forma= " + diferenca);
-        return diferenca;
+        return diferenca;*/
+        return 1;
+    }
+    
+    public double funcaoInversa(double porcentagem) {
+        double area_bb = this.forma.getBounds2D().getWidth() * this.forma.getBounds2D().getHeight();
+        
+        return (porcentagem * this.area_tela) / area_bb;
     }
 }

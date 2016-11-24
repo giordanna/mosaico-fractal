@@ -1415,13 +1415,14 @@ public class InterfaceUsuario extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Set the default OS look and feel */
+        
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         }
         catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new InterfaceUsuario().setVisible(true);

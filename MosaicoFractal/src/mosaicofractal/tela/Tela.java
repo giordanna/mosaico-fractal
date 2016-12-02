@@ -69,12 +69,12 @@ public class Tela {
      * Estampa utilizada para verificar casos de intersecção com as demais 
      * estampas já inseridas na tela.
      */
-    private Estampa estampaTeste;
+    private Estampa estampaTeste = null;
     
     /**
      * Valor para controlar a quantidade de estampas já inseridas na tela.
      */
-    private int quantidadeEstampas;
+    private int quantidadeEstampas = 0;
     
     /**
      * Valores para controlar a execução das threads. O programa só poderá 
@@ -108,7 +108,7 @@ public class Tela {
     /**
      * Usado para verificar se execução será sequencial ou paralelizada.
      */
-    private final boolean isUSARTHREAD = false;
+    private final boolean isUSARTHREAD = true;
     
     /**
      * Cria uma tela na qual serão adicionados diversas estampas ao longo
@@ -197,12 +197,12 @@ public class Tela {
      * para definir uma razão que será usada para determinar a área da primeira 
      * forma a ser inserida na região
      *
-     * @param c constante utilizada na função, a qual deve ser maior que 1
-     * @param N onde inicia o somatório
+     * @param N constante utilizada na função, a qual deve ser maior que 1
+     * @param expoente onde inicia o somatório
      * @return a soma dos valores da função Zeta
      */
-    private double valorControle(double valor_n, double exp_u){
-        return Math.pow(valor_n, -exp_u);
+    private double valorControle(double N, double expoente){
+        return Math.pow(N, -expoente);
     }
     
     /**
@@ -215,11 +215,11 @@ public class Tela {
      * @return a razão área da tela / área da forma
      * @see #preencherArea(java.awt.Shape, java.awt.Shape, java.util.ArrayList, java.awt.Color, double, int, int) 
      */
-    private double razaoArea(Shape forma) {
-        double area_forma, razao;
+    private double getRazaoAreaTelaForma(Shape forma) {
+        double areaDaForma, razao;
         
-        area_forma = Estampa.calculaArea(forma);
-        razao = valorAreaTela / area_forma;
+        areaDaForma = Estampa.calculaArea(forma);
+        razao = valorAreaTela / areaDaForma;
         
         return Math.sqrt(razao);
     }
@@ -240,9 +240,10 @@ public class Tela {
      */
     private boolean encontraXeY(Shape forma, int iteracoes_max) {
         if (isConsiderarBordas) {
-            x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
-            y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
             if (isFormaTelaPersonalizada) {
+                x = Math.random() * (LARGURA -  shapeFormaTela.getBounds2D().getWidth());
+                y = Math.random() * (ALTURA -  shapeFormaTela.getBounds2D().getHeight());
+                
                 int iteracoes_posicao = 0;
                 
                 while (!shapeFormaTela.contains(x, y) ||
@@ -255,6 +256,10 @@ public class Tela {
                         return true;
                     }
                 }
+            }
+            else {
+                x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
+                y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
             }
         }
         else {
@@ -322,12 +327,9 @@ public class Tela {
      * @see Thread1
      * @see Thread2
      */
-    private boolean isUsarThread(int qtd_formas, Estampa obj_teste) {
+    private boolean isUsarThread() {
         boolean teste = false;
         if (isUSARTHREAD) {
-            quantidadeEstampas = qtd_formas;
-            this.estampaTeste = new Estampa(obj_teste);
-
             threadA = threadB = 0;
             new Thread1().start();
             new Thread2().start();
@@ -342,8 +344,8 @@ public class Tela {
             teste = (threadA == 2 || threadB == 2);
         }
         else{
-            for (int k = 0 ; k < qtd_formas ; k++) {
-                teste = Estampa.intersecta(obj_teste, estampasAdicionadas.get(k));
+            for (int k = 0 ; k < quantidadeEstampas ; k++) {
+                teste = Estampa.intersecta(estampaTeste, estampasAdicionadas.get(k));
                 if (teste) break;
             }
         }
@@ -355,184 +357,220 @@ public class Tela {
      * Função principal da classe, onde realiza os devidos cálculos para 
      * posicionar as estampas na tela.
      *
-     * @param forma forma das estampas a seren posicionadas
-     * @param forma_tela formato da tela
+     * @param formaDaEstampa forma das estampas a seren posicionadas
+     * @param formaDaTela formato da tela
      * @param preenchimentos preenchimentos utilizados para as estampas
-     * @param formas_max número máximo de estampas a serem inseridas na tela
-     * @param cor_fundo cor utilizada no fundo da tela
-     * @param iteracoes_max número máximo de iterações para os testes realizados
-     * @param c constante a ser utilizada na <code>funcaoZeta()</code>
+     * @param maximoFormas número máximo de estampas a serem inseridas na tela
+     * @param corFundo cor utilizada no fundo da tela
+     * @param maximoIteracoes número máximo de iterações para os testes
+     * @param constante constante a ser utilizada na <code>funcaoZeta()</code>
      * @see #funcaoZeta(double, int) 
      */
-    public void preencherArea(Shape forma, Shape forma_tela, ArrayList<Preenchimento> preenchimentos, Color cor_fundo, double c, int formas_max, int iteracoes_max) {
+    public void preencherArea(Shape formaDaEstampa, Shape formaDaTela,
+            ArrayList<Preenchimento> preenchimentos, Color corFundo, 
+            double constante, int maximoFormas, int maximoIteracoes) {
         
-        Estampa obj_teste = null;
+        final double maximoPorcentagemPreenchimento = 0.99,
+                     expoente = 0.5 * constante;
         
-        final double preenchimento_max = 0.99; // um dos critérios de parada, se o preenchimento da área for maior que 99%
-        this.corDoFundo = cor_fundo; // cor da tela do fundo
+        final int estouroMaxFormas = maximoFormas + 1;
         
-        double escala;
-        AffineTransform ajusta;
+        int numeroIteracoesTotal = 0,
+            numeroIteracoesAcumulado,
+            N = 2,
+            indexPreenchimento;
+
+        double  valorZeta = funcaoZeta(constante, N),
+                razaoDaArea = 1.0 / valorZeta,
+                porcentagem = razaoDaArea * valorControle(N, expoente),
+                escala, areaPreenchidaPorcentagem, areaTotal;
         
-        // se a tela do fundo for uma forma específica, define a forma da tela escalada (de 100x100 para 500x500)
-        if (this.isFormaTelaPersonalizada) {
+        boolean testeInterseccao, casoExcepcional;
+        
+        Shape formaEscolhida;
+        
+        /* para executar transformações nas formas */
+        AffineTransform transformador;
+        
+        corDoFundo = corFundo;
+        
+        /* se a forma da tela é personalizada */
+        if (isFormaTelaPersonalizada) {
             
-            if (forma_tela.getBounds2D().getWidth() > forma_tela.getBounds2D().getHeight()) {
-                escala = LARGURA / forma_tela.getBounds2D().getWidth();
+            if (formaDaTela.getBounds2D().getWidth() > 
+                    formaDaTela.getBounds2D().getHeight()) {
+                escala = LARGURA / formaDaTela.getBounds2D().getWidth();
             }
             else {
-                escala = ALTURA / forma_tela.getBounds2D().getHeight();
+                escala = ALTURA / formaDaTela.getBounds2D().getHeight();
             }
-            ajusta = AffineTransform.getScaleInstance(escala, escala);
+            transformador = AffineTransform.getScaleInstance(escala, escala);
         
-            this.shapeFormaTela = ajusta.createTransformedShape(forma_tela);
-            this.valorAreaTela = Estampa.calculaArea(this.shapeFormaTela);
+            shapeFormaTela = transformador.createTransformedShape(formaDaTela);
             
-            // coloca na origem
-            ajusta = AffineTransform.getTranslateInstance(-this.shapeFormaTela.getBounds2D().getX(), -this.shapeFormaTela.getBounds2D().getY());
-            this.shapeFormaTela = ajusta.createTransformedShape(this.shapeFormaTela);
+            /* coloca primeiro na origem */
+            transformador = AffineTransform.getTranslateInstance(
+                    -shapeFormaTela.getBounds2D().getX(), 
+                    -shapeFormaTela.getBounds2D().getY());
             
-            // coloca no centro da janela
-            ajusta = AffineTransform.getTranslateInstance(LARGURA/2.0 - (this.shapeFormaTela.getBounds2D().getCenterX()), ALTURA/2.0 - (this.shapeFormaTela.getBounds2D().getCenterY()));
-            this.shapeFormaTela = ajusta.createTransformedShape(this.shapeFormaTela);
+            shapeFormaTela = transformador.createTransformedShape(shapeFormaTela);
+            
+            /* coloca no centro da janela */
+            transformador = AffineTransform.getTranslateInstance(
+                    LARGURA/2.0 - (shapeFormaTela.getBounds2D().getCenterX()), 
+                    ALTURA/2.0 - (shapeFormaTela.getBounds2D().getCenterY()));
+            
+            shapeFormaTela = transformador.createTransformedShape(shapeFormaTela);
+            
+            /* calcula a área da tela */
+            valorAreaTela = Estampa.calculaArea(shapeFormaTela);
         }
         
-        // escala a forma para o tamanho da tela
-        double razao_ajuste = razaoArea(forma);
-        ajusta = AffineTransform.getScaleInstance(razao_ajuste, razao_ajuste);
-        this.shapeFormaUsada = ajusta.createTransformedShape(forma);
+        /* escala a forma da estampa para o tamanho da tela */
+        escala = getRazaoAreaTelaForma(formaDaEstampa);
+        transformador = AffineTransform.getScaleInstance(escala, escala);
+        shapeFormaUsada = transformador.createTransformedShape(formaDaEstampa);
         
-        // coloca forma na origem
-        ajusta = AffineTransform.getTranslateInstance(-this.shapeFormaUsada.getBounds2D().getX(), -this.shapeFormaUsada.getBounds2D().getY());
-        this.shapeFormaUsada = ajusta.createTransformedShape(this.shapeFormaUsada);
+        /* coloca forma na origem */
+        transformador = AffineTransform.getTranslateInstance(
+                -shapeFormaUsada.getBounds2D().getX(), 
+                -shapeFormaUsada.getBounds2D().getY());
         
-        // inicia contador para ver a duração do algoritmo
+        shapeFormaUsada = transformador.createTransformedShape(shapeFormaUsada);
+        
+        /* inicia contador para ver a duração do algoritmo */
         long tempoInicial = System.currentTimeMillis();
         
-        double teste_porcentagem, area_preenchida,
-               exp_u = 0.5 * c; // metade desse valor c
+        /* escala a forma para a porcentagem da área da tela */
+        transformador = AffineTransform.getScaleInstance(porcentagem, porcentagem);
+        formaEscolhida = transformador.createTransformedShape(shapeFormaUsada);
         
-        int qtd_formas = 1,
-            numero_iteracoes_total = 0,
-            numero_iteracoes,
-            valor_n = 2,
-            nmax = formas_max + 1;
-
-        double  valor_zeta = funcaoZeta(c, valor_n), // o valor que vai determinar a porcentagem. ex: 4 = 25%
-                area_razao = 1.0 / valor_zeta, // ex: valor_zeta = 4, area_razao = 1/4 = 25%
-                porcentagem = area_razao * valorControle(valor_n, exp_u),
-                porcentagem_original = area_razao;
-        
-        boolean teste; // variável para verificar se uma tarefa passou no teste
-        boolean caso_excepcional = false; // variável para tratar exceções
-        
-        ajusta = AffineTransform.getScaleInstance(porcentagem, porcentagem);
-        Shape forma_escolhida = ajusta.createTransformedShape(this.shapeFormaUsada);
-        
-        // se for rotacionar a forma, executa o que estiver dentro da condição
-        // rotação em radianos
+        /* se for rotacionar a forma, executa o que estiver dentro da condição
+        rotação em radianos */
         if (isMudarAngulo) {
-            ajusta = AffineTransform.getRotateInstance(Math.random() * Math.PI * 2, forma_escolhida.getBounds2D().getCenterX(), forma_escolhida.getBounds2D().getCenterY());
-            forma_escolhida = ajusta.createTransformedShape(forma_escolhida);
+            transformador = AffineTransform.getRotateInstance(
+                    Math.random() * Math.PI * 2, 
+                    formaEscolhida.getBounds2D().getCenterX(), 
+                    formaEscolhida.getBounds2D().getCenterY());
+            
+            formaEscolhida = transformador.createTransformedShape(formaEscolhida);
         }
         
-        // verifica se, depois de o número máximo de iterações, ainda não foi possivel encontrar as posições X e Y
-        // acontece quando o valor de c é muito grande para a relação entre a forma e a tela
-        caso_excepcional = encontraXeY(forma_escolhida, iteracoes_max);
-        // se aconteceu a exceção, reduz o tamanho da primeira forma
-        while (caso_excepcional) {
-            valor_n++;
-            porcentagem = area_razao * valorControle(valor_n, exp_u);
-            ajusta = AffineTransform.getScaleInstance(porcentagem, porcentagem);
-            forma_escolhida = ajusta.createTransformedShape(this.shapeFormaUsada);
+        /* verifica se, depois de o número máximo de iterações, ainda não foi 
+        possivel encontrar as posições X e Y. acontece quando o valor de c é 
+        muito grande para a relação entre a forma e a tela */
+        casoExcepcional = encontraXeY(formaEscolhida, maximoIteracoes);
+        
+        /* se aconteceu a exceção, reduz o tamanho da primeira forma */
+        while (casoExcepcional) {
+            N++;
+            porcentagem = razaoDaArea * valorControle(N, expoente);
+            transformador = AffineTransform.getScaleInstance(porcentagem, porcentagem);
+            formaEscolhida = transformador.createTransformedShape(shapeFormaUsada);
+            
             if (isMudarAngulo) {
-                ajusta = AffineTransform.getRotateInstance(Math.random() * Math.PI * 2, forma_escolhida.getBounds2D().getCenterX(), forma_escolhida.getBounds2D().getCenterY());
-                forma_escolhida = ajusta.createTransformedShape(forma_escolhida);
+                transformador = AffineTransform.getRotateInstance(
+                        Math.random() * Math.PI * 2, 
+                        formaEscolhida.getBounds2D().getCenterX(), 
+                        formaEscolhida.getBounds2D().getCenterY());
+                
+                formaEscolhida = transformador.createTransformedShape(formaEscolhida);
             }
-            caso_excepcional = encontraXeY(forma_escolhida, iteracoes_max);
+            casoExcepcional = encontraXeY(formaEscolhida, maximoIteracoes);
         }
         
-        System.out.println("c = " + c + " | zeta = " + valor_zeta + " | razão = " + area_razao
+        System.out.println("c = " + constante + " | zeta = " + valorZeta + " | razão = " + razaoDaArea
         + "| primeira forma = " + porcentagem);
         
-        // se utiliza textura
+        /* se utiliza textura */
         if (isUsarTextura) {
-            estampasAdicionadas.add(new Estampa(forma_escolhida, preenchimentos.get(0), x, y));
+            estampasAdicionadas.add(new Estampa(formaEscolhida, 
+                    preenchimentos.get(0), x, y));
         }
         else {
-            // cor aleatória
-            estampasAdicionadas.add(new Estampa(forma_escolhida, preenchimentos.get(RAND.nextInt(preenchimentos.size())), x, y));
+            /* cor aleatória */
+            estampasAdicionadas.add(new Estampa(formaEscolhida, 
+                    preenchimentos.get(RAND.nextInt(preenchimentos.size())), x, y));
         }
         
-        // inicia contagem da porcentagem preenchida da área
-        double area_total = estampasAdicionadas.get(0).getArea();
-        area_preenchida = area_total / valorAreaTela;
+        /* inicia contagem da porcentagem preenchida da área */
+        areaTotal = estampasAdicionadas.get(0).getArea();
+        areaPreenchidaPorcentagem = areaTotal / valorAreaTela;
         
-        do { // loop no número de círculos
+        quantidadeEstampas = 1;
         
-            numero_iteracoes = 0;
-            int index = 0;
+        /* loop no número de círculos */
+        do {
+            numeroIteracoesAcumulado = 0;
             
-            teste_porcentagem = porcentagem_original * valorControle(qtd_formas + valor_n, exp_u);
-            ajusta = AffineTransform.getScaleInstance(teste_porcentagem, teste_porcentagem);
-            forma_escolhida = ajusta.createTransformedShape(this.shapeFormaUsada);
+            porcentagem = razaoDaArea * valorControle(quantidadeEstampas + N, expoente);
+            transformador = AffineTransform.getScaleInstance(porcentagem, porcentagem);
+            formaEscolhida = transformador.createTransformedShape(shapeFormaUsada);
             
-            do { // busca aleatória
-                
+            do {
                 if (isMudarAngulo) {
-                    ajusta = AffineTransform.getRotateInstance(Math.random() * Math.PI * 2, forma_escolhida.getBounds2D().getCenterX(), forma_escolhida.getBounds2D().getCenterY());
-                    forma_escolhida = ajusta.createTransformedShape(forma_escolhida);
+                    transformador = AffineTransform.getRotateInstance(
+                            Math.random() * Math.PI * 2, 
+                            formaEscolhida.getBounds2D().getCenterX(), 
+                            formaEscolhida.getBounds2D().getCenterY());
+                    
+                    formaEscolhida = transformador.createTransformedShape(formaEscolhida);
                 }
-                caso_excepcional = encontraXeY(forma_escolhida, iteracoes_max);
                 
-                if (caso_excepcional) {
-                    System.out.println("opa! a estampa não consegue ser colocada na forma! vamos terminar o processo mais cedo...");
+                casoExcepcional = encontraXeY(formaEscolhida, maximoIteracoes);
+                
+                if (casoExcepcional) {
+                    System.out.println("A estampa não consegue ser colocada na "
+                            + "forma! Vamos terminar o processo mais cedo...");
+                    
                     break;
                 }
-                
-                numero_iteracoes++;
-                teste = true;
                 
                 if (isUsarTextura) {
-                    obj_teste = new Estampa(forma_escolhida, preenchimentos.get(0), x, y);
-                    index = 0;
+                    estampaTeste = new Estampa(formaEscolhida, preenchimentos.get(0), x, y);
                 }
                 else {
-                    index = RAND.nextInt(preenchimentos.size());
-                    obj_teste = new Estampa(forma_escolhida, preenchimentos.get(index), x, y);
+                    indexPreenchimento = RAND.nextInt(preenchimentos.size());
+                    estampaTeste = new Estampa(formaEscolhida, preenchimentos.get(indexPreenchimento), x, y);
                 }
                 
-                teste = isUsarThread(qtd_formas, obj_teste);
+                testeInterseccao = isUsarThread();
+                numeroIteracoesAcumulado++;
                 
-                if (numero_iteracoes > iteracoes_max){
-                    caso_excepcional = true;
-                    System.out.println("opa! a estampa não consegue ser colocada na forma! vamos terminar o processo mais cedo...");
+                if (numeroIteracoesAcumulado > maximoIteracoes){
+                    casoExcepcional = true;
+                    System.out.println("A estampa não consegue ser colocada na "
+                            + "forma! Vamos terminar o processo mais cedo...");
                     break;
                 }
-            } while (teste);
-            if (caso_excepcional) break;
-            
-            numero_iteracoes_total += numero_iteracoes;
-            
-            if (isUsarTextura) {
-                estampasAdicionadas.add(obj_teste);
-            }
-            else {
-                estampasAdicionadas.add(obj_teste);
+                
+            } while (testeInterseccao);
+            if (casoExcepcional) {
+                break;
             }
             
-            area_total += estampasAdicionadas.get(qtd_formas).getArea();
-            area_preenchida = area_total / valorAreaTela;
-            qtd_formas++;
+            numeroIteracoesTotal += numeroIteracoesAcumulado;
+            
+            estampasAdicionadas.add(estampaTeste);
+            
+            areaTotal += estampasAdicionadas.get(quantidadeEstampas).getArea();
+            areaPreenchidaPorcentagem = areaTotal / valorAreaTela;
+            quantidadeEstampas++;
         
-        } while (numero_iteracoes_total < iteracoes_max && qtd_formas < nmax && area_preenchida < preenchimento_max);
-        System.out.println("área preenchida = " + Math.round(area_preenchida * 100) + "%");
-        System.out.println("número de iterações = " + numero_iteracoes_total);
-        System.out.println("número de formas = " + qtd_formas);
+        } while (numeroIteracoesTotal < maximoIteracoes && 
+                quantidadeEstampas < estouroMaxFormas && 
+                areaPreenchidaPorcentagem < maximoPorcentagemPreenchimento);
+        
+        System.out.println("Área da tela = " + valorAreaTela);
+        System.out.println("Área da estampa = " + Estampa.calculaArea(shapeFormaUsada));
+        
+        System.out.println("área preenchida = " + Math.round(areaPreenchidaPorcentagem * 100) + "%");
+        System.out.println("número de iterações = " + numeroIteracoesTotal);
+        System.out.println("número de formas = " + quantidadeEstampas);
+        System.out.println("Tempo de execução = " + (System.currentTimeMillis() - tempoInicial)/1000.0 + " segundos.");
+        
         jFrame.revalidate();
         jFrame.repaint();
-        
-        System.out.println("Tempo de execução = " + (System.currentTimeMillis() - tempoInicial)/1000.0 + " segundos.");
         
         salvarImagem();
     }

@@ -1,6 +1,5 @@
 package mosaicofractal.tela;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -21,64 +20,77 @@ import org.apache.batik.svggen.SVGGraphics2DIOException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DOMImplementation;
 
+/**
+ * A classe <code>SalvaImagem</code> cuida de rasterizar a tela gerada pelo 
+ * programa para PNG, ou salvando como um documento SVG. Esta classe possui 
+ * dependências com a toolkit <code>Batik</code> para converter os elementos 
+ * gráficos de Java2D para SVG, e disso salvar o documento.
+ * 
+ * @author Giordanna De Gregoriis
+ * @see Tela
+ */
 public class SalvaImagem {
-    private static int i = 0, v = 0;
     
+    /**
+     * Variáveis para definir o número do árquivo que será salvo.
+     */
+    private static int numeroImagem = 0, numeroVetor = 0;
+    
+    /**
+     * Função para salvar os elementos da tela em PNG.
+     */
     public static void salvarPNG() {
         File file = new File("imagens_salvas");
         if (!file.exists()) {
             file.mkdirs();
         }
         
-        BufferedImage bImg = new BufferedImage(Area.area.LARGURA, Area.area.ALTURA, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bImg = new BufferedImage(Tela.LARGURA, Tela.ALTURA, BufferedImage.TYPE_INT_ARGB);
         Graphics2D cg = bImg.createGraphics();
         
-        Area.area.renderizador.setOpaque(false);
+        Tela.tela.renderizador.setOpaque(false);
         
-        Area.area.renderizador.paintAll(cg);
+        Tela.tela.renderizador.paintAll(cg);
         
         try {
-            File salva = new File("./imagens_salvas/imagem_"+i+".png");
+            File salva = new File("./imagens_salvas/imagem_"+numeroImagem+".png");
             while (salva.exists()){
-                i++;
-                salva = new File("./imagens_salvas/imagem_"+i+".png");
+                numeroImagem++;
+                salva = new File("./imagens_salvas/imagem_"+numeroImagem+".png");
             }
             
-            if (ImageIO.write(bImg, "png", new File("./imagens_salvas/imagem_"+i+".png"))){
-                i++;
+            if (ImageIO.write(bImg, "png", new File("./imagens_salvas/imagem_"+numeroImagem+".png"))){
+                numeroImagem++;
             }
         }
         catch (IOException e) {}
     }
     
+    /**
+     * Função para salvar os elementos da tela em SVG.
+     */
     public static void salvarSVG() {
         File file = new File("vetores_salvos");
         if (!file.exists()) {
             file.mkdirs();
         }
-        // Get a DOMImplementation
+        
         DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
         String svgNamespaceURI = "http://www.w3.org/2000/svg";
 
-        // Create an instance of org.w3c.dom.Document
         Document document = domImpl.createDocument(svgNamespaceURI, "svg", null);
-
-        // Create an instance of the SVG Generator
         SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 
-        // Render into the SVG Graphics2D implementation
-        Area.area.renderizador.setOpaque(false);
-        Area.area.renderizador.paintAll(svgGenerator);
+        Tela.tela.renderizador.setOpaque(false);
+        Tela.tela.renderizador.paintAll(svgGenerator);
 
-        // Finally, stream out SVG to the standard output using UTF-8
-        // character to byte encoding
-        boolean useCSS = true; // we want to use CSS style attribute
+        boolean useCSS = true;
         Writer out;
         try {
-            File salva = new File("./vetores_salvos/vetor_"+v+".svg");
+            File salva = new File("./vetores_salvos/vetor_"+numeroVetor+".svg");
             while (salva.exists()){
-                v++;
-                salva = new File("./vetores_salvos/vetor_"+v+".svg");
+                numeroVetor++;
+                salva = new File("./vetores_salvos/vetor_"+numeroVetor+".svg");
             }
             
             out = new OutputStreamWriter(new FileOutputStream(salva), "UTF-8");

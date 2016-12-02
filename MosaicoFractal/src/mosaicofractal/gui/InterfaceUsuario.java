@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import mosaicofractal.elementos.Preenchimento;
-import mosaicofractal.tela.Area;
+import mosaicofractal.tela.Tela;
 import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.gvt.GraphicsNode;
 import org.apache.batik.gvt.ShapeNode;
@@ -42,7 +42,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private String estampa = "estampa1.svg";
     private String forma_fundo = "estampa1.svg";
     private Dimension dim;
-    private Area area;
+    private Tela area;
     
     /**
      * Creates new form InterfaceUsuario
@@ -1403,8 +1403,8 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             }
         }
         
-        Area.iniciar(radioBordaTelaSim.isSelected(), radioRotacionarEstampasSim.isSelected(), radioTelaFormaSim.isSelected(), radioTipoPreenchimentoTexturas.isSelected());
-        Area.area.preencherArea(shape_estampa, shape_tela, preenchimentos, cor_fundo_selecionada, (double) spinnerValorC.getValue(), (int) spinnerQuantidadeFormas.getValue(), (int) spinnerIteracoes.getValue());
+        Tela.tela = new Tela(radioBordaTelaSim.isSelected(), radioRotacionarEstampasSim.isSelected(), radioTelaFormaSim.isSelected(), radioTipoPreenchimentoTexturas.isSelected());
+        Tela.tela.preencherArea(shape_estampa, shape_tela, preenchimentos, cor_fundo_selecionada, (double) spinnerValorC.getValue(), (int) spinnerQuantidadeFormas.getValue(), (int) spinnerIteracoes.getValue());
         
         //frameTeste teste = new frameTeste(shape_estampa, radioRotacionarEstampasSim.isSelected(), preenchimentos.get(0));
         //teste.inicia();

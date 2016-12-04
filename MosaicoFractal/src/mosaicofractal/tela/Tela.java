@@ -66,12 +66,6 @@ public class Tela {
     private Shape shapeFormaTela = null, shapeFormaUsada;
     
     /**
-     * Estampa utilizada para verificar casos de intersecção com as demais 
-     * estampas já inseridas na tela.
-     */
-    private Estampa estampaTeste = null;
-    
-    /**
      * Valor para controlar a quantidade de estampas já inseridas na tela.
      */
     private int quantidadeEstampas = 0;
@@ -81,6 +75,33 @@ public class Tela {
      * prosseguir se as duas threads terminarem suas execuções.
      */
     private int threadA, threadB;
+    
+    /**
+     * Threads usadas para paralelização.
+     */
+    private InterseccionaThread1 t1;
+    private InterseccionaThread2 t2;
+    
+    /**
+     * Porcentagem usada para reduzir a forma.
+     */
+    private double porcentagemTeste;
+    
+    /**
+     * Preenchimentos utilizados nas estampas posicionadas na tela.
+     */
+    private ArrayList<Preenchimento> preenchimentos = new ArrayList<>();
+    
+    /**
+     * Máximo de iterações no programa.
+     */
+    private int maximoIteracoes;
+    
+    /**
+     * Estampas utilizadas nas threads. Utilizadas para verificar casos de 
+     * intersecção com as demais estampas já inseridas na tela.
+     */
+    private Estampa estampaTeste1 = null, estampaTeste2 = null;
     
     /**
      * A área da tela. Default é a área da tela do jFrame.
@@ -108,7 +129,7 @@ public class Tela {
     /**
      * Usado para verificar se execução será sequencial ou paralelizada.
      */
-    private final boolean isUSARTHREAD = true;
+    private final boolean isUSARTHREAD = false;
     
     /**
      * Cria uma tela na qual serão adicionados diversas estampas ao longo
@@ -235,10 +256,9 @@ public class Tela {
      * utilizadas.
      * 
      * @param forma a forma usada para calcular sua área
-     * @param iteracoes_max número de iterações máximas
      * @return se houve um caso excepcional ou não
      */
-    private boolean encontraXeY(Shape forma, int iteracoes_max) {
+    private boolean encontraXeY(Shape forma) {
         if (isConsiderarBordas) {
             if (isFormaTelaPersonalizada) {
                 x = Math.random() * (LARGURA -  shapeFormaTela.getBounds2D().getWidth());
@@ -252,7 +272,7 @@ public class Tela {
                     x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
                     y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
                     iteracoes_posicao++;
-                    if (iteracoes_posicao > iteracoes_max) {
+                    if (iteracoes_posicao > maximoIteracoes) {
                         return true;
                     }
                 }
@@ -269,13 +289,45 @@ public class Tela {
         return false;
     }
     
+    private Estampa criarEstampa() {
+        AffineTransform transformador = AffineTransform.getScaleInstance(porcentagemTeste, porcentagemTeste);
+        Shape forma = transformador.createTransformedShape(shapeFormaUsada);
+        boolean casoExcepcional;
+        
+        if (isMudarAngulo) {
+            transformador = AffineTransform.getRotateInstance(
+                    Math.random() * Math.PI * 2, 
+                    forma.getBounds2D().getCenterX(), 
+                    forma.getBounds2D().getCenterY());
+
+            forma = transformador.createTransformedShape(forma);
+        }
+
+        casoExcepcional = encontraXeY(forma);
+
+        if (casoExcepcional) {
+            System.out.println("A estampa não consegue ser colocada na "
+                    + "forma! Vamos terminar o processo mais cedo...");
+
+            return null;
+        }
+
+        if (isUsarTextura) {
+            return new Estampa(forma, preenchimentos.get(0), x, y);
+        }
+        else {
+            return new Estampa(forma, preenchimentos.get(RAND.nextInt(preenchimentos.size())), x, y);
+        }
+    }
+    
     /**
-     * A classe privada <code>Thread1</code> serve para realizar a função de 
+     * A classe privada <code>InterseccionaThread1</code> serve para realizar a função de 
      * paralelizar a função de verificação se há intersecção com a forma que se 
      * deseja posicionar na tela com as demais que já foram inseridas.
+     * 
      * @author Giordanna De Gregoriis
      */
-    private class Thread1 extends Thread {
+    private class InterseccionaThread1 extends Thread {
         
         /**
          * Esta thread cuida da primeira metade das estampas adicionadas no 
@@ -284,23 +336,45 @@ public class Tela {
         @Override
         public void run() {
             threadA = 0;
-            for (int i = 0 ; i < quantidadeEstampas / 2 ; i++) {
-                if (Estampa.intersecta(estampaTeste, estampasAdicionadas.get(i))) {
-                    threadA = 2; 
+            boolean teste;
+            int iteracoesAcumuladas = 0;
+            
+            do {
+                teste = true;
+                estampaTeste1 = criarEstampa();
+                iteracoesAcumuladas++;
+                
+                if (iteracoesAcumuladas > maximoIteracoes) {
+                    System.out.println("Esta demorando demais para encontrar "
+                            + "uma posição! Terminando maiss cedo...");
+                    estampaTeste1 = null;
+                    threadA = 1;
                     return;
                 }
-            }
+                
+                for (int i = 0 ; i < quantidadeEstampas ; i++) {
+                    if (threadB == 1) {
+                        return;
+                    }
+
+                    if (Estampa.intersecta(estampaTeste1, estampasAdicionadas.get(i))) {
+                        teste = false;
+                        break;
+                    }
+                } 
+            } while (!teste);
             threadA = 1;
         }
     }
     
     /**
-     * A classe privada <code>Thread2</code> serve para realizar a função de 
+     * A classe privada <code>InterseccionaThread2</code> serve para realizar a função de 
      * paralelizar a função de verificação se há intersecção com a forma que se 
      * deseja posicionar na tela com as demais que já foram inseridas.
+     * 
      * @author Giordanna De Gregoriis
      */
-    private class Thread2 extends Thread {
+    private class InterseccionaThread2 extends Thread {
         
         /**
          * Esta thread cuida da segunda metade das estampas adicionadas no 
@@ -309,12 +383,34 @@ public class Tela {
         @Override
         public void run() {
             threadB = 0;
-            for (int i = quantidadeEstampas / 2 ; i < quantidadeEstampas ; i++) {
-                if (Estampa.intersecta(estampaTeste, estampasAdicionadas.get(i))) {
-                    threadB = 2; 
+            boolean teste;
+            int iteracoesAcumuladas = 0;
+            
+            do {
+                estampaTeste2 = criarEstampa();
+                teste = true;
+                iteracoesAcumuladas++;
+                
+                if (iteracoesAcumuladas > maximoIteracoes) {
+                    System.out.println("Esta demorando demais para encontrar "
+                            + "uma posição! Terminando maiss cedo...");
+                    estampaTeste2 = null;
+                    threadB = 1;
                     return;
                 }
-            }
+                
+                for (int i = 0 ; i < quantidadeEstampas ; i++) {
+                    if (threadA == 1) {
+                        return;
+                    }
+
+                    if (Estampa.intersecta(estampaTeste2, estampasAdicionadas.get(i))) {
+                        teste = false;
+                        break;
+                    }
+                }
+                
+            } while (!teste);
             threadB = 1;
         }
     }
@@ -324,33 +420,64 @@ public class Tela {
      * executada sequencialmente ou irá utilizar Threads.
      * 
      * @return se houve intersecção ou não
-     * @see Thread1
-     * @see Thread2
+     * @see InterseccionaThread1
+     * @see InterseccionaThread2
      */
-    private boolean isUsarThread() {
-        boolean teste = false;
+    private Estampa isUsarThread() {
         if (isUSARTHREAD) {
             threadA = threadB = 0;
-            new Thread1().start();
-            new Thread2().start();
+            t1 = new InterseccionaThread1();
+            t2 = new InterseccionaThread2();
+            t1.start();
+            t2.start();
+            try {
+                t1.join();
+                t2.join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Tela.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("oops");
+            }
+            /*
             while (threadA == 0 || threadB == 0) {
+                
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Tela.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
-
-            teste = (threadA == 2 || threadB == 2);
+                
+            }*/
+            
+            return (threadA == 1) ? estampaTeste1 : estampaTeste2;
         }
         else{
-            for (int k = 0 ; k < quantidadeEstampas ; k++) {
-                teste = Estampa.intersecta(estampaTeste, estampasAdicionadas.get(k));
-                if (teste) break;
-            }
+            Estampa estampa;
+            boolean teste;
+            int iteracoesAcumuladas = 0;
+            
+            do {
+                estampa = criarEstampa();
+                teste = true;
+                iteracoesAcumuladas++;
+                
+                if (iteracoesAcumuladas > maximoIteracoes) {
+                    System.out.println("Esta demorando demais para encontrar "
+                            + "uma posição! Terminando maiss cedo...");
+                    
+                    return null;
+                }
+                
+                for (int i = 0 ; i < quantidadeEstampas ; i++) {
+
+                    if (Estampa.intersecta(estampa, estampasAdicionadas.get(i))) {
+                        teste = false;
+                        break;
+                    }
+                }
+                
+            } while (!teste);
+            return estampa;
         }
-        
-        return teste;
     }
     
     /**
@@ -359,40 +486,36 @@ public class Tela {
      *
      * @param formaDaEstampa forma das estampas a seren posicionadas
      * @param formaDaTela formato da tela
-     * @param preenchimentos preenchimentos utilizados para as estampas
+     * @param listaPreenchimentos preenchimentos utilizados para as estampas
      * @param maximoFormas número máximo de estampas a serem inseridas na tela
      * @param corFundo cor utilizada no fundo da tela
-     * @param maximoIteracoes número máximo de iterações para os testes
+     * @param maxIteracoes número máximo de iterações para os testes
      * @param constante constante a ser utilizada na <code>funcaoZeta()</code>
      * @see #funcaoZeta(double, int) 
      */
     public void preencherArea(Shape formaDaEstampa, Shape formaDaTela,
-            ArrayList<Preenchimento> preenchimentos, Color corFundo, 
-            double constante, int maximoFormas, int maximoIteracoes) {
+            ArrayList<Preenchimento> listaPreenchimentos, Color corFundo, 
+            double constante, int maximoFormas, int maxIteracoes) {
         
         final double maximoPorcentagemPreenchimento = 0.99,
                      expoente = 0.5 * constante;
         
-        final int estouroMaxFormas = maximoFormas + 1;
-        
         int numeroIteracoesTotal = 0,
-            numeroIteracoesAcumulado,
-            N = 2,
-            indexPreenchimento;
+            N = 2;
 
         double  valorZeta = funcaoZeta(constante, N),
                 razaoDaArea = 1.0 / valorZeta,
-                porcentagem = razaoDaArea * valorControle(N, expoente),
                 escala, areaPreenchidaPorcentagem, areaTotal;
         
-        boolean testeInterseccao, casoExcepcional;
-        
-        Shape formaEscolhida;
+        Estampa estampaEscolhida;
         
         /* para executar transformações nas formas */
         AffineTransform transformador;
         
+        porcentagemTeste = razaoDaArea * valorControle(N, expoente);
+        maximoIteracoes = maxIteracoes;
         corDoFundo = corFundo;
+        preenchimentos = listaPreenchimentos;
         
         /* se a forma da tela é personalizada */
         if (isFormaTelaPersonalizada) {
@@ -441,124 +564,45 @@ public class Tela {
         /* inicia contador para ver a duração do algoritmo */
         long tempoInicial = System.currentTimeMillis();
         
-        /* escala a forma para a porcentagem da área da tela */
-        transformador = AffineTransform.getScaleInstance(porcentagem, porcentagem);
-        formaEscolhida = transformador.createTransformedShape(shapeFormaUsada);
-        
-        /* se for rotacionar a forma, executa o que estiver dentro da condição
-        rotação em radianos */
-        if (isMudarAngulo) {
-            transformador = AffineTransform.getRotateInstance(
-                    Math.random() * Math.PI * 2, 
-                    formaEscolhida.getBounds2D().getCenterX(), 
-                    formaEscolhida.getBounds2D().getCenterY());
-            
-            formaEscolhida = transformador.createTransformedShape(formaEscolhida);
-        }
-        
-        /* verifica se, depois de o número máximo de iterações, ainda não foi 
-        possivel encontrar as posições X e Y. acontece quando o valor de c é 
-        muito grande para a relação entre a forma e a tela */
-        casoExcepcional = encontraXeY(formaEscolhida, maximoIteracoes);
+        estampaEscolhida = criarEstampa();
         
         /* se aconteceu a exceção, reduz o tamanho da primeira forma */
-        while (casoExcepcional) {
+        while (estampaEscolhida == null) {
             N++;
-            porcentagem = razaoDaArea * valorControle(N, expoente);
-            transformador = AffineTransform.getScaleInstance(porcentagem, porcentagem);
-            formaEscolhida = transformador.createTransformedShape(shapeFormaUsada);
-            
-            if (isMudarAngulo) {
-                transformador = AffineTransform.getRotateInstance(
-                        Math.random() * Math.PI * 2, 
-                        formaEscolhida.getBounds2D().getCenterX(), 
-                        formaEscolhida.getBounds2D().getCenterY());
-                
-                formaEscolhida = transformador.createTransformedShape(formaEscolhida);
-            }
-            casoExcepcional = encontraXeY(formaEscolhida, maximoIteracoes);
+            porcentagemTeste = razaoDaArea * valorControle(N, expoente);
+            estampaEscolhida = criarEstampa();
         }
         
-        System.out.println("c = " + constante + " | zeta = " + valorZeta + " | razão = " + razaoDaArea
-        + "| primeira forma = " + porcentagem);
-        
-        /* se utiliza textura */
-        if (isUsarTextura) {
-            estampasAdicionadas.add(new Estampa(formaEscolhida, 
-                    preenchimentos.get(0), x, y));
-        }
-        else {
-            /* cor aleatória */
-            estampasAdicionadas.add(new Estampa(formaEscolhida, 
-                    preenchimentos.get(RAND.nextInt(preenchimentos.size())), x, y));
-        }
+        estampasAdicionadas.add(estampaEscolhida);
         
         /* inicia contagem da porcentagem preenchida da área */
-        areaTotal = estampasAdicionadas.get(0).getArea();
+        areaTotal = estampaEscolhida.getArea();
         areaPreenchidaPorcentagem = areaTotal / valorAreaTela;
         
         quantidadeEstampas = 1;
         
+        System.out.println("c = " + constante + " | zeta = " + valorZeta + " | razão = " + razaoDaArea
+        + "| primeira forma = " + porcentagemTeste);
+        
         /* loop no número de círculos */
         do {
-            numeroIteracoesAcumulado = 0;
+            porcentagemTeste = razaoDaArea * valorControle(quantidadeEstampas + N, expoente);
             
-            porcentagem = razaoDaArea * valorControle(quantidadeEstampas + N, expoente);
-            transformador = AffineTransform.getScaleInstance(porcentagem, porcentagem);
-            formaEscolhida = transformador.createTransformedShape(shapeFormaUsada);
+            estampaEscolhida = isUsarThread();
             
-            do {
-                if (isMudarAngulo) {
-                    transformador = AffineTransform.getRotateInstance(
-                            Math.random() * Math.PI * 2, 
-                            formaEscolhida.getBounds2D().getCenterX(), 
-                            formaEscolhida.getBounds2D().getCenterY());
-                    
-                    formaEscolhida = transformador.createTransformedShape(formaEscolhida);
-                }
-                
-                casoExcepcional = encontraXeY(formaEscolhida, maximoIteracoes);
-                
-                if (casoExcepcional) {
-                    System.out.println("A estampa não consegue ser colocada na "
-                            + "forma! Vamos terminar o processo mais cedo...");
-                    
-                    break;
-                }
-                
-                if (isUsarTextura) {
-                    estampaTeste = new Estampa(formaEscolhida, preenchimentos.get(0), x, y);
-                }
-                else {
-                    indexPreenchimento = RAND.nextInt(preenchimentos.size());
-                    estampaTeste = new Estampa(formaEscolhida, preenchimentos.get(indexPreenchimento), x, y);
-                }
-                
-                testeInterseccao = isUsarThread();
-                numeroIteracoesAcumulado++;
-                
-                if (numeroIteracoesAcumulado > maximoIteracoes){
-                    casoExcepcional = true;
-                    System.out.println("A estampa não consegue ser colocada na "
-                            + "forma! Vamos terminar o processo mais cedo...");
-                    break;
-                }
-                
-            } while (testeInterseccao);
-            if (casoExcepcional) {
-                break;
-            }
+            /* se for null, houve caso excepcional */
+            if (estampaEscolhida == null) break;
             
-            numeroIteracoesTotal += numeroIteracoesAcumulado;
+            numeroIteracoesTotal++;
             
-            estampasAdicionadas.add(estampaTeste);
+            estampasAdicionadas.add(estampaEscolhida);
             
             areaTotal += estampasAdicionadas.get(quantidadeEstampas).getArea();
             areaPreenchidaPorcentagem = areaTotal / valorAreaTela;
             quantidadeEstampas++;
         
-        } while (numeroIteracoesTotal < maximoIteracoes && 
-                quantidadeEstampas < estouroMaxFormas && 
+        } while (numeroIteracoesTotal < maxIteracoes && 
+                quantidadeEstampas < maximoFormas && 
                 areaPreenchidaPorcentagem < maximoPorcentagemPreenchimento);
         
         System.out.println("Área da tela = " + valorAreaTela);

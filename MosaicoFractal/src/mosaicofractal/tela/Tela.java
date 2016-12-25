@@ -129,7 +129,7 @@ public class Tela {
     /**
      * Usado para verificar se execução será sequencial ou paralelizada.
      */
-    private final boolean isUSARTHREAD = false;
+    private final boolean isUSARTHREAD = true;
     
     /**
      * Cria uma tela na qual serão adicionados diversas estampas ao longo
@@ -261,13 +261,14 @@ public class Tela {
     private boolean encontraXeY(Shape forma) {
         if (isConsiderarBordas) {
             if (isFormaTelaPersonalizada) {
-                x = Math.random() * (LARGURA -  shapeFormaTela.getBounds2D().getWidth());
-                y = Math.random() * (ALTURA -  shapeFormaTela.getBounds2D().getHeight());
+                x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
+                y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
                 
                 int iteracoes_posicao = 0;
                 
                 while (!shapeFormaTela.contains(x, y) ||
-                        Estampa.estaDentro(x, y, shapeFormaTela, forma)){
+                        Estampa.estaDentro(x, y, shapeFormaTela, forma) ||
+                        !shapeFormaTela.contains(x + forma.getBounds2D().getWidth(), y + forma.getBounds2D().getHeight())){
                     
                     x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
                     y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());

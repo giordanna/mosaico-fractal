@@ -3,6 +3,7 @@ package mosaicofractal.tela;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
@@ -129,7 +130,7 @@ public class Tela {
     /**
      * Usado para verificar se execução será sequencial ou paralelizada.
      */
-    private final boolean isUSARTHREAD = true;
+    private final boolean isUSARTHREAD = false;
     
     /**
      * Cria uma tela na qual serão adicionados diversas estampas ao longo
@@ -151,7 +152,7 @@ public class Tela {
         renderizador = new Renderizador();
         
         jFrame = new JFrame("Resultado");
-        jFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         jFrame.add(renderizador);
         jFrame.setContentPane(renderizador);
         jFrame.pack();
@@ -172,12 +173,7 @@ public class Tela {
     public void pintaTela(Graphics2D g2d) {
         g2d.setColor(corDoFundo);
         
-        if (isFormaTelaPersonalizada) {
-            g2d.fill(shapeFormaTela);
-        }
-        else {
-            g2d.fillRect(0, 0, LARGURA, ALTURA);
-        }
+        g2d.fill(shapeFormaTela);
         
         estampasAdicionadas.stream().forEach((estampa) -> {
             estampa.desenha(g2d);
@@ -246,6 +242,96 @@ public class Tela {
     }
     
     /**
+     * Retorna a razão entre a área da tela e a forma dada na entrada. 
+     * Este valor é utilizado para redimensionar a estampa corretamente, 
+     * igualando a sua área com a área da tela, como é utilizada em 
+     * <code>preencherArea()</code>.
+     *
+     * @param forma a forma usada para calcular sua área
+     * @param tela a tela usada para pedir para verificar sua razão
+     * @return a razão área da tela / área da forma
+     * @see #preencherArea(java.awt.Shape, java.awt.Shape, java.util.ArrayList, java.awt.Color, double, int, int) 
+     */
+    private double getRazaoAreaTelaForma(Shape tela, Shape forma) {
+        double areaDaForma, razao, valorArea;
+        
+        valorArea = Estampa.calculaArea(tela);
+        areaDaForma = Estampa.calculaArea(forma);
+        
+        razao = valorArea / areaDaForma;
+        
+        return Math.sqrt(razao);
+    }
+    
+    /**
+     * Retorna a razão entre a área da tela e a forma dada na entrada. 
+     * Este valor é utilizado para redimensionar a estampa corretamente, 
+     * igualando a sua área com a área da tela, como é utilizada em 
+     * <code>preencherArea()</code>.
+     *
+     * @param forma a forma usada para calcular sua área
+     * @param tela a tela usada para pedir para verificar sua razão
+     * @return a razão área da tela / área da forma
+     * @see #preencherArea(java.awt.Shape, java.awt.Shape, java.util.ArrayList, java.awt.Color, double, int, int) 
+     */
+    private double getRazaoForma(Shape forma) {
+        double areaDaForma, razao, valorArea;
+        
+        valorArea = forma.getBounds2D().getWidth() * forma.getBounds2D().getHeight();
+        areaDaForma = Estampa.calculaArea(forma);
+        
+        razao = valorArea / areaDaForma;
+        
+        return Math.sqrt(razao);
+    }
+    
+    /**
+     * Retorna a porcentagem corrigida para corrigir a estampa.
+     * 
+     * @param porcentagem a porcentagem que era utilizada antigamente
+     * @return a porcentagem corrigida para reduzir a forma
+     */
+    private double getPorcentagemCorreta(double porcentagem) {
+        double coeficiente, porcentagemCorreta;
+        if (isFormaTelaPersonalizada) {
+            if (shapeFormaTela.getBounds2D().getHeight() > shapeFormaTela.getBounds2D().getWidth()){
+                coeficiente = shapeFormaTela.getBounds2D().getHeight() / shapeFormaTela.getBounds2D().getWidth();
+            }
+            else {
+                coeficiente = shapeFormaTela.getBounds2D().getWidth() / shapeFormaTela.getBounds2D().getHeight();
+            }
+
+            porcentagemCorreta = porcentagem * shapeFormaTela.getBounds2D().getHeight() * shapeFormaTela.getBounds2D().getWidth() * coeficiente;
+            porcentagemCorreta = Math.sqrt(porcentagemCorreta);
+
+            porcentagemCorreta /= (shapeFormaTela.getBounds2D().getHeight() > shapeFormaTela.getBounds2D().getWidth()) ?
+                    shapeFormaTela.getBounds2D().getHeight() : shapeFormaTela.getBounds2D().getWidth();
+        }
+        else {
+            porcentagemCorreta = porcentagem * LARGURA * ALTURA;
+            porcentagemCorreta = Math.sqrt(porcentagemCorreta);
+
+            porcentagemCorreta /= LARGURA;
+        }
+        
+        AffineTransform transformador;
+        Shape telaEscalada;
+        
+        //System.out.println(shapeFormaTela);
+        //System.out.println(porcentagemCorreta);
+        
+        transformador = AffineTransform.getScaleInstance(porcentagemCorreta, porcentagemCorreta);
+        telaEscalada = transformador.createTransformedShape(shapeFormaTela);
+        
+        //System.out.println(telaEscalada);
+        
+        /* escala a forma da estampa para o tamanho da tela */
+        porcentagemCorreta = getRazaoAreaTelaForma(telaEscalada, shapeFormaUsada);
+        
+        return porcentagemCorreta;
+    }
+    
+    /**
      * Função para definir aleatóriamente as posições x e y da forma. 
      * Nesta função há verificações se as bordas serão consideradas ou não. 
      * Caso sim, deve-se verificar se a tela possui forma personalizada. Se 
@@ -260,27 +346,36 @@ public class Tela {
      */
     private boolean encontraXeY(Shape forma) {
         if (isConsiderarBordas) {
+            double larguraForma = forma.getBounds2D().getWidth();
+            double alturaForma = forma.getBounds2D().getHeight();
+            
             if (isFormaTelaPersonalizada) {
-                x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
-                y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
+                
+                double larguraTela = shapeFormaTela.getBounds2D().getWidth();
+                double alturaTela = shapeFormaTela.getBounds2D().getHeight();
+                
+                x = (LARGURA - larguraTela)/2 + Math.random() * (larguraTela - larguraForma);
+                y = (ALTURA - alturaTela)/2 + Math.random() * (alturaTela - alturaForma);
                 
                 int iteracoes_posicao = 0;
                 
                 while (!shapeFormaTela.contains(x, y) ||
                         Estampa.estaDentro(x, y, shapeFormaTela, forma) ||
-                        !shapeFormaTela.contains(x + forma.getBounds2D().getWidth(), y + forma.getBounds2D().getHeight())){
+                        !shapeFormaTela.contains(x + larguraForma, y + alturaForma) ||
+                        !shapeFormaTela.contains(x, y + alturaForma) ||
+                        !shapeFormaTela.contains(x + larguraForma, y)){
                     
-                    x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
-                    y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
+                    x = (LARGURA - larguraTela)/2 + Math.random() * (larguraTela - larguraForma);
+                    y = (ALTURA - alturaTela)/2 + Math.random() * (alturaTela - alturaForma);
                     iteracoes_posicao++;
-                    if (iteracoes_posicao > maximoIteracoes) {
+                    if (iteracoes_posicao > maximoIteracoes * 1000) {
                         return true;
                     }
                 }
             }
             else {
-                x = Math.random() * (LARGURA -  forma.getBounds2D().getWidth());
-                y = Math.random() * (ALTURA -  forma.getBounds2D().getHeight());
+                x = Math.random() * (LARGURA - larguraForma);
+                y = Math.random() * (ALTURA - alturaForma);
             }
         }
         else {
@@ -347,7 +442,7 @@ public class Tela {
                 
                 if (iteracoesAcumuladas > maximoIteracoes) {
                     System.out.println("Esta demorando demais para encontrar "
-                            + "uma posição! Terminando maiss cedo...");
+                            + "uma posição! Terminando mais cedo...");
                     estampaTeste1 = null;
                     threadA = 1;
                     return;
@@ -394,7 +489,7 @@ public class Tela {
                 
                 if (iteracoesAcumuladas > maximoIteracoes) {
                     System.out.println("Esta demorando demais para encontrar "
-                            + "uma posição! Terminando maiss cedo...");
+                            + "uma posição! Terminando mais cedo...");
                     estampaTeste2 = null;
                     threadB = 1;
                     return;
@@ -463,7 +558,7 @@ public class Tela {
                 
                 if (iteracoesAcumuladas > maximoIteracoes) {
                     System.out.println("Esta demorando demais para encontrar "
-                            + "uma posição! Terminando maiss cedo...");
+                            + "uma posição! Terminando mais cedo...");
                     
                     return null;
                 }
@@ -513,7 +608,6 @@ public class Tela {
         /* para executar transformações nas formas */
         AffineTransform transformador;
         
-        porcentagemTeste = razaoDaArea * valorControle(N, expoente);
         maximoIteracoes = maxIteracoes;
         corDoFundo = corFundo;
         preenchimentos = listaPreenchimentos;
@@ -549,6 +643,18 @@ public class Tela {
             /* calcula a área da tela */
             valorAreaTela = Estampa.calculaArea(shapeFormaTela);
         }
+        else {
+            shapeFormaTela = new Rectangle(LARGURA, ALTURA);
+            
+            /* coloca forma na origem */
+            transformador = AffineTransform.getTranslateInstance(
+                    -shapeFormaTela.getBounds2D().getX(),
+                    -shapeFormaTela.getBounds2D().getY());
+            shapeFormaTela = transformador.createTransformedShape(shapeFormaTela);
+            
+            /* calcula a área da tela */
+            valorAreaTela = LARGURA * ALTURA;
+        }
         
         /* escala a forma da estampa para o tamanho da tela */
         escala = getRazaoAreaTelaForma(formaDaEstampa);
@@ -564,6 +670,10 @@ public class Tela {
         
         /* inicia contador para ver a duração do algoritmo */
         long tempoInicial = System.currentTimeMillis();
+        
+        porcentagemTeste = razaoDaArea * valorControle(N, expoente);
+
+        //porcentagemTeste = getPorcentagemCorreta(porcentagemTeste);
         
         estampaEscolhida = criarEstampa();
         
@@ -585,10 +695,11 @@ public class Tela {
         System.out.println("c = " + constante + " | zeta = " + valorZeta + " | razão = " + razaoDaArea
         + "| primeira forma = " + porcentagemTeste);
         
-        /* loop no número de círculos */
+        /* loop no número de formas */
         do {
-            porcentagemTeste = razaoDaArea * valorControle(quantidadeEstampas + N, expoente);
             
+            porcentagemTeste = razaoDaArea * valorControle(quantidadeEstampas + N, expoente);
+            //porcentagemTeste = getPorcentagemCorreta(porcentagemTeste);
             estampaEscolhida = isUsarThread();
             
             /* se for null, houve caso excepcional */

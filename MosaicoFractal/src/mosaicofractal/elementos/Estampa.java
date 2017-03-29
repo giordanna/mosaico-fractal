@@ -162,15 +162,15 @@ public class Estampa {
      * 
      * @param x posição da coordenada X da forma
      * @param y posição da coordenada Y da forma
-     * @param area_grande a forma da tela personalizada
+     * @param tela a forma da tela personalizada
      * @param forma a forma a qual deseja saber se está dentro da tela
      * @return se a forma se encontra dentro ou não da tela
      */
-    public static boolean estaDentro(double x, double y, Shape area_grande, Shape forma) {
+    public static boolean estaDentro(double x, double y, Shape tela, Shape forma) {
         final AffineTransform translada = AffineTransform.getTranslateInstance(x, y);
         Shape teste = translada.createTransformedShape(forma);
         
-        Area areaA = new Area(area_grande);
+        Area areaA = new Area(tela);
         Area areaB = new Area(teste);
         
         areaA.intersect(areaB);

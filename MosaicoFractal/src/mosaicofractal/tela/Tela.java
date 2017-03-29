@@ -94,6 +94,21 @@ public class Tela {
     private ArrayList<Preenchimento> preenchimentos = new ArrayList<>();
     
     /**
+     * Estampas utilizadas para preencher a região.
+     */
+    private ArrayList<Shape> estampas = new ArrayList<>();
+    
+    /**
+     * Índice utilizado para demarcar a estampa atual a ser posicionada.
+     */
+    private int indiceAtualShape = 0;
+    
+    /**
+     * Índice utilizado para demarcar a estampa atual a ser posicionada.
+     */
+    private int indiceAtualPreenchimento = 0;
+    
+    /**
      * Máximo de iterações no programa.
      */
     private int maximoIteracoes;
@@ -387,7 +402,7 @@ public class Tela {
     
     private Estampa criarEstampa() {
         AffineTransform transformador = AffineTransform.getScaleInstance(porcentagemTeste, porcentagemTeste);
-        Shape forma = transformador.createTransformedShape(shapeFormaUsada);
+        Shape forma = transformador.createTransformedShape(estampas.get(indiceAtualShape));
         boolean casoExcepcional;
         
         if (isMudarAngulo) {
@@ -412,7 +427,7 @@ public class Tela {
             return new Estampa(forma, preenchimentos.get(0), x, y);
         }
         else {
-            return new Estampa(forma, preenchimentos.get(RAND.nextInt(preenchimentos.size())), x, y);
+            return new Estampa(forma, preenchimentos.get(indiceAtualPreenchimento), x, y);
         }
     }
     
@@ -533,16 +548,6 @@ public class Tela {
                 Logger.getLogger(Tela.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println("oops");
             }
-            /*
-            while (threadA == 0 || threadB == 0) {
-                
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Tela.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-            }*/
             
             return (threadA == 1) ? estampaTeste1 : estampaTeste2;
         }
@@ -580,7 +585,7 @@ public class Tela {
      * Função principal da classe, onde realiza os devidos cálculos para 
      * posicionar as estampas na tela.
      *
-     * @param formaDaEstampa forma das estampas a seren posicionadas
+     * @param listaEstampas forma(s) das estampas a serem posicionadas
      * @param formaDaTela formato da tela
      * @param listaPreenchimentos preenchimentos utilizados para as estampas
      * @param maximoFormas número máximo de estampas a serem inseridas na tela
@@ -589,9 +594,13 @@ public class Tela {
      * @param constante constante a ser utilizada na <code>funcaoZeta()</code>
      * @see #funcaoZeta(double, int) 
      */
-    public void preencherArea(Shape formaDaEstampa, Shape formaDaTela,
+    public void preencherArea(ArrayList<Shape> listaEstampas, Shape formaDaTela,
             ArrayList<Preenchimento> listaPreenchimentos, Color corFundo, 
             double constante, int maximoFormas, int maxIteracoes) {
+        
+        final int numeroShapes, numeroPreenchimentos;
+        
+        Shape formaDaEstampa;
         
         final double maximoPorcentagemPreenchimento = 0.99,
                      expoente = 0.5 * constante;
@@ -611,6 +620,9 @@ public class Tela {
         maximoIteracoes = maxIteracoes;
         corDoFundo = corFundo;
         preenchimentos = listaPreenchimentos;
+        
+        numeroShapes = listaEstampas.size();
+        numeroPreenchimentos = preenchimentos.size();
         
         /* se a forma da tela é personalizada */
         if (isFormaTelaPersonalizada) {
@@ -656,18 +668,21 @@ public class Tela {
             valorAreaTela = LARGURA * ALTURA;
         }
         
-        /* escala a forma da estampa para o tamanho da tela */
-        escala = getRazaoAreaTelaForma(formaDaEstampa);
-        transformador = AffineTransform.getScaleInstance(escala, escala);
-        shapeFormaUsada = transformador.createTransformedShape(formaDaEstampa);
-        
-        /* coloca forma na origem */
-        transformador = AffineTransform.getTranslateInstance(
-                -shapeFormaUsada.getBounds2D().getX(), 
-                -shapeFormaUsada.getBounds2D().getY());
-        
-        shapeFormaUsada = transformador.createTransformedShape(shapeFormaUsada);
-        
+        /* escala a(s) forma(s) da(s) estampa(s) para o tamanho da tela */
+        for (int i = 0 ; i < numeroShapes ; i++){
+            formaDaEstampa = listaEstampas.get(i);
+            escala = getRazaoAreaTelaForma(formaDaEstampa);
+            transformador = AffineTransform.getScaleInstance(escala, escala);
+            shapeFormaUsada = transformador.createTransformedShape(formaDaEstampa);
+
+            /* coloca forma na origem */
+            transformador = AffineTransform.getTranslateInstance(
+                    -shapeFormaUsada.getBounds2D().getX(), 
+                    -shapeFormaUsada.getBounds2D().getY());
+
+            estampas.add(transformador.createTransformedShape(shapeFormaUsada));
+        }
+
         /* inicia contador para ver a duração do algoritmo */
         long tempoInicial = System.currentTimeMillis();
         
@@ -700,6 +715,21 @@ public class Tela {
             
             porcentagemTeste = razaoDaArea * valorControle(quantidadeEstampas + N, expoente);
             //porcentagemTeste = getPorcentagemCorreta(porcentagemTeste);
+            
+            if (numeroShapes > 1){
+                indiceAtualShape++;
+                if (indiceAtualShape == numeroShapes){
+                    indiceAtualShape = 0;
+                }
+            }
+            
+            if (numeroPreenchimentos > 1){
+                indiceAtualPreenchimento++;
+                if (indiceAtualPreenchimento == numeroPreenchimentos){
+                    indiceAtualPreenchimento = 0;
+                }
+            }
+            
             estampaEscolhida = isUsarThread();
             
             /* se for null, houve caso excepcional */

@@ -23,6 +23,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import mosaicofractal.elementos.Preenchimento;
 import mosaicofractal.tela.Tela;
 import org.apache.batik.bridge.BridgeContext;
+import org.apache.batik.bridge.GVTBuilder;
+import org.apache.batik.gvt.GVTTreeWalker;
 import org.apache.batik.gvt.GraphicsNode;
 import org.apache.batik.gvt.ShapeNode;
 import static org.apache.batik.swing.svg.JSVGComponent.ALWAYS_DYNAMIC;
@@ -523,7 +525,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         textoValorC.setText("Valor de c:");
 
-        spinnerValorC.setModel(new javax.swing.SpinnerNumberModel(1.48d, 1.0d, 1.48d, 0.01d));
+        spinnerValorC.setModel(new javax.swing.SpinnerNumberModel(1.48d, 1.01d, 2.0d, 0.01d));
 
         textoPreview.setText("Preview:");
 
@@ -1373,21 +1375,34 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoFrameCoresEstampaApagarActionPerformed
 
     private void botaoIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIniciarActionPerformed
-        // estampa
-        BridgeContext ctx = canvasPreviewEstampa.getUpdateManager().getBridgeContext();
-        SVGDocument d = canvasPreviewEstampa.getSVGDocument();
-        Element el = d.getElementById("XMLID_1_");
-        GraphicsNode gn = ctx.getGraphicsNode(el);
-        Shape shape_estampa = ((ShapeNode)gn).getShape();
         Shape shape_tela = null;
+
+        BridgeContext contexto = canvasPreviewEstampa.getUpdateManager().getBridgeContext();
+        SVGDocument documento = canvasPreviewEstampa.getSVGDocument();
+        contexto.setDynamicState(BridgeContext.DYNAMIC); 
+        GVTBuilder gvt = new GVTBuilder(); 
+        GraphicsNode nodo = gvt.build(contexto, documento); 
+        GVTTreeWalker arvore = new GVTTreeWalker(nodo); 
+        ArrayList<Shape> array_formas = new ArrayList<>();
+        arvore.nextGraphicsNode(); // passa a GeneralPath
+        while ( (nodo = arvore.nextGraphicsNode()) != null) { 
+            array_formas.add(nodo.getOutline());
+            System.out.println("ESTAMPA: " + nodo.getOutline());
+        } 
+        System.out.println("TOTAL DE FORMAS DE ESTAMPA: " + array_formas.size());
         
         if (radioTelaFormaSim.isSelected()) {
             // forma da tela
-            BridgeContext ctx2 = canvasPreviewFormaFundo.getUpdateManager().getBridgeContext();
-            SVGDocument d2 = canvasPreviewFormaFundo.getSVGDocument();
-            Element el2 = d2.getElementById("XMLID_1_");
-            GraphicsNode gn2 = ctx2.getGraphicsNode(el2);
-            shape_tela = ((ShapeNode)gn2).getShape();
+            contexto = canvasPreviewFormaFundo.getUpdateManager().getBridgeContext();
+            documento = canvasPreviewFormaFundo.getSVGDocument();
+            contexto.setDynamicState(BridgeContext.DYNAMIC); 
+            gvt = new GVTBuilder(); 
+            nodo = gvt.build(contexto, documento); 
+            arvore = new GVTTreeWalker(nodo);
+            arvore.nextGraphicsNode();
+            nodo = arvore.nextGraphicsNode();
+            shape_tela = nodo.getOutline();
+            System.out.println("TELA: " + shape_tela);
         }
         
         // cores ou textura
@@ -1404,7 +1419,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
         
         Tela.tela = new Tela(radioBordaTelaSim.isSelected(), radioRotacionarEstampasSim.isSelected(), radioTelaFormaSim.isSelected(), radioTipoPreenchimentoTexturas.isSelected());
-        Tela.tela.preencherArea(shape_estampa, shape_tela, preenchimentos, cor_fundo_selecionada, (double) spinnerValorC.getValue(), (int) spinnerQuantidadeFormas.getValue(), (int) spinnerIteracoes.getValue());
+        Tela.tela.preencherArea(array_formas, shape_tela, preenchimentos, cor_fundo_selecionada, (double) spinnerValorC.getValue(), (int) spinnerQuantidadeFormas.getValue(), (int) spinnerIteracoes.getValue());
         
         //frameTeste teste = new frameTeste(shape_estampa, radioRotacionarEstampasSim.isSelected(), preenchimentos.get(0));
         //teste.inicia();

@@ -41,6 +41,7 @@ import org.apache.batik.bridge.GVTBuilder;
 import org.apache.batik.gvt.GVTTreeWalker;
 import org.apache.batik.gvt.GraphicsNode;
 import static org.apache.batik.swing.svg.JSVGComponent.ALWAYS_DYNAMIC;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
@@ -73,6 +74,15 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         frameCoresEscolher.pack();
         frameCoresEscolher.setLocation(dim.width/2-frameCoresEscolher.getSize().width/2, dim.height/2-frameCoresEscolher.getSize().height/2);
         
+        frameVerCores.pack();
+        frameVerCores.setLocation(dim.width/2-frameVerCores.getSize().width/2, dim.height/2-frameVerCores.getSize().height/2);
+        
+        javax.swing.ImageIcon icone = new javax.swing.ImageIcon("./img/icones/icone_small.png");
+        setIconImage(icone.getImage());
+        frameTexturasEscolher.setIconImage(icone.getImage());
+        frameEstampaEscolher.setIconImage(icone.getImage());
+        frameCoresEscolher.setIconImage(icone.getImage());
+        frameVerCores.setIconImage(icone.getImage());
     }
 
     /**
@@ -194,8 +204,6 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                 .addComponent(tabelaVerCores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-
-        frameVerCores.pack();
 
         frameEstampaEscolher.setTitle("Escolher Estampas");
         frameEstampaEscolher.setResizable(false);
@@ -1023,20 +1031,12 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         if (retorno == javax.swing.JFileChooser.APPROVE_OPTION){
             File arquivo = fileEstampaAdicionar.getSelectedFile();
             canvasframeEstampa.setURI(arquivo.toURI().toString());
-            
-            if (canvasframeEstampa.getSVGDocument().getElementById("XMLID_1_") != null) {
-                File copia;
-                try {
-                    copia = new File("img/estampas/estampa" + numeroEstampa() + ".svg").getCanonicalFile();
-                    Files.copy(arquivo.toPath(),copia.toPath(), REPLACE_EXISTING);
-                } catch (IOException ex) {
-                    Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            else {
-                javax.swing.JOptionPane.showMessageDialog(this,
-                    "O arquivo SVG não possui uma tag com o id \"XMLID_1_\". Não poderá ser adicionada. :(",
-                    "Erro",javax.swing.JOptionPane.ERROR_MESSAGE);
+            File copia;
+            try {
+                copia = new File("./img/estampas/estampa" + numeroEstampa() + ".svg").getCanonicalFile();
+                Files.copy(arquivo.toPath(),copia.toPath(), REPLACE_EXISTING);
+            } catch (IOException ex) {
+                Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_estampaAdicionarActionPerformed
@@ -1047,7 +1047,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             File arquivo = filePreenchimentoAdicionar.getSelectedFile();
             File copia;
             try {
-                copia = new File("img/texturas/textura" + numeroTextura() + ".svg").getCanonicalFile();
+                copia = new File("./img/texturas/textura" + numeroTextura() + ".svg").getCanonicalFile();
                 Files.copy(arquivo.toPath(),copia.toPath(), REPLACE_EXISTING);
             } catch (IOException ex) {
                 Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -1104,7 +1104,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                 if (radioTipoPreenchimentoTexturas.isSelected())
                     trocaIconeTextura(canvasPreviewPreenchimento, textura);
             }
-            File arquivo = new File("img/texturas/" + nome);
+            File arquivo = new File("./img/texturas/" + nome);
             arquivo.delete();
             atualizarTexturas();
             
@@ -1130,7 +1130,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                     trocaIconeEstampa(canvasPreviewFormaFundo, forma_fundo);
             }
             
-            File arquivo = new File("img/estampas/" + nome);
+            File arquivo = new File("./img/estampas/" + nome);
             arquivo.delete();
             atualizarEstampas();
         }
@@ -1160,51 +1160,62 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             array_formas.add(nodo.getOutline());
             System.out.println("ESTAMPA: " + nodo.getOutline());
         } 
-        System.out.println("TOTAL DE FORMAS DE ESTAMPA: " + array_formas.size());
         
-        if (radioTelaFormaSim.isSelected()) {
-            // forma da tela
-            contexto = canvasPreviewFormaFundo.getUpdateManager().getBridgeContext();
-            documento = canvasPreviewFormaFundo.getSVGDocument();
-            contexto.setDynamicState(BridgeContext.DYNAMIC); 
-            gvt = new GVTBuilder(); 
-            nodo = gvt.build(contexto, documento); 
-            arvore = new GVTTreeWalker(nodo);
-            arvore.nextGraphicsNode();
-            nodo = arvore.nextGraphicsNode();
-            shape_tela = nodo.getOutline();
-            System.out.println("TELA: " + shape_tela);
+        if (array_formas.isEmpty()){
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "O arquivo SVG não possui forma(s). Não poderá ser utilizada. :(",
+                    "Erro",javax.swing.JOptionPane.ERROR_MESSAGE);
         }
-        
-        // cores ou textura
-        ArrayList<Preenchimento> preenchimentos = new ArrayList<>();
-        
-        if (radioTipoPreenchimentoTexturas.isSelected()) {
-            preenchimentos.add(new Preenchimento(criarImagem(canvasPreviewPreenchimento)));
-        }
-        else { //cores
-            Color aux;
-            
-            for (int i = 0 ; i < quantidadeColunas ; i++) {
-                for (int j = 0 ; j < quantidadeLinhas ; j++) {
-                    aux = (Color) tabelaVerCores.getModel().getValueAt(j, i);
-                    if (aux.getAlpha() != 0) {
-                        preenchimentos.add(new Preenchimento(aux));
-                    }
+        else{
+            System.out.println("TOTAL DE FORMAS DE ESTAMPA: " + array_formas.size());
+            try{
+                if (radioTelaFormaSim.isSelected()) {
+                    // forma da tela
+                    contexto = canvasPreviewFormaFundo.getUpdateManager().getBridgeContext();
+                    documento = canvasPreviewFormaFundo.getSVGDocument();
+                    contexto.setDynamicState(BridgeContext.DYNAMIC); 
+                    gvt = new GVTBuilder(); 
+                    nodo = gvt.build(contexto, documento); 
+                    arvore = new GVTTreeWalker(nodo);
+                    arvore.nextGraphicsNode();
+                    nodo = arvore.nextGraphicsNode();
+                    shape_tela = nodo.getOutline();
+                    System.out.println("TELA: " + shape_tela);
                 }
+
+                // cores ou textura
+                ArrayList<Preenchimento> preenchimentos = new ArrayList<>();
+
+                if (radioTipoPreenchimentoTexturas.isSelected()) {
+                    preenchimentos.add(new Preenchimento(criarImagem(canvasPreviewPreenchimento)));
+                }
+                else { //cores
+                    Color aux;
+
+                    for (int i = 0 ; i < quantidadeColunas ; i++) {
+                        for (int j = 0 ; j < quantidadeLinhas ; j++) {
+                            aux = (Color) tabelaVerCores.getModel().getValueAt(j, i);
+                            if (aux.getAlpha() != 0) {
+                                preenchimentos.add(new Preenchimento(aux));
+                            }
+                        }
+                    }
+
+                    if (preenchimentos.isEmpty()) {
+                        preenchimentos.add(new Preenchimento(Color.BLACK));
+                    }
+                    System.out.println("TOTAL DE CORES: " + preenchimentos.size());
+                }
+
+                Tela.tela = new Tela(radioBordaTelaSim.isSelected(), radioRotacionarEstampasSim.isSelected(), radioTelaFormaSim.isSelected(), radioTipoPreenchimentoTexturas.isSelected());
+                Tela.tela.preencherArea(array_formas, shape_tela, preenchimentos, cor_fundo_selecionada, (double) spinnerValorC.getValue(), (int) spinnerQuantidadeFormas.getValue(), (int) spinnerIteracoes.getValue());
+                
+            } catch (java.lang.NullPointerException ex){
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "O arquivo SVG não possui forma(s). Não poderá ser utilizada. :(",
+                        "Erro",javax.swing.JOptionPane.ERROR_MESSAGE);
             }
-            
-            if (preenchimentos.isEmpty()) {
-                preenchimentos.add(new Preenchimento(Color.BLACK));
-            }
-            System.out.println("TOTAL DE CORES: " + preenchimentos.size());
         }
-        
-        Tela.tela = new Tela(radioBordaTelaSim.isSelected(), radioRotacionarEstampasSim.isSelected(), radioTelaFormaSim.isSelected(), radioTipoPreenchimentoTexturas.isSelected());
-        Tela.tela.preencherArea(array_formas, shape_tela, preenchimentos, cor_fundo_selecionada, (double) spinnerValorC.getValue(), (int) spinnerQuantidadeFormas.getValue(), (int) spinnerIteracoes.getValue());
-        
-        //frameTeste teste = new frameTeste(shape_estampa, radioRotacionarEstampasSim.isSelected(), preenchimentos.get(0));
-        //teste.inicia();
     }//GEN-LAST:event_botaoIniciarActionPerformed
 
     private void botaoVerCoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVerCoresActionPerformed
@@ -1238,7 +1249,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     
     public void trocaPreviewIconeModo(String arquivo) {
         try{
-            File g = new File("img/icones/" + arquivo + ".svg").getCanonicalFile();
+            File g = new File("./img/icones/" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewModo.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
@@ -1246,7 +1257,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     
     public void trocaIconeTextura(org.apache.batik.swing.JSVGCanvas canvas, String arquivo) {
         try{
-            File g = new File("img/texturas/" + arquivo).getCanonicalFile();
+            File g = new File("./img/texturas/" + arquivo).getCanonicalFile();
             canvas.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
@@ -1254,7 +1265,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     
     public void trocaIconeEstampa(org.apache.batik.swing.JSVGCanvas canvas, String arquivo) {
         try{
-            File g = new File("img/estampas/" + arquivo).getCanonicalFile();
+            File g = new File("./img/estampas/" + arquivo).getCanonicalFile();
             canvas.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
@@ -1262,7 +1273,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     
     public void deixaVazio(org.apache.batik.swing.JSVGCanvas canvas) {
         try{
-            File g = new File("img/vazio.svg").getCanonicalFile();
+            File g = new File("./img/vazio.svg").getCanonicalFile();
             canvas.setURI(g.toURI().toString());
         }
         catch(java.io.IOException e){}
@@ -1271,10 +1282,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private int numeroEstampa() {
         try {
             int v = 1;
-            File salva = new File("img/estampas/estampa" + v + ".svg").getCanonicalFile();
+            File salva = new File("./img/estampas/estampa" + v + ".svg").getCanonicalFile();
             while (salva.exists()){
                 v++;
-                salva = new File("img/estampas/estampa" + v + ".svg").getCanonicalFile();
+                salva = new File("./img/estampas/estampa" + v + ".svg").getCanonicalFile();
             }
             return v;
         } catch (IOException ex) {
@@ -1287,10 +1298,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private int numeroTextura(){
         try{
             int v = 1;
-            File salva = new File("img/texturas/textura" + v + ".svg").getCanonicalFile();
+            File salva = new File("./img/texturas/textura" + v + ".svg").getCanonicalFile();
             while (salva.exists()){
                 v++;
-                salva = new File("img/texturas/textura" + v + ".svg").getCanonicalFile();
+                salva = new File("./img/texturas/textura" + v + ".svg").getCanonicalFile();
             }
             return v;
         } catch (IOException ex) {
@@ -1301,7 +1312,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     }
     
     private void atualizarEstampas() {
-        File folder = new File("img/estampas");
+        File folder = new File("./img/estampas");
 
         File[] lista_arquivos = folder.listFiles();
         ArrayList<String> nomes_arquivos = new ArrayList<>();
@@ -1319,7 +1330,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     }
     
     private void atualizarTexturas() {
-        File folder = new File("img/texturas");
+        File folder = new File("./img/texturas");
 
         File[] lista_arquivos = folder.listFiles();
         ArrayList<String> nomes_arquivos = new ArrayList<>();

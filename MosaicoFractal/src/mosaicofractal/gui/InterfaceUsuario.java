@@ -6,10 +6,13 @@
 package mosaicofractal.gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -18,17 +21,26 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import mosaicofractal.elementos.Preenchimento;
 import mosaicofractal.tela.Tela;
 import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.bridge.GVTBuilder;
 import org.apache.batik.gvt.GVTTreeWalker;
 import org.apache.batik.gvt.GraphicsNode;
-import org.apache.batik.gvt.ShapeNode;
 import static org.apache.batik.swing.svg.JSVGComponent.ALWAYS_DYNAMIC;
-import org.w3c.dom.Element;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
@@ -38,13 +50,11 @@ import org.w3c.dom.svg.SVGDocument;
 public class InterfaceUsuario extends javax.swing.JFrame {
     
     private Color cor_fundo_selecionada = Color.WHITE;
-    private int indice_cor_selecionada = 0;
-    private Color [] cores_estampas = {Color.BLACK, null, null, null};
     private String textura = "textura1.svg";
     private String estampa = "estampa1.svg";
     private String forma_fundo = "estampa1.svg";
     private Dimension dim;
-    private Tela area;
+    private int quantidadeColunas, quantidadeLinhas;
     
     /**
      * Creates new form InterfaceUsuario
@@ -80,6 +90,8 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         buttonGroupTipoPreenchimento = new javax.swing.ButtonGroup();
         fileEstampaAdicionar = new javax.swing.JFileChooser();
         filePreenchimentoAdicionar = new javax.swing.JFileChooser();
+        frameVerCores = new javax.swing.JFrame();
+        tabelaVerCores = new javax.swing.JTable();
         frameEstampaEscolher = new javax.swing.JFrame();
         comboboxEstampas = new javax.swing.JComboBox<>();
         textoFrameEstampaCorpo = new javax.swing.JLabel();
@@ -99,15 +111,9 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         textoFrameCoresCorpo = new javax.swing.JLabel();
         textoFrameCoresEstampas = new javax.swing.JLabel();
         textoFrameCoresFundo = new javax.swing.JLabel();
-        panelFrameCoresEstampa1 = new javax.swing.JPanel();
-        panelFrameCoresEstampa2 = new javax.swing.JPanel();
-        panelFrameCoresEstampa3 = new javax.swing.JPanel();
-        panelFrameCoresEstampa4 = new javax.swing.JPanel();
         panelFrameCoresFundo = new javax.swing.JPanel();
-        botaoFrameCoresEstampaSelecionar = new javax.swing.JButton();
-        botaoFrameCoresEstampaApagar = new javax.swing.JButton();
         botaoFrameCoresFundoSelecionar = new javax.swing.JButton();
-        escolherCor = new javax.swing.JColorChooser();
+        botaoVerCoresEscolher = new javax.swing.JButton();
         panelCorpo = new javax.swing.JPanel();
         textoValorC = new javax.swing.JLabel();
         spinnerValorC = new javax.swing.JSpinner();
@@ -134,10 +140,6 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         textoPreviewPreenchimentoCores = new javax.swing.JLabel();
         textoPreviewPreenchimentoTextura = new javax.swing.JLabel();
         canvasPreviewEstampa = new org.apache.batik.swing.JSVGCanvas();
-        previewCorPaleta1 = new javax.swing.JPanel();
-        previewCorPaleta2 = new javax.swing.JPanel();
-        previewCorPaleta3 = new javax.swing.JPanel();
-        previewCorPaleta4 = new javax.swing.JPanel();
         textoPreviewCorFundo = new javax.swing.JLabel();
         previewCorFundo = new javax.swing.JPanel();
         textoPreviewFormaFundo = new javax.swing.JLabel();
@@ -146,6 +148,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         spinnerQuantidadeFormas = new javax.swing.JSpinner();
         textoIteracoes = new javax.swing.JLabel();
         spinnerIteracoes = new javax.swing.JSpinner();
+        botaoVerCores = new javax.swing.JButton();
         textoTitulo = new javax.swing.JLabel();
         barraMenu = new javax.swing.JMenuBar();
         menuEstampas = new javax.swing.JMenu();
@@ -164,6 +167,35 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         fileEstampaAdicionar.setFileFilter(new FileNameExtensionFilter("SVG", "svg"));
 
         filePreenchimentoAdicionar.setFileFilter(new FileNameExtensionFilter("SVG", "svg"));
+
+        frameVerCores.setTitle("Visualização de cores");
+        frameVerCores.setResizable(false);
+
+        tabelaVerCores.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.disabledBackground"));
+        tabelaVerCores.setModel(new modeloTabelaCores());
+        tabelaVerCores.setDefaultRenderer(Color.class, new RenderizadorDeCor(true));
+        tabelaVerCores.setDefaultEditor(Color.class, new editorDeCor());
+        quantidadeColunas = tabelaVerCores.getModel().getColumnCount();
+        quantidadeLinhas = tabelaVerCores.getModel().getRowCount();
+
+        javax.swing.GroupLayout frameVerCoresLayout = new javax.swing.GroupLayout(frameVerCores.getContentPane());
+        frameVerCores.getContentPane().setLayout(frameVerCoresLayout);
+        frameVerCoresLayout.setHorizontalGroup(
+            frameVerCoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameVerCoresLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(tabelaVerCores, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        frameVerCoresLayout.setVerticalGroup(
+            frameVerCoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameVerCoresLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(tabelaVerCores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        frameVerCores.pack();
 
         frameEstampaEscolher.setTitle("Escolher Estampas");
         frameEstampaEscolher.setResizable(false);
@@ -356,79 +388,6 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         textoFrameCoresFundo.setText("Para o fundo:");
 
-        panelFrameCoresEstampa1.setBackground(new java.awt.Color(0, 0, 0));
-        panelFrameCoresEstampa1.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2)));
-        panelFrameCoresEstampa1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                panelFrameCoresEstampa1MouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panelFrameCoresEstampa1Layout = new javax.swing.GroupLayout(panelFrameCoresEstampa1);
-        panelFrameCoresEstampa1.setLayout(panelFrameCoresEstampa1Layout);
-        panelFrameCoresEstampa1Layout.setHorizontalGroup(
-            panelFrameCoresEstampa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-        panelFrameCoresEstampa1Layout.setVerticalGroup(
-            panelFrameCoresEstampa1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        panelFrameCoresEstampa2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelFrameCoresEstampa2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                panelFrameCoresEstampa2MouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panelFrameCoresEstampa2Layout = new javax.swing.GroupLayout(panelFrameCoresEstampa2);
-        panelFrameCoresEstampa2.setLayout(panelFrameCoresEstampa2Layout);
-        panelFrameCoresEstampa2Layout.setHorizontalGroup(
-            panelFrameCoresEstampa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-        panelFrameCoresEstampa2Layout.setVerticalGroup(
-            panelFrameCoresEstampa2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        panelFrameCoresEstampa3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelFrameCoresEstampa3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                panelFrameCoresEstampa3MouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panelFrameCoresEstampa3Layout = new javax.swing.GroupLayout(panelFrameCoresEstampa3);
-        panelFrameCoresEstampa3.setLayout(panelFrameCoresEstampa3Layout);
-        panelFrameCoresEstampa3Layout.setHorizontalGroup(
-            panelFrameCoresEstampa3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-        panelFrameCoresEstampa3Layout.setVerticalGroup(
-            panelFrameCoresEstampa3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        panelFrameCoresEstampa4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelFrameCoresEstampa4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                panelFrameCoresEstampa4MouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panelFrameCoresEstampa4Layout = new javax.swing.GroupLayout(panelFrameCoresEstampa4);
-        panelFrameCoresEstampa4.setLayout(panelFrameCoresEstampa4Layout);
-        panelFrameCoresEstampa4Layout.setHorizontalGroup(
-            panelFrameCoresEstampa4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-        panelFrameCoresEstampa4Layout.setVerticalGroup(
-            panelFrameCoresEstampa4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
         panelFrameCoresFundo.setBackground(new java.awt.Color(255, 255, 255));
         panelFrameCoresFundo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -443,24 +402,17 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             .addGap(0, 20, Short.MAX_VALUE)
         );
 
-        botaoFrameCoresEstampaSelecionar.setText("Selecionar");
-        botaoFrameCoresEstampaSelecionar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoFrameCoresEstampaSelecionarActionPerformed(evt);
-            }
-        });
-
-        botaoFrameCoresEstampaApagar.setText("Apagar");
-        botaoFrameCoresEstampaApagar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoFrameCoresEstampaApagarActionPerformed(evt);
-            }
-        });
-
         botaoFrameCoresFundoSelecionar.setText("Selecionar");
         botaoFrameCoresFundoSelecionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botaoFrameCoresFundoSelecionarActionPerformed(evt);
+            }
+        });
+
+        botaoVerCoresEscolher.setText("Ver Cores");
+        botaoVerCoresEscolher.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoVerCoresEscolherActionPerformed(evt);
             }
         });
 
@@ -472,18 +424,6 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(frameCoresEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(frameCoresEscolherLayout.createSequentialGroup()
-                        .addComponent(panelFrameCoresEstampa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelFrameCoresEstampa2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelFrameCoresEstampa3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelFrameCoresEstampa4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(botaoFrameCoresEstampaSelecionar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(botaoFrameCoresEstampaApagar))
-                    .addGroup(frameCoresEscolherLayout.createSequentialGroup()
                         .addGroup(frameCoresEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textoFrameCoresCorpo)
                             .addComponent(textoFrameCoresEstampas)
@@ -492,7 +432,8 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                                 .addComponent(panelFrameCoresFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(botaoFrameCoresFundoSelecionar)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(botaoVerCoresEscolher, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         frameCoresEscolherLayout.setVerticalGroup(
@@ -502,16 +443,9 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                 .addComponent(textoFrameCoresCorpo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(textoFrameCoresEstampas)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(frameCoresEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelFrameCoresEstampa1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelFrameCoresEstampa2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelFrameCoresEstampa4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(frameCoresEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(botaoFrameCoresEstampaSelecionar)
-                        .addComponent(botaoFrameCoresEstampaApagar))
-                    .addComponent(panelFrameCoresEstampa3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addComponent(botaoVerCoresEscolher)
+                .addGap(18, 18, 18)
                 .addComponent(textoFrameCoresFundo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(frameCoresEscolherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -525,7 +459,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         textoValorC.setText("Valor de c:");
 
-        spinnerValorC.setModel(new javax.swing.SpinnerNumberModel(1.48d, 1.01d, 2.0d, 0.01d));
+        spinnerValorC.setModel(new javax.swing.SpinnerNumberModel(1.48d, 1.0d, 1.48d, 0.01d));
 
         textoPreview.setText("Preview:");
 
@@ -638,7 +572,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         textoPreviewModo.setText("Modo:");
 
-        textoPreviewEstampa.setText("Estampa:");
+        textoPreviewEstampa.setText("Estampa(s):");
 
         textoPreviewPreenchimento.setText("Preenchimento:");
 
@@ -663,63 +597,6 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
         catch(java.io.IOException e){
         }
-
-        previewCorPaleta1.setBackground(new java.awt.Color(0, 0, 0));
-        previewCorPaleta1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        previewCorPaleta1.setPreferredSize(new java.awt.Dimension(20, 20));
-
-        javax.swing.GroupLayout previewCorPaleta1Layout = new javax.swing.GroupLayout(previewCorPaleta1);
-        previewCorPaleta1.setLayout(previewCorPaleta1Layout);
-        previewCorPaleta1Layout.setHorizontalGroup(
-            previewCorPaleta1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
-        );
-        previewCorPaleta1Layout.setVerticalGroup(
-            previewCorPaleta1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 18, Short.MAX_VALUE)
-        );
-
-        previewCorPaleta2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        previewCorPaleta2.setPreferredSize(new java.awt.Dimension(20, 20));
-
-        javax.swing.GroupLayout previewCorPaleta2Layout = new javax.swing.GroupLayout(previewCorPaleta2);
-        previewCorPaleta2.setLayout(previewCorPaleta2Layout);
-        previewCorPaleta2Layout.setHorizontalGroup(
-            previewCorPaleta2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 16, Short.MAX_VALUE)
-        );
-        previewCorPaleta2Layout.setVerticalGroup(
-            previewCorPaleta2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 16, Short.MAX_VALUE)
-        );
-
-        previewCorPaleta3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        previewCorPaleta3.setPreferredSize(new java.awt.Dimension(20, 20));
-
-        javax.swing.GroupLayout previewCorPaleta3Layout = new javax.swing.GroupLayout(previewCorPaleta3);
-        previewCorPaleta3.setLayout(previewCorPaleta3Layout);
-        previewCorPaleta3Layout.setHorizontalGroup(
-            previewCorPaleta3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 16, Short.MAX_VALUE)
-        );
-        previewCorPaleta3Layout.setVerticalGroup(
-            previewCorPaleta3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 16, Short.MAX_VALUE)
-        );
-
-        previewCorPaleta4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        previewCorPaleta4.setPreferredSize(new java.awt.Dimension(20, 20));
-
-        javax.swing.GroupLayout previewCorPaleta4Layout = new javax.swing.GroupLayout(previewCorPaleta4);
-        previewCorPaleta4.setLayout(previewCorPaleta4Layout);
-        previewCorPaleta4Layout.setHorizontalGroup(
-            previewCorPaleta4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 16, Short.MAX_VALUE)
-        );
-        previewCorPaleta4Layout.setVerticalGroup(
-            previewCorPaleta4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 16, Short.MAX_VALUE)
-        );
 
         textoPreviewCorFundo.setText("Cor do Fundo:");
 
@@ -757,6 +634,13 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         spinnerIteracoes.setModel(new javax.swing.SpinnerNumberModel(1000, 100, 400000, 1));
 
+        botaoVerCores.setText("Ver Cores");
+        botaoVerCores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoVerCoresActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelCorpoLayout = new javax.swing.GroupLayout(panelCorpo);
         panelCorpo.setLayout(panelCorpoLayout);
         panelCorpoLayout.setHorizontalGroup(
@@ -785,19 +669,12 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                                     .addGroup(panelCorpoLayout.createSequentialGroup()
                                         .addGap(1, 1, 1)
                                         .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(panelCorpoLayout.createSequentialGroup()
-                                                .addComponent(previewCorPaleta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(previewCorPaleta2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(previewCorPaleta3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(previewCorPaleta4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addComponent(textoPreviewPreenchimentoCores)
                                             .addComponent(textoPreviewPreenchimentoTextura)
                                             .addComponent(textoPreviewCorFundo)
-                                            .addComponent(previewCorFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                                            .addComponent(previewCorFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(botaoVerCores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(6, 6, 6)
                                 .addComponent(canvasPreviewPreenchimento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelCorpoLayout.createSequentialGroup()
                                 .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -892,12 +769,8 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                     .addGroup(panelCorpoLayout.createSequentialGroup()
                         .addComponent(textoPreviewPreenchimentoCores)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(previewCorPaleta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(previewCorPaleta2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(previewCorPaleta4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(previewCorPaleta3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botaoVerCores)
+                        .addGap(3, 3, 3)
                         .addComponent(textoPreviewPreenchimentoTextura)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(textoPreviewCorFundo)
@@ -1063,11 +936,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         if (!"Cores? Sim. Sendo elas:".equals(textoPreviewPreenchimentoCores.getText())){
             textoPreviewPreenchimentoCores.setText("Cores? Sim. Sendo elas:");
             textoPreviewPreenchimentoCores.setForeground(java.awt.Color.BLACK);
-            
-            previewCorPaleta1.setVisible(true);
-            previewCorPaleta2.setVisible(true);
-            previewCorPaleta3.setVisible(true);
-            previewCorPaleta4.setVisible(true);
+            botaoVerCores.setVisible(true);
         }
         if ("Textura? Sim. Sendo ela:".equals(textoPreviewPreenchimentoTextura.getText())){
             textoPreviewPreenchimentoTextura.setText("Textura? Não.");
@@ -1080,11 +949,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         if ("Cores? Sim. Sendo elas:".equals(textoPreviewPreenchimentoCores.getText())){
             textoPreviewPreenchimentoCores.setText("Cores? Não.");
             textoPreviewPreenchimentoCores.setForeground(java.awt.SystemColor.textInactiveText);
-            
-            previewCorPaleta1.setVisible(false);
-            previewCorPaleta2.setVisible(false);
-            previewCorPaleta3.setVisible(false);
-            previewCorPaleta4.setVisible(false);
+            botaoVerCores.setVisible(false);
         }
         if (!"Textura? Sim. Sendo ela:".equals(textoPreviewPreenchimentoTextura.getText())){
             textoPreviewPreenchimentoTextura.setText("Textura? Sim. Sendo ela:");
@@ -1271,38 +1136,6 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_botaoEstampaExcluirActionPerformed
 
-    private void panelFrameCoresEstampa1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelFrameCoresEstampa1MouseClicked
-        panelFrameCoresEstampa1.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2)));
-        panelFrameCoresEstampa2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelFrameCoresEstampa3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelFrameCoresEstampa4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        indice_cor_selecionada = 0;
-    }//GEN-LAST:event_panelFrameCoresEstampa1MouseClicked
-
-    private void panelFrameCoresEstampa2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelFrameCoresEstampa2MouseClicked
-        panelFrameCoresEstampa1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelFrameCoresEstampa2.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2)));
-        panelFrameCoresEstampa3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelFrameCoresEstampa4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        indice_cor_selecionada = 1;
-    }//GEN-LAST:event_panelFrameCoresEstampa2MouseClicked
-
-    private void panelFrameCoresEstampa3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelFrameCoresEstampa3MouseClicked
-        panelFrameCoresEstampa1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelFrameCoresEstampa2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelFrameCoresEstampa3.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2)));
-        panelFrameCoresEstampa4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        indice_cor_selecionada = 2;
-    }//GEN-LAST:event_panelFrameCoresEstampa3MouseClicked
-
-    private void panelFrameCoresEstampa4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelFrameCoresEstampa4MouseClicked
-        panelFrameCoresEstampa1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelFrameCoresEstampa2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelFrameCoresEstampa3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panelFrameCoresEstampa4.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 2)));
-        indice_cor_selecionada = 3;
-    }//GEN-LAST:event_panelFrameCoresEstampa4MouseClicked
-
     private void botaoFrameCoresFundoSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoFrameCoresFundoSelecionarActionPerformed
         Color nova_cor = javax.swing.JColorChooser.showDialog(this, "Escolha a cor do fundo", cor_fundo_selecionada);
         if (nova_cor != null) {
@@ -1311,68 +1144,6 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             atualizaCoresFrame(panelFrameCoresFundo, cor_fundo_selecionada);
         }
     }//GEN-LAST:event_botaoFrameCoresFundoSelecionarActionPerformed
-
-    private void botaoFrameCoresEstampaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoFrameCoresEstampaSelecionarActionPerformed
-        Color cor_anterior = cores_estampas[indice_cor_selecionada];
-        if (cor_anterior == null) cor_anterior = new java.awt.Color(240, 240, 240);
-        
-        Color nova_cor = javax.swing.JColorChooser.showDialog(this, "Escolha a cor do quadro", cor_anterior);
-        if (nova_cor != null){
-            cores_estampas[indice_cor_selecionada] = nova_cor;
-            
-            switch(indice_cor_selecionada) {
-                case 0:{
-                    atualizaCoresPreview(previewCorPaleta1, nova_cor);
-                    atualizaCoresFrame(panelFrameCoresEstampa1, nova_cor);
-                    break;
-                }
-                case 1:{
-                    atualizaCoresPreview(previewCorPaleta2, nova_cor);
-                    atualizaCoresFrame(panelFrameCoresEstampa2, nova_cor);
-                    break;
-                }
-                case 2:{
-                    atualizaCoresPreview(previewCorPaleta3, nova_cor);
-                    atualizaCoresFrame(panelFrameCoresEstampa3, nova_cor);
-                    break;
-                }
-                case 3:{
-                    atualizaCoresPreview(previewCorPaleta4, nova_cor);
-                    atualizaCoresFrame(panelFrameCoresEstampa4, nova_cor);
-                    break;
-                }
-            }
-        }
-    }//GEN-LAST:event_botaoFrameCoresEstampaSelecionarActionPerformed
-
-    private void botaoFrameCoresEstampaApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoFrameCoresEstampaApagarActionPerformed
-        if (indice_cor_selecionada != 0){
-            cores_estampas[indice_cor_selecionada] = null;
-            
-            switch(indice_cor_selecionada) {
-                case 1:{
-                    atualizaCoresPreview(previewCorPaleta2, null);
-                    atualizaCoresFrame(panelFrameCoresEstampa2, null);
-                    break;
-                }
-                case 2:{
-                    atualizaCoresPreview(previewCorPaleta3, null);
-                    atualizaCoresFrame(panelFrameCoresEstampa3, null);
-                    break;
-                }
-                case 3:{
-                    atualizaCoresPreview(previewCorPaleta4, null);
-                    atualizaCoresFrame(panelFrameCoresEstampa4, null);
-                    break;
-                }
-            }
-        }
-        else {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "Não delete a primeira cor. :(",
-                    "Erro",javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_botaoFrameCoresEstampaApagarActionPerformed
 
     private void botaoIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIniciarActionPerformed
         Shape shape_tela = null;
@@ -1407,15 +1178,26 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         
         // cores ou textura
         ArrayList<Preenchimento> preenchimentos = new ArrayList<>();
+        
         if (radioTipoPreenchimentoTexturas.isSelected()) {
             preenchimentos.add(new Preenchimento(criarImagem(canvasPreviewPreenchimento)));
         }
         else { //cores
-            for (Color x: cores_estampas){
-                if (x != null){
-                    preenchimentos.add(new Preenchimento(x));
+            Color aux;
+            
+            for (int i = 0 ; i < quantidadeColunas ; i++) {
+                for (int j = 0 ; j < quantidadeLinhas ; j++) {
+                    aux = (Color) tabelaVerCores.getModel().getValueAt(j, i);
+                    if (aux.getAlpha() != 0) {
+                        preenchimentos.add(new Preenchimento(aux));
+                    }
                 }
             }
+            
+            if (preenchimentos.isEmpty()) {
+                preenchimentos.add(new Preenchimento(Color.BLACK));
+            }
+            System.out.println("TOTAL DE CORES: " + preenchimentos.size());
         }
         
         Tela.tela = new Tela(radioBordaTelaSim.isSelected(), radioRotacionarEstampasSim.isSelected(), radioTelaFormaSim.isSelected(), radioTipoPreenchimentoTexturas.isSelected());
@@ -1424,6 +1206,16 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         //frameTeste teste = new frameTeste(shape_estampa, radioRotacionarEstampasSim.isSelected(), preenchimentos.get(0));
         //teste.inicia();
     }//GEN-LAST:event_botaoIniciarActionPerformed
+
+    private void botaoVerCoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVerCoresActionPerformed
+        frameVerCores.setLocation(dim.width/2-frameVerCores.getSize().width/2, dim.height/2-frameVerCores.getSize().height/2);
+        frameVerCores.setVisible(true);
+    }//GEN-LAST:event_botaoVerCoresActionPerformed
+
+    private void botaoVerCoresEscolherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVerCoresEscolherActionPerformed
+        frameVerCores.setLocation(dim.width/2-frameVerCores.getSize().width/2, dim.height/2-frameVerCores.getSize().height/2);
+        frameVerCores.setVisible(true);
+    }//GEN-LAST:event_botaoVerCoresEscolherActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1572,18 +1364,156 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         //cg.scale(5, 5);
         return imagem;
     }
+    
+    public class editorDeCor extends AbstractCellEditor implements
+            TableCellEditor, ActionListener {
+        Color corAtual;
+        JButton botao;
+        JColorChooser colorChooser;
+        JDialog dialog;
+
+        public editorDeCor() {
+            botao = new JButton();
+            botao.addActionListener(this);
+            botao.setBorderPainted(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            botao.setBackground(corAtual);
+            Color nova_cor = javax.swing.JColorChooser.showDialog(null, "Escolha a cor do fundo", corAtual);
+            if (nova_cor != null) {
+                corAtual = nova_cor;
+            }
+            fireEditingStopped();
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return corAtual;
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean isSelected, int row, int column) {
+            corAtual = (Color)value;
+            return botao;
+        }
+    }
+
+
+    public class RenderizadorDeCor extends JLabel implements TableCellRenderer {
+        Border bordaNaoSelecionada = null;
+        Border bordaSelecionada = null;
+        boolean isComBorda = true;
+
+        public RenderizadorDeCor(boolean isBordered) {
+            this.isComBorda = isBordered;
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent( JTable table, Object color,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            Color newColor = (Color)color;
+            setBackground(newColor);
+            if (isComBorda) {
+                if (isSelected) {
+                    if (bordaSelecionada == null) {
+                        bordaSelecionada = BorderFactory.createMatteBorder(2,5,2,5,
+                                table.getSelectionBackground());
+                    }
+                    setBorder(bordaSelecionada);
+                } else {
+                    if (bordaNaoSelecionada == null) {
+                        bordaNaoSelecionada = BorderFactory.createMatteBorder(2,5,2,5,
+                                table.getBackground());
+                    }
+                    setBorder(bordaNaoSelecionada);
+                }
+            }
+
+        String texto;
+        
+        if (newColor.getAlpha() == 0) {
+            texto = "Tecnicamente vazio";
+        }
+        else{
+           texto = "Cores RGBA: " + newColor.getRed() + ", " + 
+                newColor.getGreen() + ", " + newColor.getBlue() + ", " + 
+                newColor.getAlpha();
+        }
+        
+        setToolTipText(texto);
+            return this;
+        }
+    }
+    
+    class modeloTabelaCores extends AbstractTableModel {
+        Color vazio = new Color(0,0,0,0);
+        private String[] columnNames = {"", "", "", "", ""};
+        private Object[][] data = {
+            {Color.BLACK, vazio, vazio, vazio, vazio},
+            {vazio, vazio, vazio, vazio, vazio},
+            {vazio, vazio, vazio, vazio, vazio},
+            {vazio, vazio, vazio, vazio, vazio},
+            {vazio, vazio, vazio, vazio, vazio},
+            {vazio, vazio, vazio, vazio, vazio},
+            {vazio, vazio, vazio, vazio, vazio},
+            {vazio, vazio, vazio, vazio, vazio},
+            {vazio, vazio, vazio, vazio, vazio},
+            {vazio, vazio, vazio, vazio, vazio},
+            };
+        
+        @Override
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+        
+        @Override
+        public int getRowCount() {
+            return data.length;
+        }
+
+        @Override
+        public String getColumnName(int col) {
+            return columnNames[col];
+        }
+
+        @Override
+        public Object getValueAt(int row, int col) {
+            return data[row][col];
+        }
+
+        @Override
+        public Class getColumnClass(int c) {
+            return getValueAt(0, c).getClass();
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int col) {
+            return col >= 0;
+        }
+
+        @Override
+        public void setValueAt(Object value, int row, int col) {
+            data[row][col] = value;
+            fireTableCellUpdated(row, col);
+        }
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraMenu;
     private javax.swing.JButton botaoEstampaExcluir;
     private javax.swing.JButton botaoEstampaSelecionar;
     private javax.swing.JButton botaoEstampaSelecionarFundo;
-    private javax.swing.JButton botaoFrameCoresEstampaApagar;
-    private javax.swing.JButton botaoFrameCoresEstampaSelecionar;
     private javax.swing.JButton botaoFrameCoresFundoSelecionar;
     private javax.swing.JButton botaoIniciar;
     private javax.swing.JButton botaoTexturaExcluir;
     private javax.swing.JButton botaoTexturaSelecionar;
+    private javax.swing.JButton botaoVerCores;
+    private javax.swing.JButton botaoVerCoresEscolher;
     private javax.swing.ButtonGroup buttonGroupBordaTela;
     private javax.swing.ButtonGroup buttonGroupRotacionarEstampas;
     private javax.swing.ButtonGroup buttonGroupTelaForma;
@@ -1596,7 +1526,6 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private org.apache.batik.swing.JSVGCanvas canvasframeTextura;
     private javax.swing.JComboBox<String> comboboxEstampas;
     private javax.swing.JComboBox<String> comboboxTexturas;
-    private javax.swing.JColorChooser escolherCor;
     private javax.swing.JMenuItem estampaAdicionar;
     private javax.swing.JMenuItem estampaSelecionar;
     private javax.swing.JFileChooser fileEstampaAdicionar;
@@ -1604,6 +1533,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JFrame frameCoresEscolher;
     private javax.swing.JFrame frameEstampaEscolher;
     private javax.swing.JFrame frameTexturasEscolher;
+    private javax.swing.JFrame frameVerCores;
     private javax.swing.JMenuItem itemCoresSelecionar;
     private javax.swing.JMenuItem itemManual;
     private javax.swing.JMenuItem itemSobre;
@@ -1615,17 +1545,9 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JMenu menuPreenchimento;
     private javax.swing.JMenu menuTextura;
     private javax.swing.JPanel panelCorpo;
-    private javax.swing.JPanel panelFrameCoresEstampa1;
-    private javax.swing.JPanel panelFrameCoresEstampa2;
-    private javax.swing.JPanel panelFrameCoresEstampa3;
-    private javax.swing.JPanel panelFrameCoresEstampa4;
     private javax.swing.JPanel panelFrameCoresFundo;
     private javax.swing.JSeparator panelSeparador;
     private javax.swing.JPanel previewCorFundo;
-    private javax.swing.JPanel previewCorPaleta1;
-    private javax.swing.JPanel previewCorPaleta2;
-    private javax.swing.JPanel previewCorPaleta3;
-    private javax.swing.JPanel previewCorPaleta4;
     private javax.swing.JRadioButton radioBordaTelaNao;
     private javax.swing.JRadioButton radioBordaTelaSim;
     private javax.swing.JRadioButton radioRotacionarEstampasNao;
@@ -1637,6 +1559,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JSpinner spinnerIteracoes;
     private javax.swing.JSpinner spinnerQuantidadeFormas;
     private javax.swing.JSpinner spinnerValorC;
+    private javax.swing.JTable tabelaVerCores;
     private javax.swing.JLabel textoBordaTela;
     private javax.swing.JLabel textoFrameCoresCorpo;
     private javax.swing.JLabel textoFrameCoresEstampas;

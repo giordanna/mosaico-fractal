@@ -472,7 +472,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         textoValorC.setText("Valor de c:");
 
-        spinnerValorC.setModel(new javax.swing.SpinnerNumberModel(1.48d, 1.0d, 1.48d, 0.01d));
+        spinnerValorC.setModel(new javax.swing.SpinnerNumberModel(1.48d, 1.01d, 2.0d, 0.01d));
 
         textoPreview.setText("Preview:");
 

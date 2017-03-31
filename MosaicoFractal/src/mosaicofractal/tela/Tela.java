@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import mosaicofractal.elementos.Estampa;
-import mosaicofractal.elementos.MersenneTwisterFast;
 import mosaicofractal.elementos.Preenchimento;
 
 /**
@@ -99,6 +98,11 @@ public class Tela {
     private ArrayList<Shape> estampas = new ArrayList<>();
     
     /**
+     * Variável para determinar o tempo limite de execução do programa.
+     */
+    private int tempoLimite = 1;
+    
+    /**
      * Índice utilizado para demarcar a estampa atual a ser posicionada.
      */
     private int indiceAtualShape = 0;
@@ -157,11 +161,12 @@ public class Tela {
      * @param usa_textura se será usado texturas ou cores para as estampas
      * @see #preencherArea(java.awt.Shape, java.awt.Shape, java.util.ArrayList, java.awt.Color, double, int, int) 
      */
-    public Tela(boolean considerar_bordas, boolean mudar_angulo, boolean tela_personalizada, boolean usa_textura) {
+    public Tela(boolean considerar_bordas, boolean mudar_angulo, boolean tela_personalizada, boolean usa_textura, int tempo_limite) {
         isConsiderarBordas = considerar_bordas;
         isMudarAngulo = mudar_angulo;
         isFormaTelaPersonalizada = tela_personalizada;
         isUsarTextura = usa_textura;
+        tempoLimite = tempo_limite;
         
         estampasAdicionadas = new ArrayList<>();
         renderizador = new Renderizador();
@@ -712,6 +717,12 @@ public class Tela {
         
         /* loop no número de formas */
         do {
+            
+            // passou do tempo limite de execução
+            if (tempoLimite * 60 < (System.currentTimeMillis() - tempoInicial)/1000.0){
+                System.out.println("Tempo limite de execução atingido!");
+                break;
+            }
             
             porcentagemTeste = razaoDaArea * valorControle(quantidadeEstampas + N, expoente);
             //porcentagemTeste = getPorcentagemCorreta(porcentagemTeste);

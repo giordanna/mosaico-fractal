@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mosaicofractal.gui;
 
 import java.awt.Color;
@@ -41,12 +36,18 @@ import org.apache.batik.bridge.GVTBuilder;
 import org.apache.batik.gvt.GVTTreeWalker;
 import org.apache.batik.gvt.GraphicsNode;
 import static org.apache.batik.swing.svg.JSVGComponent.ALWAYS_DYNAMIC;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.svg.SVGDocument;
 
 /**
- *
- * @author Giordanna
+ * A classe <code>InterfaceUsuario</code> é usada para permitir ao usuário de 
+ * interajir com o programa, podendo definir as suas opções desejadas 
+ * interativamente. A construção desta classe contou fortemente com a biblioteca 
+ * Swing.
+ * 
+ * @author      Giordanna De Gregoriis
+ * @see         mosaicofractal.tela.Tela
+ * @see         mosaicofractal.elementos.Estampa
+ * @see         mosaicofractal.elementos.Preenchimento
  */
 public class InterfaceUsuario extends javax.swing.JFrame {
     
@@ -159,6 +160,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         textoIteracoes = new javax.swing.JLabel();
         spinnerIteracoes = new javax.swing.JSpinner();
         botaoVerCores = new javax.swing.JButton();
+        textoTempoLimite = new javax.swing.JLabel();
+        spinnerTempoLimite = new javax.swing.JSpinner();
+        spinnerTempoLimite.setModel(new javax.swing.SpinnerNumberModel(1, 1, 60, 1));
+        textoMinutos = new javax.swing.JLabel();
         textoTitulo = new javax.swing.JLabel();
         barraMenu = new javax.swing.JMenuBar();
         menuEstampas = new javax.swing.JMenu();
@@ -634,7 +639,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         canvasPreviewFormaFundo.setEnableZoomInteractor(false);
         canvasPreviewFormaFundo.setPreferredSize(new java.awt.Dimension(100, 100));
 
-        textoQuantidadeFormas.setText("Quantidade de formas:");
+        textoQuantidadeFormas.setText("Formas:");
 
         spinnerQuantidadeFormas.setModel(new javax.swing.SpinnerNumberModel(1000, 10, 90000, 1));
 
@@ -648,6 +653,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                 botaoVerCoresActionPerformed(evt);
             }
         });
+
+        textoTempoLimite.setText("Tempo limite:");
+
+        textoMinutos.setText("minuto(s).");
 
         javax.swing.GroupLayout panelCorpoLayout = new javax.swing.GroupLayout(panelCorpo);
         panelCorpo.setLayout(panelCorpoLayout);
@@ -719,7 +728,13 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(textoIteracoes)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spinnerIteracoes, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(spinnerIteracoes, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(textoTempoLimite)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spinnerTempoLimite, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(textoMinutos)))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
@@ -756,7 +771,10 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                     .addComponent(textoQuantidadeFormas)
                     .addComponent(spinnerQuantidadeFormas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(textoIteracoes)
-                    .addComponent(spinnerIteracoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnerIteracoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textoTempoLimite)
+                    .addComponent(spinnerTempoLimite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textoMinutos))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botaoIniciar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1207,7 +1225,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                     System.out.println("TOTAL DE CORES: " + preenchimentos.size());
                 }
 
-                Tela.tela = new Tela(radioBordaTelaSim.isSelected(), radioRotacionarEstampasSim.isSelected(), radioTelaFormaSim.isSelected(), radioTipoPreenchimentoTexturas.isSelected());
+                Tela.tela = new Tela(radioBordaTelaSim.isSelected(), radioRotacionarEstampasSim.isSelected(), radioTelaFormaSim.isSelected(), radioTipoPreenchimentoTexturas.isSelected(), (int) spinnerTempoLimite.getValue());
                 Tela.tela.preencherArea(array_formas, shape_tela, preenchimentos, cor_fundo_selecionada, (double) spinnerValorC.getValue(), (int) spinnerQuantidadeFormas.getValue(), (int) spinnerIteracoes.getValue());
                 
             } catch (java.lang.NullPointerException ex){
@@ -1569,6 +1587,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JRadioButton radioTipoPreenchimentoTexturas;
     private javax.swing.JSpinner spinnerIteracoes;
     private javax.swing.JSpinner spinnerQuantidadeFormas;
+    private javax.swing.JSpinner spinnerTempoLimite;
     private javax.swing.JSpinner spinnerValorC;
     private javax.swing.JTable tabelaVerCores;
     private javax.swing.JLabel textoBordaTela;
@@ -1580,6 +1599,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel textoFrameTexturaCorpo;
     private javax.swing.JLabel textoFrameTexturaPreview;
     private javax.swing.JLabel textoIteracoes;
+    private javax.swing.JLabel textoMinutos;
     private javax.swing.JLabel textoPreview;
     private javax.swing.JLabel textoPreviewCorFundo;
     private javax.swing.JLabel textoPreviewEstampa;
@@ -1591,6 +1611,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel textoQuantidadeFormas;
     private javax.swing.JLabel textoRotacionarEstampas;
     private javax.swing.JLabel textoTelaForma;
+    private javax.swing.JLabel textoTempoLimite;
     private javax.swing.JLabel textoTipoPreenchimento;
     private javax.swing.JLabel textoTitulo;
     private javax.swing.JLabel textoValorC;

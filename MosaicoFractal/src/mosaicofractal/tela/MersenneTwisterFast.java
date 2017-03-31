@@ -1,4 +1,4 @@
-package mosaicofractal.elementos;
+package mosaicofractal.tela;
 
 import java.io.*;
 

@@ -704,6 +704,12 @@
                                           <Component id="textoIteracoes" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="spinnerIteracoes" min="-2" pref="60" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="textoTempoLimite" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="spinnerTempoLimite" min="-2" pref="41" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="textoMinutos" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -753,6 +759,9 @@
                       <Component id="spinnerQuantidadeFormas" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="textoIteracoes" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="spinnerIteracoes" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="textoTempoLimite" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="spinnerTempoLimite" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="textoMinutos" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="botaoIniciar" min="-2" max="-2" attributes="0"/>
@@ -1092,7 +1101,7 @@
         </Container>
         <Component class="javax.swing.JLabel" name="textoQuantidadeFormas">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Quantidade de formas:"/>
+            <Property name="text" type="java.lang.String" value="Formas:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JSpinner" name="spinnerQuantidadeFormas">
@@ -1121,6 +1130,21 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoVerCoresActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="textoTempoLimite">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Tempo limite:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JSpinner" name="spinnerTempoLimite">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="spinnerTempoLimite.setModel(new javax.swing.SpinnerNumberModel(1, 1, 60, 1));"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="textoMinutos">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="minuto(s)."/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

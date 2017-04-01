@@ -1,5 +1,5 @@
 # Mosaico Fractal #
-O programa Mosaico Fractal como objetivo preencher um determinado espaço utilizando estampas que possuem uma área que respeitam uma lei de potência inversa, na qual utiliza a função zeta de Hurwitz para este propósito, assim permitindo que estas estampas sejam inseridas no espaço ad infinitum, e por fim apresentando um resultado que se assemelha a um fractal geométrico, sendo também esteticamente agradável. Esta ferramenta permite que pessoas utilizem suas próprias criações artísticas para tanto definir as formas das estampas que preencherão o espaço como o formato da tela em si.
+O programa Mosaico Fractal tem como objetivo preencher um determinado espaço utilizando estampas que possuem uma área que respeitam uma lei de potência inversa, na qual utiliza a função zeta de Hurwitz para este propósito, assim permitindo que estas estampas sejam inseridas no espaço ad infinitum, e por fim apresentando um resultado que se assemelha a um fractal geométrico, sendo também esteticamente agradável. Esta ferramenta permite que pessoas utilizem suas próprias criações artísticas para tanto definir as formas das estampas que preencherão o espaço como o formato da tela em si.
 
 ### Download ###
 * Vá para https://bitbucket.org/giordanna/mosaico-fractal/downloads/;
@@ -19,5 +19,11 @@ O programa Mosaico Fractal como objetivo preencher um determinado espaço utiliz
 ### Como apagar uma forma personalizada ###
 * Estampas > Selecionar... > Utilize o menu dropdown para selecionar a forma, ela aparecerá na janela de preview. > Clique em "Excluir Arquivo".
 
+
+### Documentação ###
+* A documentação do software está localizada no diretório "Documentação", localizado na raíz do código-fonte do repositório.
+* Existe também o diretório contendo os diagramas gerados para a modelagem do programa, cujo nome é "Diagramas". Também está localizado na raíz do repositório.
+
 ### Dúvidas ###
 * Fale com a responsável do repositório.
+* Email: giordanna.gregoriis@icen.ufpa.br

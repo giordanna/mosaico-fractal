@@ -229,7 +229,7 @@ public class Tela {
      * @param N onde inicia o somatório
      * @return a soma dos valores da função Zeta
      */
-    private double funcaoZeta(double c, int N) {
+    private double funcaoZeta(double c, double N) {
         double soma = 0;
         int NMAX = 100000;
         for (double i = N; i < NMAX; i++) {
@@ -325,6 +325,9 @@ public class Tela {
         return Math.sqrt(razao);
     }
     
+    //TODO: fazer este método funcionar da maneira desejada.
+    //O decaimento das formas está rápido demais. Falta encontrar uma maneira
+    //de balancear isto.
     /**
      * Retorna a porcentagem corrigida para corrigir a estampa. Ainda em construção
      * 
@@ -599,13 +602,14 @@ public class Tela {
      * @param listaPreenchimentos preenchimentos utilizados para as estampas
      * @param maximoFormas número máximo de estampas a serem inseridas na tela
      * @param corFundo cor utilizada no fundo da tela
+     * @param valor_N valor inicial de N
      * @param maxIteracoes número máximo de iterações para os testes
      * @param constante constante a ser utilizada na <code>funcaoZeta()</code>
      * @see #funcaoZeta(double, int) 
      */
     public void preencherArea(ArrayList<Shape> listaEstampas, Shape formaDaTela,
             ArrayList<Preenchimento> listaPreenchimentos, Color corFundo, 
-            double constante, int maximoFormas, int maxIteracoes) {
+            double constante, double valor_N, int maximoFormas, int maxIteracoes) {
         
         final int numeroShapes, numeroPreenchimentos;
         
@@ -614,10 +618,10 @@ public class Tela {
         final double maximoPorcentagemPreenchimento = 0.99,
                      expoente = 0.5 * constante;
         
-        int numeroIteracoesTotal = 0,
-            N = 2;
+        int numeroIteracoesTotal = 0;
 
-        double  valorZeta = funcaoZeta(constante, N),
+        double  N = valor_N,
+                valorZeta = funcaoZeta(constante, N),
                 razaoDaArea = 1.0 / valorZeta,
                 escala, areaPreenchidaPorcentagem, areaTotal;
         

@@ -1,3 +1,20 @@
+/*
+Este arquivo é parte do programa Mosaico Fractal
+
+Mosaico Fractal é um software livre; você pode redistribuí-lo e/ou 
+modificá-lo dentro dos termos da Licença Pública Geral GNU como 
+publicada pela Fundação do Software Livre (FSF); na versão 3 da 
+Licença, ou (a seu critério) qualquer versão posterior.
+
+Este programa é distribuído na esperança de que possa ser útil, 
+mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO
+a qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a
+Licença Pública Geral GNU para maiores detalhes.
+
+Você deve ter recebido uma cópia da Licença Pública Geral GNU junto
+com este programa, Se não, veja <http://www.gnu.org/licenses/>.
+*/
+
 package mosaicofractal.gui;
 
 import java.awt.Color;
@@ -19,8 +36,6 @@ import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JColorChooser;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -40,7 +55,7 @@ import org.w3c.dom.svg.SVGDocument;
 
 /**
  * A classe <code>InterfaceUsuario</code> é usada para permitir ao usuário de 
- * interajir com o programa, podendo definir as suas opções desejadas 
+ * interagir com o programa, podendo definir as suas opções desejadas 
  * interativamente. A construção desta classe contou fortemente com a biblioteca 
  * Swing.
  * 
@@ -51,15 +66,40 @@ import org.w3c.dom.svg.SVGDocument;
  */
 public class InterfaceUsuario extends javax.swing.JFrame {
     
+    /**
+     * Cor utilizada para o fundo da região.
+     */
     private Color cor_fundo_selecionada = Color.WHITE;
+    
+    /**
+     * Nome do arquivo SVG contendo a textura selecionada.
+     */
     private String textura = "textura1.svg";
+    
+    /**
+     * Nome do arquivo SVG contendo a estampa selecionada.
+     */
     private String estampa = "estampa1.svg";
+    
+    /**
+     * Nome do arquivo SVG contendo a forma da região a ser preenchida 
+     * selecionada.
+     */
     private String forma_fundo = "estampa1.svg";
-    private Dimension dim;
+    
+    /**
+     * Dimensão da interface, utilizada para fazer as janelas aparecerem no 
+     * meio da tela.
+     */
+    private final Dimension dim;
+    
+    /**
+     * Delimitação do números de colunas e linhas da tabela de cores.
+     */
     private int quantidadeColunas, quantidadeLinhas;
     
     /**
-     * Creates new form InterfaceUsuario
+     * Cria o form InterfaceUsuario
      */
     public InterfaceUsuario() {
         initComponents();
@@ -189,7 +229,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         tabelaVerCores.setBackground(javax.swing.UIManager.getDefaults().getColor("TextField.disabledBackground"));
         tabelaVerCores.setModel(new modeloTabelaCores());
         tabelaVerCores.setDefaultRenderer(Color.class, new RenderizadorDeCor(true));
-        tabelaVerCores.setDefaultEditor(Color.class, new editorDeCor());
+        tabelaVerCores.setDefaultEditor(Color.class, new EditorDeCor());
         quantidadeColunas = tabelaVerCores.getModel().getColumnCount();
         quantidadeLinhas = tabelaVerCores.getModel().getRowCount();
 
@@ -902,62 +942,115 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    /**
+     * Método utilizado para quando o valor do botão de rádio 
+     * de radioTelaFormaSim for pressionado. O botão está relacionado ao 
+     * formato personalizado da tela. Caso esteja marcado, deve marcar 
+     * automaticamente o botão de rádio sobre considerar limites inclusivos da 
+     * região. 
+     * 
+     * Verica-se também se o botão de rádio sobre rotacionar estampas está 
+     * marcado, para poder mudar o ícone do preview de acordo. 
+     * 
+     * Também modifica o valor do texto sobre o preview da forma da região, e
+     * troca o ícone do preview da forma do fundo.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #trocaIconeEstampa(org.apache.batik.swing.JSVGCanvas, java.awt.Shape)
+     * @see #trocaPreviewIconeModo(java.lang.String) 
+     */
     private void radioTelaFormaSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTelaFormaSimActionPerformed
         if (!radioBordaTelaSim.isSelected()){
             radioBordaTelaSim.setSelected(true);
         }
-        if (radioTelaFormaSim.isSelected()) {
-            if (radioRotacionarEstampasSim.isSelected()) {
-                trocaPreviewIconeModo("modo_com_forma_sim_rotaciona");
-            }
-            else {
-                trocaPreviewIconeModo("modo_com_forma_nao_rotaciona");
-            }
+        if (radioRotacionarEstampasSim.isSelected()) {
+            trocaPreviewIconeModo("modo_com_forma_sim_rotaciona");
         }
+        else {
+            trocaPreviewIconeModo("modo_com_forma_nao_rotaciona");
+        }
+        
         textoPreviewFormaFundo.setText("Forma do fundo:");
         trocaIconeEstampa(canvasPreviewFormaFundo, forma_fundo);
     }//GEN-LAST:event_radioTelaFormaSimActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão de rádio 
+     * de radioBordaTelaNao for pressionado. O botão está relacionado aos 
+     * limites da tela. Verifica se o botão sobre forma personalizada da região 
+     * está marcado como "não". Se estiver marcado como sim, marca como não, e 
+     * Atualiza o texto do preview da estampa da forma da tela para fundo 
+     * normal, e insere uma forma vazia no lugar.
+     * 
+     * Verifica também se o botão de rádio sobre rotacionar estampas está 
+     * marcado, e atualiza o ícone de acordo com o estado.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #deixaVazio(org.apache.batik.swing.JSVGCanvas)
+     * @see #trocaPreviewIconeModo(java.lang.String) 
+     */
     private void radioBordaTelaNaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBordaTelaNaoActionPerformed
         if (!radioTelaFormaNao.isSelected()){
             radioTelaFormaNao.setSelected(true);
             textoPreviewFormaFundo.setText("Fundo normal.");
             deixaVazio(canvasPreviewFormaFundo);
         }
-        if (radioBordaTelaNao.isSelected()) {
-            if (radioRotacionarEstampasSim.isSelected()) {
+        if (radioRotacionarEstampasSim.isSelected()) {
+            trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
+        }
+        else {
+            trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
+        }
+    }//GEN-LAST:event_radioBordaTelaNaoActionPerformed
+    
+    /**
+     * Método utilizado para quando o valor do botão de rádio 
+     * de radioTelaFormaNao for pressionado. O botão está relacionado ao 
+     * formato personalizado da tela. Verica-se se o botão de rádio sobre 
+     * rotacionar estampas está marcado, para poder mudar o ícone do preview 
+     * de acordo.
+     * 
+     * Verica-se também o botão de rádio sobre considerar limites inclusivos 
+     * ou periódicos da tela, para poder mudar o ícone do preview de acordo. 
+     * 
+     * Atualiza o texto do preview da estampa da forma da tela para fundo 
+     * normal, e insere uma forma vazia no lugar.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #deixaVazio(org.apache.batik.swing.JSVGCanvas)
+     * @see #trocaPreviewIconeModo(java.lang.String)
+     */
+    private void radioTelaFormaNaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTelaFormaNaoActionPerformed
+
+        if (radioRotacionarEstampasSim.isSelected()) {
+            if (radioBordaTelaSim.isSelected()) {
+                trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
+            }
+            else {
                 trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
+            }
+        }
+        else {
+            if (radioBordaTelaSim.isSelected()) {
+                trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
             }
             else {
                 trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
             }
         }
-    }//GEN-LAST:event_radioBordaTelaNaoActionPerformed
-
-    private void radioTelaFormaNaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTelaFormaNaoActionPerformed
-        if (radioTelaFormaNao.isSelected()) {
-            if (radioRotacionarEstampasSim.isSelected()) {
-                if (radioBordaTelaSim.isSelected()) {
-                    trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
-                }
-                else {
-                    trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
-                }
-            }
-            else {
-                if (radioBordaTelaSim.isSelected()) {
-                    trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
-                }
-                else {
-                    trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
-                }
-            }
-        }
         textoPreviewFormaFundo.setText("Fundo normal.");
         deixaVazio(canvasPreviewFormaFundo);
     }//GEN-LAST:event_radioTelaFormaNaoActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão de rádio 
+     * de radioTipoPreenchimentoCores for pressionado. Atualiza os textos 
+     * relacionados ao preenchimento das estampas para cores.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #deixaVazio(org.apache.batik.swing.JSVGCanvas) 
+     */
     private void radioTipoPreenchimentoCoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTipoPreenchimentoCoresActionPerformed
         if (!"Cores? Sim. Sendo elas:".equals(textoPreviewPreenchimentoCores.getText())){
             textoPreviewPreenchimentoCores.setText("Cores? Sim. Sendo elas:");
@@ -970,7 +1063,15 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             deixaVazio(canvasPreviewPreenchimento);
         }
     }//GEN-LAST:event_radioTipoPreenchimentoCoresActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão de rádio 
+     * de radioTipoPreenchimentoTexturas for pressionado. Atualiza os textos 
+     * relacionados ao preenchimento das estampas para texturas.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #trocaIconeTextura(org.apache.batik.swing.JSVGCanvas, java.lang.String) 
+     */
     private void radioTipoPreenchimentoTexturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioTipoPreenchimentoTexturasActionPerformed
         if ("Cores? Sim. Sendo elas:".equals(textoPreviewPreenchimentoCores.getText())){
             textoPreviewPreenchimentoCores.setText("Cores? Não.");
@@ -984,66 +1085,107 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         
         trocaIconeTextura(canvasPreviewPreenchimento, textura);
     }//GEN-LAST:event_radioTipoPreenchimentoTexturasActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão de rádio 
+     * de radioBordaTelaSim for pressionado. O botão está relacionado aos 
+     * limites da região da tela. Verica-se se o botão de rádio sobre 
+     * a tela com forma personalizada marcada e se o botão de rádio sobre 
+     * rotacionar estampas está marcado, para poder mudar o ícone do preview de acordo.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #trocaPreviewIconeModo(java.lang.String) 
+     */
     private void radioBordaTelaSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioBordaTelaSimActionPerformed
-        if (radioBordaTelaSim.isSelected()) {
-            if (radioTelaFormaSim.isSelected()) {
-                if (radioRotacionarEstampasSim.isSelected()) {
-                    trocaPreviewIconeModo("modo_com_forma_sim_rotaciona");
-                }
-                else {
-                    trocaPreviewIconeModo("modo_com_forma_nao_rotaciona");
-                }
-            }
-            else {
-                if (radioRotacionarEstampasSim.isSelected()) {
-                    trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
-                }
-                else {
-                    trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
-                }
-            }
-        }
-    }//GEN-LAST:event_radioBordaTelaSimActionPerformed
-
-    private void radioRotacionarEstampasSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioRotacionarEstampasSimActionPerformed
-        if (radioRotacionarEstampasSim.isSelected()) {
-            if (radioTelaFormaSim.isSelected()) {
+        if (radioTelaFormaSim.isSelected()) {
+            if (radioRotacionarEstampasSim.isSelected()) {
                 trocaPreviewIconeModo("modo_com_forma_sim_rotaciona");
             }
             else {
-                if (radioBordaTelaSim.isSelected()) {
-                    trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
-                }
-                else {
-                    trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
-                }
+                trocaPreviewIconeModo("modo_com_forma_nao_rotaciona");
+            }
+        }
+        else {
+            if (radioRotacionarEstampasSim.isSelected()) {
+                trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
+            }
+            else {
+                trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
+            }
+        }
+    }//GEN-LAST:event_radioBordaTelaSimActionPerformed
+    
+    /**
+     * Método utilizado para quando o valor do botão de rádio 
+     * de radioRotacionarEstampasSim for pressionado. O botão está relacionado as 
+     * rotações das estampas na tela. Verica-se se o botão de rádio sobre 
+     * a tela com forma personalizada marcada e se o botão de rádio sobre 
+     * limites inclusivos está marcado, para poder mudar o ícone do preview de acordo.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #trocaPreviewIconeModo(java.lang.String) 
+     */
+    private void radioRotacionarEstampasSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioRotacionarEstampasSimActionPerformed
+        if (radioTelaFormaSim.isSelected()) {
+            trocaPreviewIconeModo("modo_com_forma_sim_rotaciona");
+        }
+        else {
+            if (radioBordaTelaSim.isSelected()) {
+                trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_com_limite");
+            }
+            else {
+                trocaPreviewIconeModo("modo_sem_forma_sim_rotaciona_sem_limite");
             }
         }
     }//GEN-LAST:event_radioRotacionarEstampasSimActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão de rádio 
+     * de radioRotacionarEstampasNao for pressionado. O botão está relacionado as 
+     * rotações das estampas na tela. Verica-se se o botão de rádio sobre 
+     * a tela com forma personalizada marcada e se o botão de rádio sobre 
+     * limites inclusivos está marcado, para poder mudar o ícone do preview de acordo.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #trocaPreviewIconeModo(java.lang.String) 
+     */
     private void radioRotacionarEstampasNaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioRotacionarEstampasNaoActionPerformed
-        if (radioRotacionarEstampasNao.isSelected()) {
-            if (radioTelaFormaSim.isSelected()) {
-                trocaPreviewIconeModo("modo_com_forma_nao_rotaciona");
+        if (radioTelaFormaSim.isSelected()) {
+            trocaPreviewIconeModo("modo_com_forma_nao_rotaciona");
+        }
+        else {
+            if (radioBordaTelaSim.isSelected()) {
+                trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
             }
             else {
-                if (radioBordaTelaSim.isSelected()) {
-                    trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_com_limite");
-                }
-                else {
-                    trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
-                }
+                trocaPreviewIconeModo("modo_sem_forma_nao_rotaciona_sem_limite");
             }
         }
     }//GEN-LAST:event_radioRotacionarEstampasNaoActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão estampaSelecionar for 
+     * pressionado. O botão está relacionado as estampas na tela. Atualiza as 
+     * instâncias das estampas na listagem e torna a janela de escolha de 
+     * estampa visível.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #atualizarEstampas() 
+     */
     private void estampaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estampaSelecionarActionPerformed
         atualizarEstampas();
         frameEstampaEscolher.setLocation(dim.width/2-frameEstampaEscolher.getSize().width/2, dim.height/2-frameEstampaEscolher.getSize().height/2);
         frameEstampaEscolher.setVisible(true);
     }//GEN-LAST:event_estampaSelecionarActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão estampaAdicionar for 
+     * pressionado. O botão está relacionado as estampas na tela. Abre uma 
+     * janela de JFileChooser para selecionar e inserir o arquivo no diretório 
+     * de estampas salvas.
+     * 
+     * @param evt evento da seleção do botão.
+     */
     private void estampaAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estampaAdicionarActionPerformed
         int retorno = fileEstampaAdicionar.showOpenDialog(this);
         if (retorno == javax.swing.JFileChooser.APPROVE_OPTION){
@@ -1058,7 +1200,15 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_estampaAdicionarActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão texturaAdicionar for 
+     * pressionado. O botão está relacionado as texturas das estampas. Abre uma 
+     * janela de JFileChooser para selecionar e inserir o arquivo no diretório 
+     * de texturas salvas.
+     * 
+     * @param evt evento da seleção do botão.
+     */
     private void itemTexturaAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemTexturaAdicionarActionPerformed
         int retorno = filePreenchimentoAdicionar.showOpenDialog(this);
         if (retorno == javax.swing.JFileChooser.APPROVE_OPTION){
@@ -1072,43 +1222,111 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_itemTexturaAdicionarActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor da combobox de estampas for 
+     * modificada. O botão está relacionado as estampas salvas. Modifica-se o
+     * ícone de previsualização da estampa escolhida.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #trocaIconeEstampa(org.apache.batik.swing.JSVGCanvas, java.lang.String) 
+     */
     private void comboboxEstampasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxEstampasActionPerformed
         trocaIconeEstampa(canvasframeEstampa, (String) comboboxEstampas.getSelectedItem());
     }//GEN-LAST:event_comboboxEstampasActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão texturaSelecionar for 
+     * pressionado. O botão está relacionado as texturas das estampas. Atualiza 
+     * as instâncias das texturas na listagem e torna a janela de escolha de 
+     * textura visível.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #atualizarEstampas() 
+     */
     private void itemTexturaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemTexturaSelecionarActionPerformed
         atualizarTexturas();
         frameTexturasEscolher.setLocation(dim.width/2-frameTexturasEscolher.getSize().width/2, dim.height/2-frameTexturasEscolher.getSize().height/2);
         frameTexturasEscolher.setVisible(true);
     }//GEN-LAST:event_itemTexturaSelecionarActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão coresSelecionar for 
+     * pressionado. O botão está relacionado as cores em geral. Torna a 
+     * janela de escolha de cores visível.
+     * 
+     * @param evt evento da seleção do botão.
+     */
     private void itemCoresSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCoresSelecionarActionPerformed
         frameCoresEscolher.setLocation(dim.width/2-frameCoresEscolher.getSize().width/2, dim.height/2-frameCoresEscolher.getSize().height/2);
         frameCoresEscolher.setVisible(true);
     }//GEN-LAST:event_itemCoresSelecionarActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor da combobox de texturas for 
+     * modificada. O botão está relacionado as texturas salvas. Modifica-se o
+     * ícone de previsualização da textura escolhida.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #trocaIconeEstampa(org.apache.batik.swing.JSVGCanvas, java.lang.String) 
+     */
     private void comboboxTexturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxTexturasActionPerformed
         trocaIconeTextura(canvasframeTextura, (String) comboboxTexturas.getSelectedItem());
     }//GEN-LAST:event_comboboxTexturasActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor da combobox de estampas for 
+     * selecionada. O botão está relacionado as estampas salvas. Salva-se o 
+     * da estampa escolhida e Modifica-se o ícone de previsualização da estampa 
+     * escolhida.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #trocaIconeEstampa(org.apache.batik.swing.JSVGCanvas, java.lang.String) 
+     */
     private void botaoEstampaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEstampaSelecionarActionPerformed
         estampa = (String) comboboxEstampas.getSelectedItem();
         trocaIconeEstampa(canvasPreviewEstampa, estampa);
     }//GEN-LAST:event_botaoEstampaSelecionarActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão estampaSelecionarFundo for 
+     * pressionado. O botão está relacionado ao formato da tela. Salva o nome 
+     * da estampa selecionada e atualiza o ícone da estampa do fundo.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #trocaIconeEstampa(org.apache.batik.swing.JSVGCanvas, java.lang.String) 
+     */
     private void botaoEstampaSelecionarFundoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEstampaSelecionarFundoActionPerformed
         forma_fundo = (String) comboboxEstampas.getSelectedItem();
         if (radioTelaFormaSim.isSelected())
             trocaIconeEstampa(canvasPreviewFormaFundo, forma_fundo);
     }//GEN-LAST:event_botaoEstampaSelecionarFundoActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor da combobox de texturas for 
+     * selecionada. O botão está relacionado as texturas salvas. Salva-se o 
+     * nome da textura escolhida e modifica-se o ícone de previsualização da 
+     * textura escolhida.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #trocaIconeTextura(org.apache.batik.swing.JSVGCanvas, java.lang.String) 
+     */
     private void botaoTexturaSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTexturaSelecionarActionPerformed
         textura = (String) comboboxTexturas.getSelectedItem();
         if (radioTipoPreenchimentoTexturas.isSelected())
             trocaIconeTextura(canvasPreviewPreenchimento, textura);
     }//GEN-LAST:event_botaoTexturaSelecionarActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o botão de exclusão de texturas for 
+     * selecionada. O botão está relacionado as texturas salvas. Verifica-se 
+     * se a textura a ser excluída não é uma das primeiras, remove-se o 
+     * arquivo do diretório e atualiza os ícones de prévisualização.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #trocaIconeTextura(org.apache.batik.swing.JSVGCanvas, java.lang.String)
+     * @see #atualizarTexturas()
+     */
     private void botaoTexturaExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTexturaExcluirActionPerformed
         String nome = (String) comboboxTexturas.getSelectedItem();
         if (nome.equals("textura1.svg") || nome.equals("textura2.svg")) {
@@ -1128,7 +1346,17 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_botaoTexturaExcluirActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o botão de exclusão de estampas for 
+     * selecionada. O botão está relacionado as estampas salvas. Verifica-se 
+     * se a estampas a ser excluída não é uma das primeiras, remove-se o 
+     * arquivo do diretório e atualiza os ícones de prévisualização.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #trocaIconeEstampa(org.apache.batik.swing.JSVGCanvas, java.lang.String)
+     * @see #atualizarEstampas()
+     */
     private void botaoEstampaExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEstampaExcluirActionPerformed
         String nome = (String) comboboxEstampas.getSelectedItem();
         if (nome.equals("estampa1.svg") || nome.equals("estampa2.svg") || nome.equals("estampa3.svg")) {
@@ -1153,7 +1381,17 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             atualizarEstampas();
         }
     }//GEN-LAST:event_botaoEstampaExcluirActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o botão de escolha de cor do fundo for 
+     * selecionada. O botão está relacionado a cor de fundo da região. 
+     * Abre-se uma janela JColorChooser para o usuário selecionar uma cor, 
+     * atualizando caso verdadeiro.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see #atualizaCoresPreview(javax.swing.JPanel, java.awt.Color)
+     * @see #atualizaCoresFrame(javax.swing.JPanel, java.awt.Color)
+     */
     private void botaoFrameCoresFundoSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoFrameCoresFundoSelecionarActionPerformed
         Color nova_cor = javax.swing.JColorChooser.showDialog(this, "Escolha a cor do fundo", cor_fundo_selecionada);
         if (nova_cor != null) {
@@ -1162,7 +1400,16 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             atualizaCoresFrame(panelFrameCoresFundo, cor_fundo_selecionada);
         }
     }//GEN-LAST:event_botaoFrameCoresFundoSelecionarActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o botão de iniciar for selecionado, e é 
+     * aqui que retira-se as formas dos documentos SVG.
+     * 
+     * @param evt evento da seleção do botão.
+     * @see 
+     * @see mosaicofractal.tela.Tela
+     * @see mosaicofractal.tela.Tela#preencherArea(java.util.ArrayList, java.awt.Shape, java.util.ArrayList, java.awt.Color, double, int, int) 
+     */
     private void botaoIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIniciarActionPerformed
         Shape shape_tela = null;
 
@@ -1235,23 +1482,38 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_botaoIniciarActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão verCores for 
+     * pressionado. O botão está relacionado as cores das estampas. Torna a 
+     * janela de escolha de cores visível.
+     * 
+     * @param evt evento da seleção do botão.
+     */
     private void botaoVerCoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVerCoresActionPerformed
         frameVerCores.setLocation(dim.width/2-frameVerCores.getSize().width/2, dim.height/2-frameVerCores.getSize().height/2);
         frameVerCores.setVisible(true);
     }//GEN-LAST:event_botaoVerCoresActionPerformed
-
+    
+    /**
+     * Método utilizado para quando o valor do botão verCores for 
+     * pressionado. O botão está relacionado as cores das estampas. Torna a 
+     * janela de escolha de cores visível.
+     * 
+     * @param evt evento da seleção do botão.
+     */
     private void botaoVerCoresEscolherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoVerCoresEscolherActionPerformed
         frameVerCores.setLocation(dim.width/2-frameVerCores.getSize().width/2, dim.height/2-frameVerCores.getSize().height/2);
         frameVerCores.setVisible(true);
     }//GEN-LAST:event_botaoVerCoresEscolherActionPerformed
 
     /**
-     * @param args the command line arguments
+     * Método principal que inicializa o programa.
+     * 
+     * @param args argumentos por linha de comando
      */
     public static void main(String args[]) {
-        /* Set the default OS look and feel */
-        
+        /* Define o look and feel do SO */
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         }
@@ -1259,13 +1521,19 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             Logger.getLogger(InterfaceUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        /* Create and display the form */
+        /* Cria e torna visível o form */
         java.awt.EventQueue.invokeLater(() -> {
             new InterfaceUsuario().setVisible(true);
         });
     }
     
-    public void trocaPreviewIconeModo(String arquivo) {
+    /**
+     * Método utilizado para trocar o ícone de pré-visualização das opções 
+     * marcadas pelo usuário.
+     * 
+     * @param arquivo nome do arquivo SVG
+     */
+    private void trocaPreviewIconeModo(String arquivo) {
         try{
             File g = new File("./img/icones/" + arquivo + ".svg").getCanonicalFile();
             canvasPreviewModo.setURI(g.toURI().toString());
@@ -1273,7 +1541,14 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         catch(java.io.IOException e){}
     }
     
-    public void trocaIconeTextura(org.apache.batik.swing.JSVGCanvas canvas, String arquivo) {
+    /**
+     * Método utilizado para trocar o ícone de pré-visualização da textura 
+     * escolhida pelo usuário.
+     * 
+     * @param canvas canvas onde será desenhado o gráfico SVG
+     * @param arquivo nome do arquivo SVG
+     */
+    private void trocaIconeTextura(org.apache.batik.swing.JSVGCanvas canvas, String arquivo) {
         try{
             File g = new File("./img/texturas/" + arquivo).getCanonicalFile();
             canvas.setURI(g.toURI().toString());
@@ -1281,7 +1556,14 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         catch(java.io.IOException e){}
     }
     
-    public void trocaIconeEstampa(org.apache.batik.swing.JSVGCanvas canvas, String arquivo) {
+    /**
+     * Método utilizado para trocar o ícone de pré-visualização da estampa 
+     * escolhida pelo usuário.
+     * 
+     * @param canvas canvas onde será desenhado o gráfico SVG
+     * @param arquivo nome do arquivo SVG
+     */
+    private void trocaIconeEstampa(org.apache.batik.swing.JSVGCanvas canvas, String arquivo) {
         try{
             File g = new File("./img/estampas/" + arquivo).getCanonicalFile();
             canvas.setURI(g.toURI().toString());
@@ -1289,7 +1571,12 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         catch(java.io.IOException e){}
     }
     
-    public void deixaVazio(org.apache.batik.swing.JSVGCanvas canvas) {
+    /**
+     * Método para trocar o ícone para uma imagem vazia.
+     * 
+     * @param canvas canvas onde será desenhado o gráfico SVG transparente
+     */
+    private void deixaVazio(org.apache.batik.swing.JSVGCanvas canvas) {
         try{
             File g = new File("./img/vazio.svg").getCanonicalFile();
             canvas.setURI(g.toURI().toString());
@@ -1297,6 +1584,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         catch(java.io.IOException e){}
     }
     
+    /**
+     * Busca uma numeração ainda não existente para nomear a estampa.
+     * 
+     * @return numeração ainda não-existente para estampa
+     */
     private int numeroEstampa() {
         try {
             int v = 1;
@@ -1313,6 +1605,11 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         return 0;
     }
     
+    /**
+     * Busca uma numeração ainda não existente para nomear a textura.
+     * 
+     * @return numeração ainda não-existente para textura
+     */
     private int numeroTextura(){
         try{
             int v = 1;
@@ -1329,6 +1626,9 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         return 0;
     }
     
+    /**
+     * Método utilizado para atualizar a listagem da combobox sobre estampas.
+     */
     private void atualizarEstampas() {
         File folder = new File("./img/estampas");
 
@@ -1347,6 +1647,9 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         trocaIconeEstampa(canvasframeEstampa, (String) comboboxEstampas.getSelectedItem());
     }
     
+    /**
+     * Método utilizado para atualizar a listagem da combobox sobre texturas.
+     */
     private void atualizarTexturas() {
         File folder = new File("./img/texturas");
 
@@ -1366,6 +1669,12 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         trocaIconeTextura(canvasframeTextura, (String) comboboxTexturas.getSelectedItem());
     }
     
+    /**
+     * Método para atualizar a cor de fundo do previw JPanel selecionado.
+     * 
+     * @param preview JPanel que trata de mostrar a cor escolhida
+     * @param cor cor escolhida
+     */
     private void atualizaCoresPreview(javax.swing.JPanel preview, Color cor) {
         if (cor != null) {
             preview.setBackground(cor);
@@ -1377,6 +1686,13 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Método para atualizar a cor de fundo do JPanel selecionado, usado para 
+     * a cor de fundo da região.
+     * 
+     * @param preview JPanel que trata de mostrar a cor escolhida
+     * @param cor cor escolhida
+     */
     private void atualizaCoresFrame(javax.swing.JPanel preview, Color cor) {
         if (cor != null) {
             preview.setBackground(cor);
@@ -1386,27 +1702,59 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
     }
     
+    //TODO: buscar melhor maneira de utilizar uma textura para as formas, 
+    //preferencialmente uma textura não-rasterizada. A qualidade da textura 
+    //se encontra muito baixa, por conta da resolução 100x100 do canvas.
+    /**
+     * Cria uma imagem rasterizada para a textura.
+     * 
+     * @param canvas gráficos SVG a ser rasterizados
+     * @return imagem rasterizada
+     */
     private BufferedImage criarImagem(org.apache.batik.swing.JSVGCanvas canvas) {
         BufferedImage imagem = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
         Graphics2D cg = imagem.createGraphics();
         canvas.paintAll(cg);
-        //cg.scale(5, 5);
+        //cg.scale(5, 5); <-- não funcionou, continua com qualidade baixa
         return imagem;
     }
     
-    public class editorDeCor extends AbstractCellEditor implements
+    /**
+    * A classe <code>EditorDeCor</code> é usada para encapsular as funções do 
+    * com relação a escolha de cores para as estampas, definidos através da 
+    * {@link InterfaceUsuario}. 
+    * 
+    * @author      Giordanna De Gregoriis
+    * @see         InterfaceUsuario
+    */
+    public class EditorDeCor extends AbstractCellEditor implements
             TableCellEditor, ActionListener {
+        
+        /**
+         * Cor escolhida na célula da tabela.
+         */
         Color corAtual;
+        
+        /**
+         * Botão de escolha da cor.
+         */
         JButton botao;
-        JColorChooser colorChooser;
-        JDialog dialog;
-
-        public editorDeCor() {
+        
+        /**
+         * Contrutor da célula.
+         */
+        public EditorDeCor() {
             botao = new JButton();
             botao.addActionListener(this);
             botao.setBorderPainted(false);
         }
-
+        
+        /**
+         * Sobrescrita de ação, onde abre-se um JColorChooser para o usuário 
+         * escolher uma cor para a célula.
+         * 
+         * @param e evento do clique da célula.
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             botao.setBackground(corAtual);
@@ -1417,11 +1765,21 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             fireEditingStopped();
         }
 
+        /**
+         * Sobrescrita de método para retornar o valor da célula.
+         * 
+         * @return cor da célula
+         */
         @Override
         public Object getCellEditorValue() {
             return corAtual;
         }
-
+        
+        /**
+         * Sobrescrita de método para retornar o componente da célula.
+         * 
+         * @return botão da célula
+         */
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value,
                 boolean isSelected, int row, int column) {
@@ -1430,33 +1788,70 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
     }
 
-
+    /**
+    * A classe <code>RenderizadorDeCor</code> é usada para encapsular as funções do 
+    * com relação a renderização de cores no modelo de tabela de visualização 
+    * de cores, definidas através da {@link InterfaceUsuario}. 
+    * 
+    * @author      Giordanna De Gregoriis
+    * @see         InterfaceUsuario
+    */
     public class RenderizadorDeCor extends JLabel implements TableCellRenderer {
+        
+        /**
+         * Borda da célula não selecionada.
+         */
         Border bordaNaoSelecionada = null;
+        
+        /**
+         * Borda da célula selecionada.
+         */
         Border bordaSelecionada = null;
+        
+        /**
+         * Verificador se a célula possui borda ou não.
+         */
         boolean isComBorda = true;
-
+        
+        /**
+         * Instancia o renderizador de cor.
+         * 
+         * @param isBordered verificador se a célula possuirá borda ou não
+         */
         public RenderizadorDeCor(boolean isBordered) {
             this.isComBorda = isBordered;
             setOpaque(true);
         }
-
+        
+        /**
+         * Sobrescrita de método para retornar componente de renderização de 
+         * célula da tabela. Insere a borda na célula quando não está 
+         * selecionada.
+         * 
+         * @param tabela tabela JTable
+         * @param cor cor da célula
+         * @param estaSelecionada se a célula está selecionada ou não
+         * @param estaFocada se a tabela está em foco ou não
+         * @param linha linha da tabela onde contém a célula
+         * @param coluna coluna da tabela onde contém a célula
+         * @return componente de renderização
+         */
         @Override
-        public Component getTableCellRendererComponent( JTable table, Object color,
-                boolean isSelected, boolean hasFocus, int row, int column) {
-            Color newColor = (Color)color;
-            setBackground(newColor);
+        public Component getTableCellRendererComponent( JTable tabela, Object cor,
+                boolean estaSelecionada, boolean estaFocada, int linha, int coluna) {
+            Color novaCor = (Color)cor;
+            setBackground(novaCor);
             if (isComBorda) {
-                if (isSelected) {
+                if (estaSelecionada) {
                     if (bordaSelecionada == null) {
                         bordaSelecionada = BorderFactory.createMatteBorder(2,5,2,5,
-                                table.getSelectionBackground());
+                                tabela.getSelectionBackground());
                     }
                     setBorder(bordaSelecionada);
                 } else {
                     if (bordaNaoSelecionada == null) {
                         bordaNaoSelecionada = BorderFactory.createMatteBorder(2,5,2,5,
-                                table.getBackground());
+                                tabela.getBackground());
                     }
                     setBorder(bordaNaoSelecionada);
                 }
@@ -1464,13 +1859,13 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         String texto;
         
-        if (newColor.getAlpha() == 0) {
+        if (novaCor.getAlpha() == 0) {
             texto = "Tecnicamente vazio";
         }
         else{
-           texto = "Cores RGBA: " + newColor.getRed() + ", " + 
-                newColor.getGreen() + ", " + newColor.getBlue() + ", " + 
-                newColor.getAlpha();
+           texto = "Cores RGBA: " + novaCor.getRed() + ", " + 
+                novaCor.getGreen() + ", " + novaCor.getBlue() + ", " + 
+                novaCor.getAlpha();
         }
         
         setToolTipText(texto);
@@ -1478,9 +1873,31 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         }
     }
     
+    /**
+    * A classe <code>modeloTabelaCores</code> é usada para ser o modelo de 
+    * tabela para a visualização de cores, definidas através da 
+    * {@link InterfaceUsuario}.
+    * 
+    * @author      Giordanna De Gregoriis
+    * @see         InterfaceUsuario
+    * @see         InterfaceUsuario.EditorDeCor
+    * @see         InterfaceUsuario.RenderizadorDeCor
+    */
     class modeloTabelaCores extends AbstractTableModel {
+        
+        /**
+         * Cor representando que a célula está vazia. Necessário ter alfa = 0.
+         */
         Color vazio = new Color(0,0,0,0);
+        
+        /**
+         * Nomes das colunas do modelo da tabela.
+         */
         private String[] columnNames = {"", "", "", "", ""};
+        
+        /**
+         * Conteúdo das células do modelo da tabela.
+         */
         private Object[][] data = {
             {Color.BLACK, vazio, vazio, vazio, vazio},
             {vazio, vazio, vazio, vazio, vazio},
@@ -1494,36 +1911,69 @@ public class InterfaceUsuario extends javax.swing.JFrame {
             {vazio, vazio, vazio, vazio, vazio},
             };
         
+        /**
+         * Sobrescrita de método que retorna a quantidade de colunas do modelo.
+         * 
+         * @return quantidade de colunas
+         */
         @Override
         public int getColumnCount() {
             return columnNames.length;
         }
         
+        /**
+         * Sobrescrita de método que retorna a quantidade de linhas do modelo.
+         * 
+         * @return quantidade de linhas
+         */
         @Override
         public int getRowCount() {
             return data.length;
         }
-
+        
+        /**
+         * Sobrescrita de método que retorna a o nome da coluna do modelo.
+         * 
+         * @return nome da coluna
+         */
         @Override
         public String getColumnName(int col) {
             return columnNames[col];
         }
-
+        
+        /**
+         * Sobrescrita de método que retorna o valor contido na célula escolhida.
+         * 
+         * @return valor da célula
+         */
         @Override
         public Object getValueAt(int row, int col) {
             return data[row][col];
         }
-
+        
+        /**
+         * Sobrescrita de método que retorna a classe da coluna escolhida.
+         * 
+         * @return quantidade de linhas
+         */
         @Override
         public Class getColumnClass(int c) {
             return getValueAt(0, c).getClass();
         }
-
+        
+        /**
+         * Sobrescrita de método que verifica se a célula é editável ou não.
+         * 
+         * @return se a célula é editável ou não
+         */
         @Override
         public boolean isCellEditable(int row, int col) {
             return col >= 0;
         }
-
+        
+        /**
+         * Sobrescrita de método que define o valor da célula no modelo.
+         */
         @Override
         public void setValueAt(Object value, int row, int col) {
             data[row][col] = value;

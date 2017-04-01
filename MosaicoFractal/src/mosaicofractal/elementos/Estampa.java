@@ -1,3 +1,20 @@
+/*
+Este arquivo é parte do programa Mosaico Fractal
+
+Mosaico Fractal é um software livre; você pode redistribuí-lo e/ou 
+modificá-lo dentro dos termos da Licença Pública Geral GNU como 
+publicada pela Fundação do Software Livre (FSF); na versão 3 da 
+Licença, ou (a seu critério) qualquer versão posterior.
+
+Este programa é distribuído na esperança de que possa ser útil, 
+mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO
+a qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a
+Licença Pública Geral GNU para maiores detalhes.
+
+Você deve ter recebido uma cópia da Licença Pública Geral GNU junto
+com este programa, Se não, veja <http://www.gnu.org/licenses/>.
+*/
+
 package mosaicofractal.elementos;
 
 import java.awt.Color;
@@ -26,10 +43,10 @@ public class Estampa {
     private final Shape estampa;
     
     /**
-     * Formas a serem usadas como apoio, caso a forma principal ultrapasse os 
+     * Formas a serem usadas como "parceiros", caso a forma principal ultrapasse os 
      * limites da tela.
      */
-    private Shape apoio_1 = null, apoio_2 = null, apoio_3 = null;
+    private Shape [] apoio = {null, null, null};
     
     /**
      * Preenchimento utilizado na estampa, podendo ser textura ou cor.
@@ -60,18 +77,18 @@ public class Estampa {
         this.area = calculaArea(this.estampa);
         if (x + estampa.getBounds2D().getWidth() > mosaicofractal.tela.Tela.LARGURA){
             translada = AffineTransform.getTranslateInstance(-mosaicofractal.tela.Tela.LARGURA, 0);
-            this.apoio_1 = translada.createTransformedShape(this.estampa);
+            this.apoio[0] = translada.createTransformedShape(this.estampa);
         }
         if (y + estampa.getBounds2D().getHeight() > mosaicofractal.tela.Tela.ALTURA){
-            if (this.apoio_1 != null){
+            if (this.apoio[0] != null){
                 translada = AffineTransform.getTranslateInstance(0, -mosaicofractal.tela.Tela.ALTURA);
-                this.apoio_2 = translada.createTransformedShape(this.estampa);
+                this.apoio[1] = translada.createTransformedShape(this.estampa);
                 translada = AffineTransform.getTranslateInstance(-mosaicofractal.tela.Tela.LARGURA, -mosaicofractal.tela.Tela.ALTURA);
-                this.apoio_3 = translada.createTransformedShape(this.estampa);
+                this.apoio[2] = translada.createTransformedShape(this.estampa);
             }
             else{
                 translada = AffineTransform.getTranslateInstance(0, -mosaicofractal.tela.Tela.ALTURA);
-                this.apoio_1 = translada.createTransformedShape(this.estampa);
+                this.apoio[0] = translada.createTransformedShape(this.estampa);
             }
         }
     }
@@ -85,12 +102,12 @@ public class Estampa {
         final AffineTransform copiadora = AffineTransform.getTranslateInstance(0, 0);
         this.preenchimento = new Preenchimento(copia.preenchimento);
         this.estampa = copiadora.createTransformedShape(copia.estampa);
-        if (copia.apoio_1 != null){
-            this.apoio_1 = copiadora.createTransformedShape(copia.apoio_1);
+        if (copia.apoio[0] != null){
+            this.apoio[0] = copiadora.createTransformedShape(copia.apoio[0]);
             
-            if (copia.apoio_2 != null){
-                this.apoio_2 = copiadora.createTransformedShape(copia.apoio_2);
-                this.apoio_3 = copiadora.createTransformedShape(copia.apoio_3);
+            if (copia.apoio[1] != null){
+                this.apoio[1] = copiadora.createTransformedShape(copia.apoio[1]);
+                this.apoio[2] = copiadora.createTransformedShape(copia.apoio[2]);
             }
         }
         
@@ -120,33 +137,33 @@ public class Estampa {
         areaA.intersect(new Area(b.estampa));
         if (!areaA.isEmpty()) return true;
         
-        if (a.apoio_1 != null){
-            areaA = new Area(a.apoio_1);
+        if (a.apoio[0] != null){
+            areaA = new Area(a.apoio[0]);
             areaA.intersect(new Area(b.estampa));
             if (!areaA.isEmpty()) return true;
             
-            if (a.apoio_2 != null){
-                areaA = new Area(a.apoio_2);
+            if (a.apoio[1] != null){
+                areaA = new Area(a.apoio[1]);
                 areaA.intersect(new Area(b.estampa));
                 if (!areaA.isEmpty()) return true;
                 
-                areaA = new Area(a.apoio_3);
+                areaA = new Area(a.apoio[2]);
                 areaA.intersect(new Area(b.estampa));
                 if (!areaA.isEmpty()) return true;
             }
         }
         
-        if (b.apoio_1 != null){
-            areaA = new Area(b.apoio_1);
+        if (b.apoio[0] != null){
+            areaA = new Area(b.apoio[0]);
             areaA.intersect(new Area(a.estampa));
             if (!areaA.isEmpty()) return true;
             
-            if (b.apoio_2 != null){
-                areaA = new Area(b.apoio_2);
+            if (b.apoio[1] != null){
+                areaA = new Area(b.apoio[1]);
                 areaA.intersect(new Area(a.estampa));
                 if (!areaA.isEmpty()) return true;
                 
-                areaA = new Area(b.apoio_3);
+                areaA = new Area(b.apoio[2]);
                 areaA.intersect(new Area(a.estampa));
                 if (!areaA.isEmpty()) return true;
             }
@@ -195,12 +212,12 @@ public class Estampa {
         
         g2.fill(estampa);
         
-        if (apoio_1 != null){
-            g2.fill(apoio_1);
+        if (apoio[0] != null){
+            g2.fill(apoio[0]);
             
-            if (apoio_2 != null){
-                g2.fill(apoio_2);
-                g2.fill(apoio_3);
+            if (apoio[1] != null){
+                g2.fill(apoio[1]);
+                g2.fill(apoio[2]);
             }
         }
     }
@@ -234,6 +251,5 @@ public class Estampa {
         }
         
         return count;
-    }
-    
+    }    
 }

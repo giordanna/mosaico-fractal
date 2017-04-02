@@ -5,7 +5,8 @@ O programa Mosaico Fractal tem como objetivo preencher um determinado espaço ut
 * Vá para https://bitbucket.org/giordanna/mosaico-fractal/downloads/;
 * Baixe o arquivo "MosaicoFractal.zip";
 * Extraia;
-* Inicie o arquivo executável .JAR (IMPORTANTE: não delete os outros diretórios que vem junto do executável).
+* Inicie o arquivo executável .JAR (IMPORTANTE: não delete os outros diretórios que vem junto do executável);
+* OBS: para executar este programa, é necessário possuir o Java Runtime Environment 8 (JRE).
 
 ### Instruções ###
 * Inicie o programa;

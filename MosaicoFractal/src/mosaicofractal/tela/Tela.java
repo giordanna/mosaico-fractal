@@ -200,7 +200,7 @@ public class Tela {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         jFrame.setLocation(dim.width/2-jFrame.getSize().width/2, dim.height/2-jFrame.getSize().height/2);
         jFrame.setVisible(true);
-        //jframe.setResizable(false);
+        //jFrame.setResizable(false);
     }
     
     /**
@@ -613,6 +613,8 @@ public class Tela {
         
         final int numeroShapes, numeroPreenchimentos;
         
+        boolean ultrapassouTempoAntes = false;
+        
         Shape formaDaEstampa;
         
         final double maximoPorcentagemPreenchimento = 0.99,
@@ -707,73 +709,91 @@ public class Tela {
         
         /* se aconteceu a exceção, reduz o tamanho da primeira forma */
         while (estampaEscolhida == null) {
+            // passou do tempo limite de execução
+            if (tempoLimite * 60 < (System.currentTimeMillis() - tempoInicial)/1000.0){
+                System.out.println("Tempo limite de execução atingido!");
+                ultrapassouTempoAntes = true;
+                break;
+            }
+            
             N++;
             porcentagemTeste = razaoDaArea * valorControle(N, expoente);
             estampaEscolhida = criarEstampa();
         }
         
-        estampasAdicionadas.add(estampaEscolhida);
-        
-        /* inicia contagem da porcentagem preenchida da área */
-        areaTotal = estampaEscolhida.getArea();
-        areaPreenchidaPorcentagem = areaTotal / valorAreaTela;
-        
-        quantidadeEstampas = 1;
-        
-        System.out.println("c = " + constante + " | zeta = " + valorZeta + " | razão = " + razaoDaArea
-        + "| primeira forma = " + porcentagemTeste);
-        
-        /* loop no número de formas */
-        do {
-            
-            // passou do tempo limite de execução
-            if (tempoLimite * 60 < (System.currentTimeMillis() - tempoInicial)/1000.0){
-                System.out.println("Tempo limite de execução atingido!");
-                break;
-            }
-            
-            porcentagemTeste = razaoDaArea * valorControle(quantidadeEstampas + N, expoente);
-            //porcentagemTeste = getPorcentagemCorreta(porcentagemTeste);
-            
-            if (numeroShapes > 1){
-                indiceAtualShape++;
-                if (indiceAtualShape == numeroShapes){
-                    indiceAtualShape = 0;
-                }
-            }
-            
-            if (numeroPreenchimentos > 1){
-                indiceAtualPreenchimento++;
-                if (indiceAtualPreenchimento == numeroPreenchimentos){
-                    indiceAtualPreenchimento = 0;
-                }
-            }
-            
-            estampaEscolhida = isUsarThread();
-            
-            /* se for null, houve caso excepcional */
-            if (estampaEscolhida == null) break;
-            
-            numeroIteracoesTotal++;
-            
+        if (!ultrapassouTempoAntes) {
             estampasAdicionadas.add(estampaEscolhida);
-            
-            areaTotal += estampasAdicionadas.get(quantidadeEstampas).getArea();
+        
+            /* inicia contagem da porcentagem preenchida da área */
+            areaTotal = estampaEscolhida.getArea();
             areaPreenchidaPorcentagem = areaTotal / valorAreaTela;
-            quantidadeEstampas++;
+
+            quantidadeEstampas = 1;
+
+            System.out.println("c = " + constante + " | N = " + N + 
+                    " | zeta = " + valorZeta + " | razão = " + razaoDaArea + 
+                    "| primeira forma = " + porcentagemTeste);
+            System.out.println("Limites inclusivos: " + isConsiderarBordas);
+            System.out.println("Rotacionar estampas: " + isMudarAngulo);
+            System.out.println("Forma personalizada: " + isFormaTelaPersonalizada);
+            System.out.println("Tempo limite: " + tempoLimite);
+
+            /* loop no número de formas */
+            do {
+
+                // passou do tempo limite de execução
+                if (tempoLimite * 60 < (System.currentTimeMillis() - tempoInicial)/1000.0){
+                    System.out.println("Tempo limite de execução atingido!");
+                    break;
+                }
+
+                porcentagemTeste = razaoDaArea * valorControle(quantidadeEstampas + N, expoente);
+                //porcentagemTeste = getPorcentagemCorreta(porcentagemTeste);
+
+                if (numeroShapes > 1){
+                    indiceAtualShape++;
+                    if (indiceAtualShape == numeroShapes){
+                        indiceAtualShape = 0;
+                    }
+                }
+
+                if (numeroPreenchimentos > 1){
+                    indiceAtualPreenchimento++;
+                    if (indiceAtualPreenchimento == numeroPreenchimentos){
+                        indiceAtualPreenchimento = 0;
+                    }
+                }
+
+                estampaEscolhida = isUsarThread();
+
+                /* se for null, houve caso excepcional */
+                if (estampaEscolhida == null) break;
+
+                numeroIteracoesTotal++;
+
+                estampasAdicionadas.add(estampaEscolhida);
+
+                areaTotal += estampasAdicionadas.get(quantidadeEstampas).getArea();
+                areaPreenchidaPorcentagem = areaTotal / valorAreaTela;
+                quantidadeEstampas++;
+
+            } while (numeroIteracoesTotal < maxIteracoes && 
+                    quantidadeEstampas < maximoFormas && 
+                    areaPreenchidaPorcentagem < maximoPorcentagemPreenchimento);
+
+            System.out.println("Área preenchida = " + Math.round(areaPreenchidaPorcentagem * 100) + "%");
+            System.out.println("Número de formas = " + quantidadeEstampas);
+            System.out.println("Tempo de execução = " + (System.currentTimeMillis() - tempoInicial)/1000.0 + " segundos.");
+
+            jFrame.revalidate();
+            jFrame.repaint();
+
+            salvarImagem();
+        }
+        else {
+            JOptionPane.showMessageDialog(jFrame, "O tempo limite foi atingido... para a primeira estampa. Sinto muito. ):", "Ops", JOptionPane.ERROR_MESSAGE);
+        }
         
-        } while (numeroIteracoesTotal < maxIteracoes && 
-                quantidadeEstampas < maximoFormas && 
-                areaPreenchidaPorcentagem < maximoPorcentagemPreenchimento);
-        
-        System.out.println("Área preenchida = " + Math.round(areaPreenchidaPorcentagem * 100) + "%");
-        System.out.println("Búmero de formas = " + quantidadeEstampas);
-        System.out.println("Tempo de execução = " + (System.currentTimeMillis() - tempoInicial)/1000.0 + " segundos.");
-        
-        jFrame.revalidate();
-        jFrame.repaint();
-        
-        salvarImagem();
     }
     
     /**

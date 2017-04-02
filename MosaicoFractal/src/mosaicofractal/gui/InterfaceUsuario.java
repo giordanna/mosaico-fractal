@@ -514,7 +514,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         textoValorC.setText("Valor de c:");
 
-        spinnerValorC.setModel(new javax.swing.SpinnerNumberModel(1.48d, 1.01d, 2d, 0.01d));
+        spinnerValorC.setModel(new javax.swing.SpinnerNumberModel(1.53d, 1.01d, 2d, 0.01d));
 
         textoPreview.setText("Preview:");
 
@@ -700,7 +700,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
 
         textoMinutos.setText("(em minutos)");
 
-        spinnerValorN.setModel(new javax.swing.SpinnerNumberModel(2d, 1d, 100d, 1d));
+        spinnerValorN.setModel(new javax.swing.SpinnerNumberModel(3d, 1d, 100d, 1d));
 
         textoValorN.setText("Valor de N:");
 
@@ -740,57 +740,57 @@ public class InterfaceUsuario extends javax.swing.JFrame {
                                 .addGap(6, 6, 6)
                                 .addComponent(canvasPreviewPreenchimento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelCorpoLayout.createSequentialGroup()
-                                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(panelCorpoLayout.createSequentialGroup()
-                                        .addComponent(radioTelaFormaSim)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(radioTelaFormaNao))
-                                    .addGroup(panelCorpoLayout.createSequentialGroup()
-                                        .addComponent(radioRotacionarEstampasSim)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(radioRotacionarEstampasNao))
-                                    .addComponent(textoBordaTela)
-                                    .addGroup(panelCorpoLayout.createSequentialGroup()
-                                        .addComponent(radioBordaTelaSim)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(radioBordaTelaNao))
-                                    .addComponent(textoRotacionarEstampas)
-                                    .addComponent(textoTelaForma)
-                                    .addComponent(textoPreview)
-                                    .addGroup(panelCorpoLayout.createSequentialGroup()
-                                        .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(panelCorpoLayout.createSequentialGroup()
-                                                .addComponent(textoValorC)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(spinnerValorC, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(textoValorN))
-                                            .addComponent(botaoIniciar))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spinnerValorN, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(textoQuantidadeFormas)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spinnerQuantidadeFormas, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(textoIteracoes)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spinnerIteracoes, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(spinnerTempoLimite, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(panelCorpoLayout.createSequentialGroup()
-                                .addComponent(radioTipoPreenchimentoCores)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(radioTipoPreenchimentoTexturas)
-                                .addGap(343, 343, 343)
-                                .addComponent(textoMinutos)))
-                        .addContainerGap())
-                    .addGroup(panelCorpoLayout.createSequentialGroup()
-                        .addComponent(textoTipoPreenchimento)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(textoTempoLimite)
-                        .addGap(34, 34, 34))))
+                                        .addComponent(textoTipoPreenchimento)
+                                        .addGap(272, 272, 272)
+                                        .addComponent(textoTempoLimite))
+                                    .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(panelCorpoLayout.createSequentialGroup()
+                                            .addComponent(radioTelaFormaSim)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(radioTelaFormaNao))
+                                        .addGroup(panelCorpoLayout.createSequentialGroup()
+                                            .addComponent(radioRotacionarEstampasSim)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(radioRotacionarEstampasNao))
+                                        .addComponent(textoBordaTela)
+                                        .addGroup(panelCorpoLayout.createSequentialGroup()
+                                            .addComponent(radioBordaTelaSim)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(radioBordaTelaNao))
+                                        .addComponent(textoRotacionarEstampas)
+                                        .addComponent(textoTelaForma)
+                                        .addComponent(textoPreview)
+                                        .addGroup(panelCorpoLayout.createSequentialGroup()
+                                            .addGroup(panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(panelCorpoLayout.createSequentialGroup()
+                                                    .addComponent(textoValorC)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(spinnerValorC, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                    .addComponent(textoValorN))
+                                                .addComponent(botaoIniciar))
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(spinnerValorN, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(textoQuantidadeFormas)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(spinnerQuantidadeFormas, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(textoIteracoes)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(spinnerIteracoes, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(spinnerTempoLimite, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(panelCorpoLayout.createSequentialGroup()
+                                            .addComponent(radioTipoPreenchimentoCores)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(radioTipoPreenchimentoTexturas)
+                                            .addGap(343, 343, 343)
+                                            .addComponent(textoMinutos))))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         panelCorpoLayout.setVerticalGroup(
             panelCorpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1829,7 +1829,7 @@ public class InterfaceUsuario extends javax.swing.JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             botao.setBackground(corAtual);
-            Color nova_cor = javax.swing.JColorChooser.showDialog(null, "Escolha a cor do fundo", corAtual);
+            Color nova_cor = javax.swing.JColorChooser.showDialog(InterfaceUsuario.this, "Escolha a cor desejada para as estampas", corAtual);
             if (nova_cor != null) {
                 corAtual = nova_cor;
             }
